@@ -1,0 +1,26 @@
+name: Lock Issue
+
+on:
+  workflow_call:
+    inputs:
+      message:
+        description: "The message to post when the issue is locked"
+        default: |
+          This issue has been locked since it has been closed for more than 14 days.
+
+          If you found a concrete bug or regression related to it, please open a new bug report with a reproduction against the latest version. If you have any questions or comments you can create a new GitHub discussion thread.
+        required: false
+        type: string
+
+jobs:
+  issue-labeled:
+    if: github.repository_owner == 'wevm'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/lock-threads@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-comment: ${{ inputs.message }}
+          issue-lock-reason: "resolved"
+          issue-inactive-days: "14"
+          process-only: "issues"
