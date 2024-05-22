@@ -3,7 +3,7 @@ name: Issue Labeled
 on:
   workflow_call:
     inputs:
-      needs_reproduction_body:
+      needs-reproduction-body:
         description: "The message to post when the issue is labeled with `needs reproduction`"
         default: |
           Hello @${{ github.event.issue.user.login }}. 
@@ -16,6 +16,9 @@ on:
         required: false
         type: string
 
+permissions:
+  issues: write
+
 jobs:
   issue-labeled:
     if: github.repository_owner == 'wevm'
@@ -26,7 +29,7 @@ jobs:
         uses: actions-cool/issues-helper@v3
         with:
           actions: "create-comment, close-issue"
-          body: ${{ inputs.needs_reproduction_body }}
+          body: ${{ inputs.needs-reproduction-body }}
           close-reason: "not_planned"
           issue-number: ${{ github.event.issue.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
