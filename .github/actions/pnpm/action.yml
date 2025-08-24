@@ -5,7 +5,7 @@ inputs:
   node-version:
     description: 'Node.js version'
     required: false
-    default: 22.5.1
+    default: 22.18.0
 
 runs:
   using: "composite"
@@ -14,7 +14,7 @@ runs:
       uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda
 
     - name: Set up node
-      uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
       with:
         cache: pnpm
         node-version: ${{ inputs.node-version }}
