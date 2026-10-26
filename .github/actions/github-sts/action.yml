@@ -1,0 +1,57 @@
+name: "github-sts"
+description: "Exchange the workflow OIDC token for a short-lived GitHub App token via wevm GitHub STS"
+
+inputs:
+  scope:
+    description: 'Repository (org/repo) or organization whose trust policy to use (defaults to the current repository)'
+    required: false
+    default: ''
+  policy:
+    description: 'Trust policy name (.github/sts/<policy>.sts.yaml in the scope repository)'
+    required: true
+  ttl:
+    description: 'Requested maximum token lifetime (for example 30s, 5m, or 1h)'
+    required: false
+    default: ''
+  host:
+    description: 'GitHub STS hostname (gh-sts.wevm.dev or staging.gh-sts.wevm.dev)'
+    required: false
+    default: gh-sts.wevm.dev
+  retry-timeout:
+    description: 'Total OIDC/exchange retry budget in seconds (1-3600)'
+    required: false
+    default: '90'
+
+outputs:
+  token:
+    description: 'Short-lived GitHub App installation token'
+    value: ${{ steps.sts.outputs.token }}
+  expires-at:
+    description: 'Token expiration timestamp'
+    value: ${{ steps.sts.outputs.expires-at }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate host
+      shell: bash
+      env:
+        STS_HOST: ${{ inputs.host }}
+      run: |
+        case "$STS_HOST" in
+          gh-sts.wevm.dev|staging.gh-sts.wevm.dev) ;;
+          *)
+            echo "::error title=github-sts::host must be gh-sts.wevm.dev or staging.gh-sts.wevm.dev"
+            exit 1
+            ;;
+        esac
+
+    - name: Exchange OIDC token
+      id: sts
+      uses: tempoxyz/gh-actions/actions/github-sts@545ea7b097e391a3a698b9d756d3263f10c7cd8b # 2026-10-20T20-48-18Z-545ea7b0
+      with:
+        scope: ${{ inputs.scope }}
+        policy: ${{ inputs.policy }}
+        ttl: ${{ inputs.ttl }}
+        host: ${{ inputs.host }}
+        retry-timeout: ${{ inputs.retry-timeout }}
