@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/dessant/lock-threads",
+  "ref": "v6.0.2",
+  "ref_type": "tag",
+  "sha": "89ae32b08ed1a541efecbab17912962a5e38981c",
+  "upstream_commit_date": "2026-05-23T05:37:25Z",
+  "readme_url": "https://github.com/dessant/lock-threads/blob/89ae32b08ed1a541efecbab17912962a5e38981c/README.md",
+  "description": "Lock closed issues, pull requests and discussions after a period of inactivity",
+  "consume_as": "wevm/actions/vendor/dessant/lock-threads/v6@<reviewed-sha>",
+  "files_removed": 16,
+  "nested_rewrites": []
+}

@@ -1,0 +1,3 @@
+# Keep upstream bytes intact, including CRLF files.
+vendor/** -text
+vendor/**/dist/** linguist-generated=true

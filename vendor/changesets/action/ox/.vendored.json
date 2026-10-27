@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/changesets/action",
+  "ref": "v1.5.3",
+  "ref_type": "tag",
+  "sha": "e0145edc7d9d8679003495b11f87bd8ef63c0cba",
+  "upstream_commit_date": "2025-05-17T16:42:57Z",
+  "readme_url": "https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md",
+  "description": "A GitHub action to automate releases with Changesets",
+  "consume_as": "wevm/actions/vendor/changesets/action/ox@<reviewed-sha>",
+  "files_removed": 38,
+  "nested_rewrites": []
+}

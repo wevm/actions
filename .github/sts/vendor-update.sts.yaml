@@ -1,0 +1,12 @@
+# Token issuance only from a manual run of the reviewed default-branch workflow.
+subject: repo:wevm/actions:ref:refs/heads/main
+claim_pattern:
+  repository_id: '804527424'
+  repository_owner_id: '109633172'
+  event_name: workflow_dispatch
+  ref: refs/heads/main
+  workflow_ref: 'wevm/actions/\.github/workflows/vendor-update\.yml@refs/heads/main'
+permissions:
+  contents: write
+  pull_requests: write
+max_ttl: 5m

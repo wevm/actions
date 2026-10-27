@@ -1,0 +1,50 @@
+{
+  "name": "lock-threads",
+  "version": "6.0.2",
+  "description": "A GitHub Action that locks closed issues and pull requests after a period of inactivity.",
+  "author": "Armin Sebastian",
+  "license": "MIT",
+  "homepage": "https://github.com/dessant/lock-threads",
+  "repository": {
+    "url": "git+https://github.com/dessant/lock-threads.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/dessant/lock-threads/issues"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js -o dist",
+    "update": "ncu --dep prod,dev,peer --filterVersion '^*' --upgrade",
+    "release": "commit-and-tag-version",
+    "push": "git push --tags origin main"
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@octokit/plugin-throttling": "^11.0.3",
+    "@octokit/plugin-retry": "^8.1.0",
+    "joi": "^18.2.1"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.4",
+    "commit-and-tag-version": "^12.7.3",
+    "npm-check-updates": "^22.2.0",
+    "prettier": "^3.8.3"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "keywords": [
+    "github",
+    "issues",
+    "pull requests",
+    "lock",
+    "automation",
+    "github actions",
+    "project management",
+    "bot"
+  ],
+  "private": true
+}
