@@ -1,0 +1,27 @@
+name: Autofix files
+description: Collect fixes or publish them without executing repository code
+inputs:
+  mode:
+    description: collect or publish
+    required: true
+  directory:
+    description: Directory containing fixes.json and fixes.patch
+    required: true
+  token:
+    description: Short-lived STS token (publish only)
+    required: false
+outputs:
+  changed:
+    description: Whether tracked files need fixing
+    value: ${{ steps.run.outputs.changed }}
+runs:
+  using: composite
+  steps:
+    - id: run
+      shell: bash
+      env:
+        AUTOFIX_MODE: ${{ inputs.mode }}
+        AUTOFIX_DIRECTORY: ${{ inputs.directory }}
+        GH_TOKEN: ${{ inputs.token }}
+        AUTOFIX_SCRIPT: ${{ github.action_path }}/index.mjs
+      run: node "$AUTOFIX_SCRIPT"
