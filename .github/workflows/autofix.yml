@@ -1,0 +1,98 @@
+name: Autofix
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: Repository-owned commands that produce fixes (runs without write or OIDC permissions)
+        required: true
+        type: string
+      node-version:
+        default: '24'
+        required: false
+        type: string
+permissions: {}
+jobs:
+  prepare:
+    name: Prepare fixes
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      changed: ${{ steps.collect.outputs.changed }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # Format the actual PR head, not GitHub's synthetic merge commit.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: wevm/actions/.github/actions/pnpm@72843e035b62f68e648202bc2fcd6b4bac746e84
+        with:
+          node-version: ${{ inputs.node-version }}
+          skip-cache: 'true'
+      - name: Run repository checks
+        shell: bash
+        env:
+          AUTOFIX_COMMAND: ${{ inputs.command }}
+        run: bash -e -o pipefail -c "$AUTOFIX_COMMAND"
+      - name: Collect fixes
+        id: collect
+        uses: wevm/actions/.github/actions/autofix@0d6b0c0dbf7ef2ba0f8c0e4cdd95b50e485ec24c
+        with:
+          mode: collect
+          directory: ${{ runner.temp }}/autofix
+      - name: Upload fixes
+        if: steps.collect.outputs.changed == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: autofix-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/autofix/
+          if-no-files-found: error
+          retention-days: 1
+      - name: Require manual fixes outside eligible PR branches
+        if: >-
+          steps.collect.outputs.changed == 'true' &&
+          (github.event_name != 'pull_request' ||
+           github.event.pull_request.head.repo.id != github.event.repository.id ||
+           github.event.pull_request.head.ref == github.event.repository.default_branch ||
+           github.event.pull_request.head.ref == github.event.pull_request.base.ref ||
+           github.event.pull_request.user.login == 'dependabot[bot]')
+        run: |
+          echo 'Fixes are available in the autofix artifact. Apply fixes.patch to the checked commit.' >> "$GITHUB_STEP_SUMMARY"
+          echo '::error::Formatting changes require manual application for forks, Dependabot, and main-branch runs.'
+          exit 1
+
+  publish:
+    name: Apply fixes
+    needs: prepare
+    if: >-
+      needs.prepare.outputs.changed == 'true' &&
+      github.repository_owner == 'wevm' &&
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.id == github.event.repository.id &&
+      github.event.pull_request.head.ref != github.event.repository.default_branch &&
+      github.event.pull_request.head.ref != github.event.pull_request.base.ref &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      id-token: write
+    steps:
+      # Fresh runner: no checkout, dependency install, shared cache, or PR scripts.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: autofix-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/autofix
+      - name: Obtain short-lived publisher token
+        id: sts
+        uses: wevm/actions/.github/actions/github-sts@72843e035b62f68e648202bc2fcd6b4bac746e84
+        with:
+          policy: autofix
+          ttl: 5m
+      - name: Apply fixes to the unchanged PR head
+        uses: wevm/actions/.github/actions/autofix@0d6b0c0dbf7ef2ba0f8c0e4cdd95b50e485ec24c
+        with:
+          mode: publish
+          directory: ${{ runner.temp }}/autofix
+          token: ${{ steps.sts.outputs.token }}
