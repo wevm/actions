@@ -1,0 +1,35 @@
+name: "pnpm"
+description: "Set up pnpm and install dependencies"
+
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: 22.18.0
+  skip-cache:
+    description: 'Skip dependency cache restore/save'
+    required: false
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up pnpm
+      uses: wevm/actions/vendor/pnpm/action-setup/v4@bf2029b5aa6e21ce7c0ed0654a2e9a48a59bdb4a # upstream v4.1.0
+
+    - name: Set up node with cache
+      if: ${{ inputs.skip-cache != 'true' }}
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      with:
+        cache: pnpm
+        node-version: ${{ inputs.node-version }}
+
+    - name: Set up node without cache
+      if: ${{ inputs.skip-cache == 'true' }}
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install
