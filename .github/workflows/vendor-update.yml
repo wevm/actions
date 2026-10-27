@@ -1,0 +1,124 @@
+name: Vendor Update
+
+# Adapted from tempoxyz/gh-actions. Manual proposals only; no auto-merge.
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Manifest name (including its slot); empty checks all entries
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vendor-update
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: github.repository == 'wevm/actions' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      updates: ${{ steps.find.outputs.updates }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Find updates at least seven days old
+        id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ONLY: ${{ inputs.action }}
+        run: |
+          set -euo pipefail
+          if [ -n "$ONLY" ]; then
+            yq -o=json vendor-manifest.yml | jq -e --arg name "$ONLY" \
+              'any(.actions[]; .name == $name)' >/dev/null
+          fi
+          node vendor/update.mjs --json --min-age-days 7 > "$RUNNER_TEMP/updates.json"
+          updates=$(jq -c --arg name "$ONLY" \
+            '[.[] | select($name == "" or .name == $name) | .name]' "$RUNNER_TEMP/updates.json")
+          echo "updates=$updates" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/updates.json" >> "$GITHUB_STEP_SUMMARY"
+
+  propose:
+    needs: discover
+    if: needs.discover.outputs.updates != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        name: ${{ fromJSON(needs.discover.outputs.updates) }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Import and verify update without running upstream code
+        id: apply
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAME: ${{ matrix.name }}
+        run: |
+          set -euo pipefail
+          old_sha=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .sha' vendor-manifest.yml)
+          node vendor/update.mjs --min-age-days 7 --apply "$NAME"
+          new_sha=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .sha' vendor-manifest.yml)
+          if [ "$new_sha" = "$old_sha" ]; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node --test vendor/lib.test.js
+          node vendor/sync.mjs --check
+          {
+            echo 'changed=true'
+            echo "old_sha=$old_sha"
+            echo "new_sha=$new_sha"
+          } >> "$GITHUB_OUTPUT"
+      - name: Obtain short-lived publisher token
+        if: steps.apply.outputs.changed == 'true'
+        id: sts
+        uses: wevm/actions/.github/actions/github-sts@72843e035b62f68e648202bc2fcd6b4bac746e84
+        with:
+          policy: vendor-update
+          ttl: 5m
+      - name: Propose reviewed update
+        if: steps.apply.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.sts.outputs.token }}
+          NAME: ${{ matrix.name }}
+          OLD_SHA: ${{ steps.apply.outputs.old_sha }}
+          NEW_SHA: ${{ steps.apply.outputs.new_sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          upstream=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .upstream' vendor-manifest.yml)
+          new_ref=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .ref' vendor-manifest.yml)
+          branch="vendor/$NAME-$NEW_SHA"
+          gh auth setup-git
+          # Never rewrite a proposal branch or replace a reviewer's PR description.
+          remote=$(git ls-remote --heads origin "refs/heads/$branch")
+          if [ -n "$remote" ]; then
+            echo "Proposal branch $branch already exists; leaving it unchanged." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -- vendor-manifest.yml "vendor/$NAME" README.md
+          git commit -m "chore(vendor): update $NAME to $new_ref"
+          git push origin "HEAD:refs/heads/$branch"
+          body=$(printf '%s\n\n%s\n\n%s' \
+            "Updates $NAME to $new_ref ($NEW_SHA)." \
+            "Upstream compare: https://github.com/$upstream/compare/$OLD_SHA...$NEW_SHA" \
+            'Review the source compare and bundled diff. Consumer pins are unchanged; no automatic merge.')
+          gh pr create --repo "$REPO" --base main --head "$branch" \
+            --title "chore(vendor): update $NAME to $new_ref" --body "$body"

@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/changesets/action",
+  "ref": "v1.9.0",
+  "ref_type": "tag",
+  "sha": "a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d",
+  "upstream_commit_date": "2026-06-03T07:05:44Z",
+  "readme_url": "https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md",
+  "description": "A GitHub action to automate releases with Changesets",
+  "consume_as": "wevm/actions/vendor/changesets/action/wagmi@<reviewed-sha>",
+  "files_removed": 41,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

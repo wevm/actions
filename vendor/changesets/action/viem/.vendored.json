@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/changesets/action",
+  "ref": "v1.4.10",
+  "ref_type": "tag",
+  "sha": "06245a4e0a36c064a573d4150030f5ec548e4fcc",
+  "upstream_commit_date": "2025-03-10T10:53:45Z",
+  "readme_url": "https://github.com/changesets/action/blob/06245a4e0a36c064a573d4150030f5ec548e4fcc/README.md",
+  "description": "A GitHub action to automate releases with Changesets",
+  "consume_as": "wevm/actions/vendor/changesets/action/viem@<reviewed-sha>",
+  "files_removed": 31,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

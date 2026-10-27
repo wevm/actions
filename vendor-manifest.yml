@@ -1,0 +1,205 @@
+# Generated copies preserve the exact upstream versions used by existing consumers.
+# A third name segment is an independent update lane, not part of the upstream repo.
+# Prebuilt runtime snapshots omit upstream development-only dependency declarations.
+org: wevm/actions
+vendor_dir: vendor
+# These initial Node actions have no nested uses. Any future nested imports must
+# point at a previously published commit that already contains their dependencies.
+self_sha: 72843e035b62f68e648202bc2fcd6b4bac746e84
+self_tag: bootstrap
+allowed_upstreams:
+  - actions/
+  - github/
+default_exclude:
+  - .github/
+  - docs/
+  - doc/
+  - '**/*.md'
+  - '**/*.markdown'
+  - '**/*.map'
+  - '**/.gitignore'
+  - '**/.gitattributes'
+  - .editorconfig
+  - .husky/
+  - .vscode/
+  - .changeset/
+actions:
+  - name: changesets/action/abitype
+    ref: v2.1.2
+    ref_type: tag
+    sha: ae32849d5ba541f9ae29e40e22a623bc13562f51
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - .node-version
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.ts'
+      - .oxfmtrc.json
+      - pr-comment/
+      - pr-status/
+      - rolldown.config.js
+      - scripts/
+      - select-mode/
+    notes: >-
+      Node action; runs dist/index.js. .changeset kept: named as a path in the code pack kept: named
+      as a path in the code pnpm-workspace.yaml kept: named as a path in the code publish kept:
+      named as a path in the code version kept: named as a path in the code excluded: src/,
+      tsconfig*.json, pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts,
+      .oxfmtrc.json, pr-comment/, pr-status/, rolldown.config.js, scripts/, select-mode/
+    upstream: changesets/action
+
+  - name: changesets/action/ox
+    ref: v1.5.3
+    ref_type: tag
+    sha: e0145edc7d9d8679003495b11f87bd8ef63c0cba
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - __fixtures__/
+      - tsconfig*.json
+      - rollup.config.*
+      - yarn.lock
+      - .node-version
+      - CHANGELOG*
+      - '**/*.d.ts'
+      - '**/*.test.*'
+      - '**/*.ts'
+      - scripts/
+      - types/
+    notes: >-
+      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
+      **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/
+    upstream: changesets/action
+
+  - name: changesets/action/viem
+    ref: v1.4.10
+    ref_type: tag
+    sha: 06245a4e0a36c064a573d4150030f5ec548e4fcc
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - __fixtures__/
+      - tsconfig*.json
+      - .babelrc*
+      - yarn.lock
+      - CHANGELOG*
+      - '**/*.d.ts'
+      - '**/*.test.*'
+      - scripts/
+      - types/
+    notes: >-
+      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      __fixtures__/, tsconfig*.json, .babelrc*, yarn.lock, CHANGELOG*, **/*.d.ts, **/*.test.*,
+      scripts/, types/
+    upstream: changesets/action
+
+  - name: changesets/action/wagmi
+    ref: v1.9.0
+    ref_type: tag
+    sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - .node-version
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.ts'
+      - .oxfmtrc.json
+      - pr-comment/
+      - pr-status/
+      - rolldown.config.js
+      - scripts/
+    notes: >-
+      Node action; runs dist/index.js. .changeset kept: named as a path in the code
+      pnpm-workspace.yaml kept: named as a path in the code excluded: src/, tsconfig*.json,
+      pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts, .oxfmtrc.json, pr-comment/,
+      pr-status/, rolldown.config.js, scripts/
+    upstream: changesets/action
+
+  - name: dessant/lock-threads/v5
+    ref: v5.0.1
+    ref_type: tag
+    sha: 1bf7ec25051fe7c00bdd17e6a7cf3d7bfb7dc771
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - assets/
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - .nvmrc
+      - CHANGELOG*
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, assets/, .prettierrc*, .prettierignore,
+      package-lock.json, .nvmrc, CHANGELOG*
+    upstream: dessant/lock-threads
+
+  - name: dessant/lock-threads/v6
+    ref: v6.0.2
+    ref_type: tag
+    sha: 89ae32b08ed1a541efecbab17912962a5e38981c
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - assets/
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - .npmrc
+      - .nvmrc
+      - CHANGELOG*
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, assets/, .prettierrc*, .prettierignore,
+      package-lock.json, .npmrc, .nvmrc, CHANGELOG*
+    upstream: dessant/lock-threads
+
+  - name: pnpm/action-setup/v4
+    ref: v4.1.0
+    ref_type: tag
+    sha: a7487c7e89a18df4991f7f222e4898a00d66ddda
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - run.sh
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
+    upstream: pnpm/action-setup
+
+  - name: pnpm/action-setup/v6
+    ref: v6.0.9
+    ref_type: tag
+    sha: 0ebf47130e4866e96fce0953f49152a61190b271
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - run.sh
+      - scripts/
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml,
+      pnpm-workspace.yaml, run.sh, scripts/
+    upstream: pnpm/action-setup
+
+  - name: pnpm/action-setup/viem-wagmi
+    ref: v4.3.0
+    ref_type: tag
+    sha: b906affcce14559ad1aafd4ab0e942779e9f58b1
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - run.sh
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
+    upstream: pnpm/action-setup

@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/pnpm/action-setup",
+  "ref": "v4.3.0",
+  "ref_type": "tag",
+  "sha": "b906affcce14559ad1aafd4ab0e942779e9f58b1",
+  "upstream_commit_date": "2026-03-11T15:54:42+01:00",
+  "readme_url": "https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md",
+  "description": "Install pnpm package manager",
+  "consume_as": "wevm/actions/vendor/pnpm/action-setup/viem-wagmi@<reviewed-sha>",
+  "files_removed": 23,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}
