@@ -8,5 +8,8 @@
   "description": "A GitHub action to automate releases with Changesets",
   "consume_as": "wevm/actions/vendor/changesets/action/ox@<reviewed-sha>",
   "files_removed": 38,
-  "nested_rewrites": []
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
 }

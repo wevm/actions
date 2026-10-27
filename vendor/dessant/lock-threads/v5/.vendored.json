@@ -8,5 +8,8 @@
   "description": "Lock closed issues, pull requests and discussions after a period of inactivity",
   "consume_as": "wevm/actions/vendor/dessant/lock-threads/v5@<reviewed-sha>",
   "files_removed": 15,
-  "nested_rewrites": []
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
 }

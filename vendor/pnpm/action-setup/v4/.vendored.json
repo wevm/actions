@@ -8,5 +8,8 @@
   "description": "Install pnpm package manager",
   "consume_as": "wevm/actions/vendor/pnpm/action-setup/v4@<reviewed-sha>",
   "files_removed": 19,
-  "nested_rewrites": []
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
 }

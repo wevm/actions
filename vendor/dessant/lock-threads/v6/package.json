@@ -27,12 +27,6 @@
     "@octokit/plugin-retry": "^8.1.0",
     "joi": "^18.2.1"
   },
-  "devDependencies": {
-    "@vercel/ncc": "^0.38.4",
-    "commit-and-tag-version": "^12.7.3",
-    "npm-check-updates": "^22.2.0",
-    "prettier": "^3.8.3"
-  },
   "engines": {
     "node": ">=24.0.0"
   },
