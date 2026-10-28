@@ -40,6 +40,19 @@ upstream. Slots preserve the versions already used by ABIType, Wagmi, Viem, and 
 this migration does not upgrade them. Pin the **wevm/actions commit**, not the
 upstream commit listed below.
 
+For consumer upgrades, use these shared entrypoints:
+
+- `.github/actions/pnpm`: pnpm setup v6.0.9 and Node setup v6.4.0. Each repository's
+  `packageManager` still selects its pnpm version; `skip-cache` remains supported.
+- `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation,
+  for callers that need a custom destination or `package_json_file`.
+- `.github/workflows/lock-issue.yml`: lock-threads v6.0.2 with the existing 14-day policy.
+
+The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available while
+consumers migrate. Changesets requires a separate CLI migration: action v2 targets
+Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by
+changing only the action path or its input names.
+
 <!-- vendored-actions:begin -->
 | Action | Version | Description |
 |--------|---------|-------------|
