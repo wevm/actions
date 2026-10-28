@@ -63,7 +63,7 @@ changing only the action path or its input names.
 | [`dessant/lock-threads/v5`](https://github.com/dessant/lock-threads/blob/1bf7ec25051fe7c00bdd17e6a7cf3d7bfb7dc771/README.md) | v5.0.1 (`1bf7ec2`) | Lock closed issues, pull requests and discussions after a period of inactivity |
 | [`dessant/lock-threads/v6`](https://github.com/dessant/lock-threads/blob/89ae32b08ed1a541efecbab17912962a5e38981c/README.md) | v6.0.2 (`89ae32b`) | Lock closed issues, pull requests and discussions after a period of inactivity |
 | [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md) | v4.1.0 (`a7487c7`) | Install pnpm package manager |
-| [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/0977fd99725f1db4007ccb2928dbb4e90d06cc86/README.md) | v6.0.10 (`0977fd9`) | Install pnpm package manager |
+| [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/ea17c68df8912ef543352723c149a84f56e3d413/README.md) | v6.1.0 (`ea17c68`) | Install pnpm package manager |
 | [`pnpm/action-setup/viem-wagmi`](https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md) | v4.3.0 (`b906aff`) | Install pnpm package manager |
 <!-- vendored-actions:end -->
 
