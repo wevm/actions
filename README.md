@@ -42,7 +42,7 @@ upstream commit listed below.
 
 For consumer upgrades, use these shared entrypoints:
 
-- `.github/actions/pnpm`: pnpm setup v6.0.10 and Node setup v6.4.0. Each repository's
+- `.github/actions/pnpm`: pnpm setup v6.1.0 and Node setup v6.4.0. Each repository's
   `packageManager` still selects its pnpm version; `skip-cache` remains supported.
 - `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation,
   for callers that need a custom destination or `package_json_file`.
