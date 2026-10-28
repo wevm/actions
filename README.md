@@ -36,13 +36,13 @@ Outputs: `token`, `expires-at`.
 Third-party action runtime files are copied at exact upstream commits; GitHub-owned
 actions remain upstream and SHA-pinned. Consumers use
 `wevm/actions/vendor/<owner>/<repo>/<slot>@<reviewed-sha>` with the same inputs as
-upstream. Slots preserve the versions already used by ABIType, Wagmi, Viem, and Ox;
-this migration does not upgrade them. Pin the **wevm/actions commit**, not the
+upstream. Older slots preserve compatibility while consumers migrate; the pnpm v6
+slot includes the patched bootstrap update. Pin the **wevm/actions commit**, not the
 upstream commit listed below.
 
 For consumer upgrades, use these shared entrypoints:
 
-- `.github/actions/pnpm`: pnpm setup v6.0.9 and Node setup v6.4.0. Each repository's
+- `.github/actions/pnpm`: pnpm setup v6.0.10 and Node setup v6.4.0. Each repository's
   `packageManager` still selects its pnpm version; `skip-cache` remains supported.
 - `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation,
   for callers that need a custom destination or `package_json_file`.
