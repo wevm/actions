@@ -26,11 +26,14 @@ jobs:
     steps:
       - name: Needs Reproduction
         if: github.event.label.name == 'needs reproduction'
-        uses: actions-cool/issues-helper@v3
-        with:
-          actions: "create-comment, close-issue"
-          body: ${{ inputs.needs-reproduction-body }}
-          close-reason: "not_planned"
-          issue-number: ${{ github.event.issue.number }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          BODY: ${{ inputs.needs-reproduction-body }}
+        shell: bash
+        run: |
+          gh api --method POST "repos/$GH_REPO/issues/$ISSUE_NUMBER/comments" \
+            --raw-field body="$BODY" --silent
+          gh api --method PATCH "repos/$GH_REPO/issues/$ISSUE_NUMBER" \
+            --raw-field state=closed --raw-field state_reason=not_planned --silent

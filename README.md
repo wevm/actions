@@ -71,5 +71,6 @@ See [vendor/README.md](vendor/README.md) for imports, verification, updates, and
 the STS rollout prerequisites. Vendoring controls when upstream code changes enter
 our workflows; it does not sandbox actions or eliminate vulnerabilities in a pinned
 version. Other third-party actions are not yet migrated, so org-wide enforcement
-must wait. `actions-cool/issues-helper` is deferred because GitHub disabled its
-upstream repository; the existing issue-labeled workflow is unchanged.
+must wait. The issue-labeled workflow uses the runner's GitHub CLI to post the
+reproduction request and close the issue as `not_planned`, with `issues: write`
+permission.
