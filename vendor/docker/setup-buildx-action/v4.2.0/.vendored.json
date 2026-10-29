@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/docker/setup-buildx-action",
+  "ref": "v4.2.0",
+  "ref_type": "tag",
+  "sha": "bb05f3f5519dd87d3ba754cc423b652a5edd6d2c",
+  "upstream_commit_date": "2026-07-02T11:21:40+02:00",
+  "readme_url": "https://github.com/docker/setup-buildx-action/blob/bb05f3f5519dd87d3ba754cc423b652a5edd6d2c/README.md",
+  "description": "Set up Docker Buildx",
+  "consume_as": "wevm/actions/vendor/docker/setup-buildx-action/v4.2.0@<reviewed-sha>",
+  "files_removed": 38,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

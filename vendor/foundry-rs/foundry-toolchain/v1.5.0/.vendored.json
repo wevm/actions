@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/foundry-rs/foundry-toolchain",
+  "ref": "v1.5.0",
+  "ref_type": "tag",
+  "sha": "50d5a8956f2e319df19e6b57539d7e2acb9f8c1e",
+  "upstream_commit_date": "2025-10-06T16:23:16+02:00",
+  "readme_url": "https://github.com/foundry-rs/foundry-toolchain/blob/50d5a8956f2e319df19e6b57539d7e2acb9f8c1e/README.md",
+  "description": "Install Foundry",
+  "consume_as": "wevm/actions/vendor/foundry-rs/foundry-toolchain/v1.5.0@<reviewed-sha>",
+  "files_removed": 17,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

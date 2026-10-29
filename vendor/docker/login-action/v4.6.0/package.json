@@ -1,0 +1,36 @@
+{
+  "name": "docker-login",
+  "description": "GitHub Action to login against a Docker registry",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.cjs --sourcemap --minify --keep-names && yarn run license",
+    "lint": "eslint --max-warnings=0 .",
+    "format": "eslint --fix .",
+    "test": "vitest run",
+    "license": "generate-license-file --input package.json --output dist/licenses.txt --overwrite --ci --no-spinner --eol lf"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docker/login-action.git"
+  },
+  "keywords": [
+    "actions",
+    "docker",
+    "login"
+  ],
+  "author": "Docker Inc.",
+  "license": "Apache-2.0",
+  "packageManager": "yarn@4.15.0",
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/http-client": "^4.0.1",
+    "@aws-sdk/client-ecr": "^3.1095.0",
+    "@aws-sdk/client-ecr-public": "^3.1095.0",
+    "@docker/actions-toolkit": "^0.94.0",
+    "http-proxy-agent": "^9.1.0",
+    "https-proxy-agent": "^9.1.0",
+    "js-yaml": "^5.2.2",
+    "uuid": "^14.0.1"
+  }
+}

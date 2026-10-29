@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/stefanzweifel/git-auto-commit-action",
+  "ref": "v6.0.1",
+  "ref_type": "tag",
+  "sha": "778341af668090896ca464160c2def5d1d1a3eb0",
+  "upstream_commit_date": "2025-06-11T13:26:39+02:00",
+  "readme_url": "https://github.com/stefanzweifel/git-auto-commit-action/blob/778341af668090896ca464160c2def5d1d1a3eb0/README.md",
+  "description": "Automatically commits files which have been changed during the workflow run and push changes back to remote repository.",
+  "consume_as": "wevm/actions/vendor/stefanzweifel/git-auto-commit-action/v6.0.1@<reviewed-sha>",
+  "files_removed": 18,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

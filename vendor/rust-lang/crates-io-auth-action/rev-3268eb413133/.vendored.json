@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/rust-lang/crates-io-auth-action",
+  "ref": "v1.0.6",
+  "ref_type": "tag",
+  "sha": "3268eb413133e2960fa4ae0e963ca76380c54cd9",
+  "upstream_commit_date": "2026-10-21T16:24:59Z",
+  "readme_url": "https://github.com/rust-lang/crates-io-auth-action/blob/3268eb413133e2960fa4ae0e963ca76380c54cd9/README.md",
+  "description": "Retrieve a temporary crates.io access token using trusted publishing.",
+  "consume_as": "wevm/actions/vendor/rust-lang/crates-io-auth-action/rev-3268eb413133@<reviewed-sha>",
+  "files_removed": 29,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

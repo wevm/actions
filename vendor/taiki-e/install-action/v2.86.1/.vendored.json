@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/taiki-e/install-action",
+  "ref": "v2.86.1",
+  "ref_type": "tag",
+  "sha": "288e746965032cfcc232e09af2daf5f23c14d780",
+  "upstream_commit_date": "2026-08-15T18:42:21Z",
+  "readme_url": "https://github.com/taiki-e/install-action/blob/288e746965032cfcc232e09af2daf5f23c14d780/README.md",
+  "description": "GitHub Action for installing development tools",
+  "consume_as": "wevm/actions/vendor/taiki-e/install-action/v2.86.1@<reviewed-sha>",
+  "files_removed": 17,
+  "nested_rewrites": []
+}

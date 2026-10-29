@@ -1,0 +1,72 @@
+name: 'Vitest Coverage Report'
+description: 'Provide a Vitest Test Coverage Report as Step-Summary and comment in Pull Requests'
+author: 'David Losert'
+inputs:
+  github-token:
+      required: false
+      description: 'A github access token with permissions to write to issues. Uses secrets.GITHUB_TOKEN by default.'
+      default: ${{ github.token }}
+  vite-config-path:
+      required: false
+      description: 'The path to the vite config file. By default, looks for paths by the pattern "vite[st].config.{t|mt|ct|j|mj|cj}s".'
+  json-summary-path:
+      required: false
+      description: 'The path to the json summary file. Uses "coverage/coverage-summary.json" by default.'
+      default: coverage/coverage-summary.json
+  json-summary-compare-path:
+      required: false
+      description: 'The path to the json summary file of the previous run to get trend indicators.'
+  json-final-path:
+      required: false
+      description: 'The path to the json final file. Uses "coverage/coverage-final.json" by default.'
+      default: coverage/coverage-final.json
+  file-coverage-mode:
+      required: false
+      description: 'How to show summary for files coverage. Options: "none" (no files), "changes" (only changed files), "changes-affected" (changed files and files with coverage changes), "all" (all files). Uses "changes" by default.'
+      default: changes
+  file-coverage-expanded:
+      required: false
+      description: 'When true, the File Coverage section will be expanded by default. When false, the section will be collapsed and require a click to expand. Uses false by default.'
+      default: 'false'
+  show-uncovered-lines:
+      required: false
+      description: 'When true, the "Uncovered Lines" column is shown in the file coverage table. When false, the column is hidden, reducing table width. Uses true by default.'
+      default: 'true'
+  sort-by:
+      required: false
+      description: 'How to order files within each file coverage group. Use "name" to preserve vitest''s collection order, or "<metric>-<direction>" to sort by a coverage metric. Metrics: "statements", "branches", "functions", "lines". Directions: "asc" (worst first), "desc" (best first). E.g. "statements-asc". Uses "name" by default.'
+      default: 'name'
+  file-coverage-root-path:
+      required: false
+      description: 'The root (or absolute) part of the path used within the json coverage reports to point to the covered files. You can change this if your reports were generated in a different context (e.g., a docker container) and the absolute paths don''t match the current runner''s workspace. Uses the runner''s workspace path by default.'
+      default: ${{ github.workspace }}
+  working-directory:
+      required: false
+      description: 'Working directory where to look for the vite config file and the coverage report files. Uses "./" by default.'
+      default: ./
+  name:
+      required: false
+      description: 'The name of the coverage report. Can be used to execute this action multiple times. '
+      default: ''
+  pr-number:
+      required: false
+      description: 'An optional, user-defined pull request number to comment on. When using "push" events, use "auto" to try to automatically find a matching PR.'
+      default: ''
+  comment-on:
+    required: false
+    description: 'Specify where you want a comment to appear: "pr" for pull-request (if one can be found), "commit" for the commit in which context the action was run, or "none" for no comments. You can provide a comma-separated list of "pr" and "commit" to comment on both. Uses "pr" by default.'
+    default: pr
+  threshold-icons:
+    required: false
+    description: "A JSON object mapping coverage percentage thresholds to status icons for display. This determines the icon shown in coverage reports. Example: \"{0: '🔴', 80: '🟠', 90: '🟢'}\" shows 🔴 for 0-79%, 🟠 for 80-89%, 🟢 for 90-100%. When both threshold-icons and vitest thresholds are defined, threshold-icons controls the icon while vitest thresholds are shown as targets."
+    default: ''
+  comparison-decimal-places:
+    required: false
+    description: 'Number of decimal places to show in comparison percentages. This is especially useful in large projects where even small percentage changes can represent significant coverage differences, such as entire test suites being added or removed. Uses 2 by default.'
+    default: '2'
+runs:
+  using: 'node24'
+  main: 'dist/index.js'
+branding:
+  icon: 'check-circle'
+  color: 'green'

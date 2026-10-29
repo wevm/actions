@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/davelosert/vitest-coverage-report-action",
+  "ref": "v2.13.1",
+  "ref_type": "tag",
+  "sha": "8f86cfb56ed6d5613ea8cdc5259f207fbfd51ece",
+  "upstream_commit_date": "2026-10-14T07:15:11Z",
+  "readme_url": "https://github.com/davelosert/vitest-coverage-report-action/blob/8f86cfb56ed6d5613ea8cdc5259f207fbfd51ece/README.md",
+  "description": "Provide a Vitest Test Coverage Report as Step-Summary and comment in Pull Requests",
+  "consume_as": "wevm/actions/vendor/davelosert/vitest-coverage-report-action/v2.13.1@<reviewed-sha>",
+  "files_removed": 84,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

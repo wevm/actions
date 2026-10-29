@@ -1,0 +1,3 @@
+# Prebuilt actions can load checked-in runtime dependencies. Override global ignores.
+!vendor/**/node_modules/
+!vendor/**/node_modules/**

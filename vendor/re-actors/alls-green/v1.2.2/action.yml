@@ -1,0 +1,67 @@
+---
+name: alls-green
+description: >-
+  GitHub Action for checking that the test matrix jobs are all
+  successful before proceeding. To be used in branch protection
+author: >-
+  Sviatoslav Sydorenko <wk+~github.com/re-actors/alls-green@sydorenko.org.ua>
+
+branding:
+  icon: check-circle
+  color: green
+
+inputs:
+  jobs:
+    description: >-
+      A list of jobs from the `needs` context, serialized as a JSON
+      string via `toJSON(needs)`
+    required: true
+  allowed-failures:
+    default: >-
+      []
+    description: >-
+      Job names that are allowed to fail and not affect the outcome,
+      as a comma-separated list or serialized as a JSON string
+    required: false
+  allowed-skips:
+    default: >-
+      []
+    description: >-
+      Job names that are allowed to be skipped and not affect the
+      outcome, as a comma-separated list or serialized as a JSON string
+    required: false
+
+outputs:
+  failure:
+    description: Whether this check decided that the job matrix failed.
+    value: ${{ steps.outcome.outputs.failure }}
+  result:
+    description: Failure or success result of the job matrix.
+    value: ${{ steps.outcome.outputs.result }}
+  success:
+    description: Whether this check decided that the job matrix succeeded.
+    value: ${{ steps.outcome.outputs.success }}
+
+runs:
+  using: composite
+  steps:
+  - name: Decide whether the input jobs succeeded or failed
+    id: outcome
+    env:
+      PYTHONPATH: ${{ github.action_path }}/src
+    run: |
+      python -m normalize_needed_jobs_status \
+      "$(cat << EOM
+        ${{ inputs.allowed-failures }}
+      EOM
+      )" \
+      "$(cat << EOM
+        ${{ inputs.allowed-skips }}
+      EOM
+      )" \
+      "$(cat << EOM
+        ${{ inputs.jobs }}
+      EOM
+      )"
+    shell: bash
+...

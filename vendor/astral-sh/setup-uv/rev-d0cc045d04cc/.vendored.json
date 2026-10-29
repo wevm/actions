@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/astral-sh/setup-uv",
+  "ref": "v6.8.0",
+  "ref_type": "tag",
+  "sha": "d0cc045d04ccac9d8b7881df0226f9e82c39688e",
+  "upstream_commit_date": "2025-09-30T17:05:27+02:00",
+  "readme_url": "https://github.com/astral-sh/setup-uv/blob/d0cc045d04ccac9d8b7881df0226f9e82c39688e/README.md",
+  "description": "Set up your GitHub Actions workflow with a specific version of uv.",
+  "consume_as": "wevm/actions/vendor/astral-sh/setup-uv/rev-d0cc045d04cc@<reviewed-sha>",
+  "files_removed": 74,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

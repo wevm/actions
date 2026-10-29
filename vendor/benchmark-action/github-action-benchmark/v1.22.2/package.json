@@ -1,0 +1,41 @@
+{
+  "name": "github-action-benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint '**/*.{ts,js}'",
+    "fix": "eslint --fix '**/*.{ts,js}'",
+    "format": "prettier -w **",
+    "format:check": "prettier -c **",
+    "test": "jest",
+    "test-s": "jest --silent",
+    "test:watch": "jest --watch",
+    "coverage": "jest --coverage",
+    "coverage:open": "jest --coverage && open ./coverage/lcov-report/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benchmark-action/github-action-benchmark.git"
+  },
+  "keywords": [
+    "github",
+    "action",
+    "benchmark"
+  ],
+  "author": "github-action-benchmark developers <https://github.com/benchmark-action>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benchmark-action/github-action-benchmark/issues"
+  },
+  "homepage": "https://github.com/benchmark-action/github-action-benchmark#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.1.1",
+    "@actions/io": "^1.1.2",
+    "zod": "^4.1.5"
+  }
+}

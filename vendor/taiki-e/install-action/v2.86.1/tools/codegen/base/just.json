@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/casey/just",
+  "license_markdown": "[CC0-1.0](https://github.com/casey/just/blob/master/LICENSE)",
+  "tag_prefix": "",
+  "rust_crate": "${package}",
+  "broken": ["1.25.1"],
+  "asset_name": "${package}-${version}-${rust_target}.tar.gz",
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {
+      "asset_name": "${package}-${version}-${rust_target}.zip"
+    },
+    "aarch64_linux_musl": {},
+    "aarch64_macos": {},
+    "aarch64_windows": {
+      "asset_name": "${package}-${version}-${rust_target}.zip"
+    }
+  }
+}

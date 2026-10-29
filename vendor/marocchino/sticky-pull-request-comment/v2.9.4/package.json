@@ -1,0 +1,37 @@
+{
+  "name": "sticky-pull-request-comment",
+  "version": "2.1.1",
+  "private": true,
+  "description": "Create comment on pull request, if exists update that comment.",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "biome format --write .",
+    "format-check": "biome format --write .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --apply .",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "build_test": "tsc && vitest run",
+    "all": "yarn build && yarn format && yarn lint && yarn package && yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actions/typescript-action.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "author": "marocchino",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "@actions/glob": "^0.5.0",
+    "@octokit/graphql-schema": "^15.26.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/nick-fields/retry",
+  "ref": "v4.0.0",
+  "ref_type": "tag",
+  "sha": "ad984534de44a9489a53aefd81eb77f87c70dc60",
+  "upstream_commit_date": "2026-03-19T22:20:33-04:00",
+  "readme_url": "https://github.com/nick-fields/retry/blob/ad984534de44a9489a53aefd81eb77f87c70dc60/README.md",
+  "description": "Retry a step on failure or timeout",
+  "consume_as": "wevm/actions/vendor/nick-fields/retry/rev-ad984534de44@<reviewed-sha>",
+  "files_removed": 28,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

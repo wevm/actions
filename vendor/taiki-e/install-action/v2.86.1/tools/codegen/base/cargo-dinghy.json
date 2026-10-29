@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/sonos/dinghy",
+  "license_markdown": "[MIT](https://github.com/sonos/dinghy/blob/main/LICENSE-MIT) OR [Apache-2.0](https://github.com/sonos/dinghy/blob/main/LICENSE-APACHE)",
+  "tag_prefix": "",
+  "rust_crate": "${package}",
+  "broken": ["0.7.0"],
+  "asset_name": "${package}-${rust_target_os}-${version}.tgz",
+  "bin": "${package}-${version}/${package}${exe}",
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {}
+  }
+}

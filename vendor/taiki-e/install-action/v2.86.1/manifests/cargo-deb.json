@@ -1,0 +1,51 @@
+{
+  "rust_crate": "cargo-deb",
+  "template": {
+    "x86_64_linux_gnu": {
+      "url": "https://github.com/kornelski/cargo-deb/releases/download/v${version}/cargo-deb_${version}-1_amd64.deb",
+      "bin": "usr/bin/cargo-deb"
+    }
+  },
+  "latest": {
+    "version": "3.7.0"
+  },
+  "3": {
+    "version": "3.7.0"
+  },
+  "3.7": {
+    "version": "3.7.0"
+  },
+  "3.7.0": {
+    "x86_64_linux_gnu": {
+      "etag": "0x8DEA87CE0C3370E",
+      "hash": "e61273031c84b6ef2ca3fb259b594d34d2b592e1c6bc378c1249380c53e5b05e"
+    }
+  },
+  "3.6": {
+    "version": "3.6.4"
+  },
+  "3.6.4": {
+    "x86_64_linux_gnu": {
+      "etag": "0x8DEA528E26D5EF0",
+      "hash": "3a95dff12baba70efe3a050a3ad94149ace73114c5af988d34073183e09dd584"
+    }
+  },
+  "3.6.3": {
+    "x86_64_linux_gnu": {
+      "etag": "0x8DE63F58EBB06E1",
+      "hash": "e4b8c1a499a8f4e5b96d72f0d1ec9da8005ba379aee95aaeef83860991c831c3"
+    }
+  },
+  "3.6.2": {
+    "x86_64_linux_gnu": {
+      "etag": "0x8DE0A5D04840934",
+      "hash": "a0053e0089f0efb194013e9629087c247d1de6cb439b7381b4109e21153b991e"
+    }
+  },
+  "3.6.1": {
+    "x86_64_linux_gnu": {
+      "etag": "0x8DDE4DDD98766C4",
+      "hash": "c7c890cc90dae8c4f5f9ad0ff3d7675fec74fbb57ff89c4f27cfbbab34676e93"
+    }
+  }
+}

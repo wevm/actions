@@ -3,8 +3,8 @@
 # Prebuilt runtime snapshots omit upstream development-only dependency declarations.
 org: wevm/actions
 vendor_dir: vendor
-# These initial Node actions have no nested uses. Any future nested imports must
-# point at a previously published commit that already contains their dependencies.
+# Nested third-party imports must point at a previously published commit
+# that already contains their dependencies.
 self_sha: 72843e035b62f68e648202bc2fcd6b4bac746e84
 self_tag: bootstrap
 allowed_upstreams:
@@ -24,6 +24,139 @@ default_exclude:
   - .vscode/
   - .changeset/
 actions:
+  - name: Swatinem/rust-cache/v2.8.2
+    ref: v2.8.2
+    ref_type: tag
+    sha: 779680da715d629ac1d338a641029a2f4372abb5
+    exclude:
+      - src/
+      - tests/
+      - tsconfig*.json
+      - package-lock.json
+      - CHANGELOG*
+    notes: >-
+      Node action; runs dist/restore/index.js, dist/save/index.js. excluded: src/, tests/,
+      tsconfig*.json, package-lock.json, CHANGELOG* Consumers: vocs.
+    upstream: Swatinem/rust-cache
+    strip_dev_dependencies: true
+
+  - name: Swatinem/rust-cache/v2.9.2
+    ref: v2.9.2
+    ref_type: tag
+    sha: 6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+    exclude:
+      - src/
+      - tests/
+      - tsconfig*.json
+      - rollup.config.*
+      - package-lock.json
+      - CHANGELOG*
+    notes: >-
+      Node action; runs dist/restore.js, dist/save.js. excluded: src/, tests/, tsconfig*.json,
+      rollup.config.*, package-lock.json, CHANGELOG* Consumers: chaindex, zyzz, reth, shiki2,
+      twoslash2.
+    upstream: Swatinem/rust-cache
+    strip_dev_dependencies: true
+
+  - name: Swatinem/rust-cache/v2.9.3
+    ref: v2.9.3
+    ref_type: tag
+    sha: d1527c8f67ef9af357290475d4af4b0fab8f12e0
+    exclude:
+      - src/
+      - tests/
+      - tsconfig*.json
+      - rollup.config.*
+      - package-lock.json
+      - CHANGELOG*
+    notes: >-
+      Node action; runs dist/restore.js, dist/save.js. excluded: src/, tests/, tsconfig*.json,
+      rollup.config.*, package-lock.json, CHANGELOG* Consumers: solilo.
+    upstream: Swatinem/rust-cache
+    strip_dev_dependencies: true
+
+  - name: andresz1/size-limit-action/v1.8.0
+    ref: v1.8.0
+    ref_type: tag
+    sha: 94bc357df29c36c8f8d50ea497c3e225c3c95d1d
+    exclude:
+      - src/
+      - tsconfig*.json
+      - jest.config.*
+      - .eslintrc*
+      - .eslintignore
+      - package-lock.json
+      - '**/*.spec.*'
+    notes: >-
+      Node action; runs dist/index.js. assets kept: named as a path in the code excluded: src/,
+      tsconfig*.json, jest.config.*, .eslintrc*, .eslintignore, package-lock.json, **/*.spec.* kept
+      although usually excludable: assets/ (referenced) Consumers: viem.
+    upstream: andresz1/size-limit-action
+    strip_dev_dependencies: true
+
+  - name: astral-sh/setup-uv/rev-d0cc045d04cc
+    ref: v6.8.0
+    ref_type: tag
+    sha: d0cc045d04ccac9d8b7881df0226f9e82c39688e
+    exclude:
+      - src/
+      - __tests__/
+      - tsconfig*.json
+      - jest.config.*
+      - package-lock.json
+      - '**/*.test.*'
+      - '**/*.ts'
+      - biome.json
+      - dist/update-known-versions/
+    notes: >-
+      Node action; runs dist/setup/index.js, dist/save-cache/index.js. excluded: src/, __tests__/,
+      tsconfig*.json, jest.config.*, package-lock.json, **/*.test.*, **/*.ts, biome.json,
+      dist/update-known-versions/ Consumers: worksteps.
+    upstream: astral-sh/setup-uv
+    strip_dev_dependencies: true
+
+  - name: autofix-ci/action/v1.3.2
+    ref: v1.3.2
+    ref_type: tag
+    sha: 635ffb0c9798bd160680f18fd73371e355b85f27
+    exclude:
+      - tsconfig*.json
+      - package-lock.json
+      - CHANGELOG*
+      - '**/*.ts'
+    notes: >-
+      Node action; runs index.dist.js. excluded: tsconfig*.json, package-lock.json, CHANGELOG*,
+      **/*.ts Consumers: abitype.
+    upstream: autofix-ci/action
+    strip_dev_dependencies: true
+
+  - name: awalsh128/cache-apt-pkgs-action/rev-553a35bb8ebd
+    ref: latest
+    ref_type: tag
+    sha: 553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: mppx.
+    upstream: awalsh128/cache-apt-pkgs-action
+
+  - name: benchmark-action/github-action-benchmark/v1.22.2
+    ref: v1.22.2
+    ref_type: tag
+    sha: 4322e5726e6334590d251fc4f92bec0efafc45dc
+    exclude:
+      - package-lock.json
+      - '**/*.d.ts'
+      - '**/*.test.*'
+      - '**/*.ts'
+      - action-types.yml
+    notes: >-
+      Node action; runs dist/src/index.js. node_modules kept: entry files import @actions/core
+      excluded: package-lock.json, **/*.d.ts, **/*.test.*, **/*.ts, action-types.yml kept although
+      usually excludable: node_modules/ (referenced) Consumers: zyzz.
+    upstream: benchmark-action/github-action-benchmark
+    strip_dev_dependencies: true
+
   - name: changesets/action/abitype
     ref: v2.1.2
     ref_type: tag
@@ -75,6 +208,30 @@ actions:
       **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/
     upstream: changesets/action
 
+  - name: changesets/action/v1.7.0
+    ref: v1.7.0
+    ref_type: tag
+    sha: 6a0a831ff30acef54f2c6aa1cbbc1096b066edaf
+    exclude:
+      - src/
+      - __fixtures__/
+      - tsconfig*.json
+      - rollup.config.*
+      - yarn.lock
+      - .node-version
+      - CHANGELOG*
+      - '**/*.d.ts'
+      - '**/*.test.*'
+      - '**/*.ts'
+      - scripts/
+      - types/
+    notes: >-
+      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
+      **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/ Consumers: curl.md.
+    upstream: changesets/action
+    strip_dev_dependencies: true
+
   - name: changesets/action/viem
     ref: v1.4.10
     ref_type: tag
@@ -122,6 +279,132 @@ actions:
       pr-status/, rolldown.config.js, scripts/
     upstream: changesets/action
 
+  - name: cloudflare/wrangler-action/rev-9acf94ace14e
+    ref: v3.15.0
+    ref_type: tag
+    sha: 9acf94ace14e7dc412b076f2c5c20b8ce93c79cd
+    exclude: []
+    notes: >-
+      Node action; runs dist/index.mjs. Consumers: tips.sh, frog, monoshot, openstats.
+    upstream: cloudflare/wrangler-action
+
+  - name: cloudflare/wrangler-action/v3.14.1
+    ref: v3.14.1
+    ref_type: tag
+    sha: da0e0dfe58b7a431659754fdf3f186c529afbe65
+    exclude: []
+    notes: >-
+      Node action; runs dist/index.mjs. Consumers: curl.md.
+    upstream: cloudflare/wrangler-action
+
+  - name: cloudflare/wrangler-action/v4.0.0
+    ref: v4.0.0
+    ref_type: tag
+    sha: ebbaa1584979971c8614a24965b4405ff95890e0
+    exclude: []
+    notes: >-
+      Node action; runs dist/index.mjs. Consumers: chaindex, cove.
+    upstream: cloudflare/wrangler-action
+
+  - name: cloudflare/wrangler-action/v4.1.3
+    ref: v4.1.3
+    ref_type: tag
+    sha: 953926a2e2182532811c01a25e53647d93bf07c0
+    exclude:
+      - src/
+      - tsconfig*.json
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.spec.*'
+      - '**/*.ts'
+      - scripts/
+    notes: >-
+      Node action; runs dist/index.mjs. package-lock.json kept: named as a path in the code
+      excluded: src/, tsconfig*.json, .prettierrc*, .prettierignore, package-lock.json, CHANGELOG*,
+      **/*.test.*, **/*.spec.*, **/*.ts, scripts/ Consumers: zyzz, twoslash2.
+    upstream: cloudflare/wrangler-action
+    strip_dev_dependencies: true
+
+  - name: codecov/codecov-action/rev-fb8b3582c8e4
+    ref: v7.0.0
+    ref_type: tag
+    sha: fb8b3582c8e4def4969c97caa2f19720cb33a72f
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: viem-v3, nethermind.
+    upstream: codecov/codecov-action
+
+  - name: codecov/codecov-action/v4.6.0
+    ref: v4.6.0
+    ref_type: tag
+    sha: b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238
+    exclude:
+      - src/
+      - tsconfig*.json
+      - jest.config.*
+      - .eslintrc*
+      - package-lock.json
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.ts'
+      - Makefile
+      - demo/
+      - hooks/
+      - install.sh
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, jest.config.*, .eslintrc*,
+      package-lock.json, CHANGELOG*, **/*.test.*, **/*.ts, Makefile, demo/, hooks/, install.sh
+      Consumers: viem.
+    upstream: codecov/codecov-action
+    strip_dev_dependencies: true
+
+  - name: codecov/codecov-action/v5.5.1
+    ref: v5.5.1
+    ref_type: tag
+    sha: 5a1091511ad55cbe89839c7260b706298ca349f7
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: wagmi.
+    upstream: codecov/codecov-action
+
+  - name: codecov/codecov-action/v7.1.1
+    ref: v7.1.1
+    ref_type: tag
+    sha: 303a32d7a59b442fa8d48b6a1cc6825c09c847a5
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: abitype.
+    upstream: codecov/codecov-action
+
+  - name: davelosert/vitest-coverage-report-action/v2.13.1
+    ref: v2.13.1
+    ref_type: tag
+    sha: 8f86cfb56ed6d5613ea8cdc5259f207fbfd51ece
+    exclude:
+      - src/
+      - test/
+      - docs/
+      - tsconfig*.json
+      - vitest.config.*
+      - package-lock.json
+      - .npmrc
+      - release.config.*
+      - '**/*.test.*'
+      - biome.json
+      - esbuild.cjs
+    notes: >-
+      Node action; runs dist/index.js. vitest.config.mjs kept: named as a path in the code excluded:
+      src/, test/, docs/, tsconfig*.json, vitest.config.*, package-lock.json, .npmrc,
+      release.config.*, **/*.test.*, biome.json, esbuild.cjs Consumers: zyzz, twoslash2.
+    upstream: davelosert/vitest-coverage-report-action
+    strip_dev_dependencies: true
+
   - name: dessant/lock-threads/v5
     ref: v5.0.1
     ref_type: tag
@@ -158,6 +441,305 @@ actions:
       Node action; runs dist/index.js. excluded: src/, assets/, .prettierrc*, .prettierignore,
       package-lock.json, .npmrc, .nvmrc, CHANGELOG*
     upstream: dessant/lock-threads
+
+  - name: docker/login-action/v4.6.0
+    ref: v4.6.0
+    ref_type: tag
+    sha: dbcb813823bdd20940b903addbd779551569679f
+    exclude:
+      - src/
+      - __tests__/
+      - tsconfig*.json
+      - vitest.config.*
+      - eslint.config.*
+      - .prettierrc*
+      - .prettierignore
+      - yarn.lock
+      - .yarnrc*
+      - .dockerignore
+      - codecov.yml
+      - '**/*.test.*'
+      - '*.Dockerfile'
+      - docker-bake.hcl
+    notes: >-
+      Node action; runs dist/index.cjs. excluded: src/, __tests__/, tsconfig*.json, vitest.config.*,
+      eslint.config.*, .prettierrc*, .prettierignore, yarn.lock, .yarnrc*, .dockerignore,
+      codecov.yml, **/*.test.*, *.Dockerfile, docker-bake.hcl Consumers: chaindex, zero.
+    upstream: docker/login-action
+    strip_dev_dependencies: true
+
+  - name: docker/setup-buildx-action/v4.2.0
+    ref: v4.2.0
+    ref_type: tag
+    sha: bb05f3f5519dd87d3ba754cc423b652a5edd6d2c
+    exclude:
+      - src/
+      - __tests__/
+      - tsconfig*.json
+      - vitest.config.*
+      - eslint.config.*
+      - .prettierrc*
+      - .prettierignore
+      - yarn.lock
+      - .yarnrc*
+      - .dockerignore
+      - codecov.yml
+      - '**/*.test.*'
+      - '*.Dockerfile'
+      - docker-bake.hcl
+    notes: >-
+      Node action; runs dist/index.cjs. excluded: src/, __tests__/, tsconfig*.json, vitest.config.*,
+      eslint.config.*, .prettierrc*, .prettierignore, yarn.lock, .yarnrc*, .dockerignore,
+      codecov.yml, **/*.test.*, *.Dockerfile, docker-bake.hcl Consumers: chaindex.
+    upstream: docker/setup-buildx-action
+    strip_dev_dependencies: true
+
+  - name: dtolnay/rust-toolchain/rev-6c977a6ca407
+    ref: 6c977a6ca407
+    ref_type: commit
+    sha: 6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772
+    exclude:
+      - '**'
+    notes: >-
+      Composite action; every step is inline, only action.yml is loaded. excluded: everything except
+      action.yml and LICENSE Consumers: chaindex.
+    upstream: dtolnay/rust-toolchain
+
+  - name: dtolnay/rust-toolchain/rev-b725eda52536
+    ref: stable
+    ref_type: branch
+    sha: b725eda525362e7cf34af9a7243cac1e3f01a7ec
+    exclude:
+      - '**'
+    notes: >-
+      Composite action; every step is inline, only action.yml is loaded. excluded: everything except
+      action.yml and LICENSE Consumers: vocs.
+    upstream: dtolnay/rust-toolchain
+
+  - name: foundry-rs/foundry-toolchain/v1.5.0
+    ref: v1.5.0
+    ref_type: tag
+    sha: 50d5a8956f2e319df19e6b57539d7e2acb9f8c1e
+    exclude:
+      - src/
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - .nvmrc
+    notes: >-
+      Node action; runs dist/index.js, dist/save/index.js. excluded: src/, .prettierrc*,
+      .prettierignore, package-lock.json, .nvmrc Consumers: wagmi.
+    upstream: foundry-rs/foundry-toolchain
+    strip_dev_dependencies: true
+
+  - name: foundry-rs/foundry-toolchain/v1.6.0
+    ref: v1.6.0
+    ref_type: tag
+    sha: 8b0419c685ef46cb79ec93fbdc131174afceb730
+    exclude:
+      - src/
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - .nvmrc
+    notes: >-
+      Node action; runs dist/index.js, dist/save/index.js. excluded: src/, .prettierrc*,
+      .prettierignore, package-lock.json, .nvmrc Consumers: ox.
+    upstream: foundry-rs/foundry-toolchain
+    strip_dev_dependencies: true
+
+  - name: foundry-rs/foundry-toolchain/v1.9.2
+    ref: v1.9.2
+    ref_type: tag
+    sha: dba66c27052e63476d886f22216e119ba7e615bf
+    exclude:
+      - src/
+      - tsconfig*.json
+      - .prettierrc*
+      - .prettierignore
+      - pnpm-lock.yaml
+      - .nvmrc
+      - '**/*.d.ts'
+      - pnpm-workspace.yaml
+    notes: >-
+      Node action; runs dist/index.js, dist/save/index.js. excluded: src/, tsconfig*.json,
+      .prettierrc*, .prettierignore, pnpm-lock.yaml, .nvmrc, **/*.d.ts, pnpm-workspace.yaml
+      Consumers: viem.
+    upstream: foundry-rs/foundry-toolchain
+    strip_dev_dependencies: true
+
+  - name: jdx/mise-action/v4.2.5
+    ref: v4.2.5
+    ref_type: tag
+    sha: 3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518
+    exclude:
+      - src/
+      - tsconfig*.json
+      - eslint.config.*
+      - .eslintrc*
+      - .prettierrc*
+      - .prettierignore
+      - rollup.config.*
+      - .npmrc
+      - CHANGELOG*
+      - .codex/
+      - .entire/
+      - aube-lock.yaml
+      - cliff.toml
+      - greptile.json
+      - mise.lock
+      - scripts/
+    notes: >-
+      Node action; runs dist/index.js. mise.toml kept: named as a path in the code excluded: src/,
+      tsconfig*.json, eslint.config.*, .eslintrc*, .prettierrc*, .prettierignore, rollup.config.*,
+      .npmrc, CHANGELOG*, .codex/, .entire/, aube-lock.yaml, cliff.toml, greptile.json, mise.lock,
+      scripts/ Consumers: chaindex.
+    upstream: jdx/mise-action
+    strip_dev_dependencies: true
+
+  - name: marocchino/sticky-pull-request-comment/v2.9.4
+    ref: v2.9.4
+    ref_type: tag
+    sha: 773744901bac0e8cbb5a0dc842800d45e9b2b405
+    exclude:
+      - src/
+      - __tests__/
+      - tsconfig*.json
+      - vitest.config.*
+      - yarn.lock
+      - .tool-versions
+      - '**/*.test.*'
+      - biome.json
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, __tests__/, tsconfig*.json, vitest.config.*,
+      yarn.lock, .tool-versions, **/*.test.*, biome.json Consumers: zyzz.
+    upstream: marocchino/sticky-pull-request-comment
+    strip_dev_dependencies: true
+
+  - name: nick-fields/retry/rev-ad984534de44
+    ref: v4.0.0
+    ref_type: tag
+    sha: ad984534de44a9489a53aefd81eb77f87c70dc60
+    exclude:
+      - src/
+      - tsconfig*.json
+      - package-lock.json
+      - .nvmrc
+      - .releaserc*
+      - '**/*.test.*'
+      - .config/
+      - sample.env
+      - test-data/
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, package-lock.json, .nvmrc,
+      .releaserc*, **/*.test.*, .config/, sample.env, test-data/ Consumers: viem-v3.
+    upstream: nick-fields/retry
+    strip_dev_dependencies: true
+
+  - name: nick-fields/retry/v3.0.2
+    ref: v3.0.2
+    ref_type: tag
+    sha: ce71cc2ab81d554ebbe88c79ab5975992d79ba08
+    exclude:
+      - src/
+      - tsconfig*.json
+      - package-lock.json
+      - .nvmrc
+      - .releaserc*
+      - '**/*.test.*'
+      - .config/
+      - sample.env
+      - test-data/
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, package-lock.json, .nvmrc,
+      .releaserc*, **/*.test.*, .config/, sample.env, test-data/ Consumers: wagmi, viem.
+    upstream: nick-fields/retry
+    strip_dev_dependencies: true
+
+  - name: ossf/scorecard-action/v2.4.1
+    ref: v2.4.1
+    ref_type: tag
+    sha: f49aabe0b5af0936a0987cfb85d86b75731b0186
+    exclude:
+      - '**'
+    notes: >-
+      runs the prebuilt image docker://ghcr.io/ossf/scorecard-action:v2.4.1; nothing else in the
+      repo is loaded Consumers: wagmi.
+    upstream: ossf/scorecard-action
+
+  - name: ossf/scorecard-action/v2.5.0
+    ref: v2.5.0
+    ref_type: tag
+    sha: fa7117db83c52d787ae5a89f350999701505d78e
+    exclude:
+      - '**'
+    notes: >-
+      runs the prebuilt image docker://ghcr.io/ossf/scorecard-action:v2.5.0; nothing else in the
+      repo is loaded Consumers: mppx.
+    upstream: ossf/scorecard-action
+
+  - name: oven-sh/setup-bun/v2.2.0
+    ref: v2.2.0
+    ref_type: tag
+    sha: 0c5077e51419868618aeaa5fe8019c62421857d6
+    exclude:
+      - src/
+      - tests/
+      - tsconfig*.json
+      - .prettierrc*
+      - bun.lock
+      - '**/*.spec.*'
+      - patches/
+    notes: >-
+      Node action; runs dist/setup/index.js, dist/cache-save/index.js. bunfig.toml kept: named as a
+      path in the code excluded: src/, tests/, tsconfig*.json, .prettierrc*, bun.lock, **/*.spec.*,
+      patches/ Consumers: viem, curl.md, incur, reth, solilo.
+    upstream: oven-sh/setup-bun
+    strip_dev_dependencies: true
+
+  - name: peter-evans/create-pull-request/v8.1.1
+    ref: v8.1.1
+    ref_type: tag
+    sha: 5f6978faf089d4d20b00c7766989d076bb2fc7f1
+    exclude:
+      - src/
+      - __test__/
+      - docs/
+      - tsconfig*.json
+      - jest.config.*
+      - .eslintrc*
+      - .eslintignore
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+      - '**/*.test.*'
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, __test__/, docs/, tsconfig*.json,
+      jest.config.*, .eslintrc*, .eslintignore, .prettierrc*, .prettierignore, package-lock.json,
+      **/*.test.* Consumers: mppx.
+    upstream: peter-evans/create-pull-request
+    strip_dev_dependencies: true
+
+  - name: planetscale/setup-pscale-action/rev-b6a50ee45b4b
+    ref: v1
+    ref_type: tag
+    sha: b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af
+    exclude:
+      - src/
+      - doc/
+      - tsconfig*.json
+      - jest.config.*
+      - .eslintrc*
+      - .eslintignore
+      - .prettierrc*
+      - .prettierignore
+      - package-lock.json
+    notes: >-
+      Node action; runs dist/index.js. excluded: src/, doc/, tsconfig*.json, jest.config.*,
+      .eslintrc*, .eslintignore, .prettierrc*, .prettierignore, package-lock.json Consumers:
+      curl.md.
+    upstream: planetscale/setup-pscale-action
+    strip_dev_dependencies: true
 
   - name: pnpm/action-setup/v4
     ref: v4.1.0
@@ -203,3 +785,94 @@ actions:
     notes: >-
       Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
     upstream: pnpm/action-setup
+
+  - name: preactjs/compressed-size-action/2.8.0
+    ref: 2.8.0
+    ref_type: tag
+    sha: 946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a
+    exclude:
+      - src/
+      - tests/
+      - package-lock.json
+      - '**/*.spec.*'
+    notes: >-
+      Node action; runs index.js. package-lock.json kept: named as a path in the code excluded:
+      src/, tests/, package-lock.json, **/*.spec.* Consumers: wagmi, abitype.
+    upstream: preactjs/compressed-size-action
+    strip_dev_dependencies: true
+
+  - name: re-actors/alls-green/v1.2.2
+    ref: v1.2.2
+    ref_type: tag
+    sha: 05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe
+    exclude: []
+    notes: >-
+      Composite action; loads src from the action directory. kept although usually excludable: src/
+      (referenced) Consumers: chaindex.
+    upstream: re-actors/alls-green
+
+  - name: rust-lang/crates-io-auth-action/rev-3268eb413133
+    ref: v1.0.6
+    ref_type: tag
+    sha: 3268eb413133e2960fa4ae0e963ca76380c54cd9
+    exclude:
+      - src/
+      - tsconfig*.json
+      - eslint.config.*
+      - .prettierrc*
+      - .prettierignore
+      - pnpm-lock.yaml
+      - .node-version
+      - '**/*.test.*'
+      - '**/*.ts'
+      - mock/
+      - pnpm-workspace.yaml
+    notes: >-
+      Node action; runs dist/main.js, dist/post.js. excluded: src/, tsconfig*.json, eslint.config.*,
+      .prettierrc*, .prettierignore, pnpm-lock.yaml, .node-version, **/*.test.*, **/*.ts, mock/,
+      pnpm-workspace.yaml Consumers: vocs.
+    upstream: rust-lang/crates-io-auth-action
+    strip_dev_dependencies: true
+
+  - name: stefanzweifel/git-auto-commit-action/v6.0.1
+    ref: v6.0.1
+    ref_type: tag
+    sha: 778341af668090896ca464160c2def5d1d1a3eb0
+    exclude:
+      - tests/
+      - package-lock.json
+      - CHANGELOG*
+    notes: >-
+      Node action; runs index.js. excluded: tests/, package-lock.json, CHANGELOG* Consumers: wagmi.
+    upstream: stefanzweifel/git-auto-commit-action
+    strip_dev_dependencies: true
+
+  - name: taiki-e/install-action/v2.86.1
+    ref: v2.86.1
+    ref_type: tag
+    sha: 288e746965032cfcc232e09af2daf5f23c14d780
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: chaindex.
+    upstream: taiki-e/install-action
+
+  - name: zizmorcore/zizmor-action/v0.5.4
+    ref: v0.5.4
+    ref_type: tag
+    sha: b572f7b1a1c2d41efaab43d504f68d215c3cd727
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: curl.md, cove.
+    upstream: zizmorcore/zizmor-action
+
+  - name: zizmorcore/zizmor-action/v0.7.0
+    ref: v0.7.0
+    ref_type: tag
+    sha: f9597c869b2e67095f9b527070297a13a6efe928
+    exclude: []
+    notes: >-
+      whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
+      itself (working directory, module path or similar) Consumers: zyzz, shiki2, twoslash2.
+    upstream: zizmorcore/zizmor-action

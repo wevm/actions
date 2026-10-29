@@ -1,0 +1,36 @@
+name: 'size-limit-action'
+description: 'size-limit action'
+author: 'Andres Alvarez <a.alvarez.sor@gmail.com>'
+branding:
+  icon: 'activity'
+  color: 'green'
+inputs:
+  github_token:
+    required: true
+    description: 'a github access token'
+  build_script:
+    required: false
+    description: 'a custom npm script to build'
+  clean_script:
+    required: false
+    description: 'a npm script to clean up build directory'
+  skip_step:
+    required: false
+    description: 'which step to skip, either "install" or "build"'
+  directory:
+    required: false
+    description: "a custom subdirectory"
+  windows_verbatim_arguments:
+    required: false
+    description: "exec `size-limit` with the option `windowsVerbatimArguments`"
+    default: true
+  script:
+    required: false
+    default: "npx size-limit --json"
+    description: "The script used to generate size-limit results"
+  package_manager:
+    required: false
+    description: "The package manager used to run the build and install commands. If not provided, the manager will be auto detected. Example values: `yarn`, `npm`, `pnpm`, `bun`."
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

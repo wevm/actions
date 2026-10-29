@@ -1,0 +1,42 @@
+{
+  "name": "retry",
+  "version": "0.0.0-managed-by-semantic-release",
+  "description": "Retries a GitHub Action step on failure or timeout.",
+  "scripts": {
+    "lint:base": "eslint --config ./.config/.eslintrc.js ",
+    "lint": "npm run lint:base -- .",
+    "local": "npm run prepare && node -r dotenv/config ./dist/index.js",
+    "prepare": "ncc build src/index.ts && husky install",
+    "style:base": "prettier --config ./.config/.prettierrc.yml --ignore-path ./.config/.prettierignore --write ",
+    "style": "npm run style:base -- .",
+    "test": "jest -c ./.config/jest.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick-fields/retry.git"
+  },
+  "keywords": [],
+  "author": "Nick Fields",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nick-fields/retry/issues"
+  },
+  "homepage": "https://github.com/nick-fields/retry#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "milliseconds": "^1.0.3",
+    "tree-kill": "^1.2.2"
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "npm run style:base --",
+      "npm run lint:base --"
+    ],
+    "**/*.{md,yaml,yml}": [
+      "npm run style:base --"
+    ],
+    "**/*.{yaml,yml}": [
+      "npx yamllint "
+    ]
+  }
+}

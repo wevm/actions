@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/ossf/scorecard-action",
+  "ref": "v2.5.0",
+  "ref_type": "tag",
+  "sha": "fa7117db83c52d787ae5a89f350999701505d78e",
+  "upstream_commit_date": "2026-10-11T22:39:04-04:00",
+  "readme_url": "https://github.com/ossf/scorecard-action/blob/fa7117db83c52d787ae5a89f350999701505d78e/README.md",
+  "description": "Run OSSF Scorecard checks and output results in SARIF, JSON, or in-toto format",
+  "consume_as": "wevm/actions/vendor/ossf/scorecard-action/v2.5.0@<reviewed-sha>",
+  "files_removed": 72,
+  "nested_rewrites": []
+}

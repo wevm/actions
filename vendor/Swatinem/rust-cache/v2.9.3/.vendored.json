@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/Swatinem/rust-cache",
+  "ref": "v2.9.3",
+  "ref_type": "tag",
+  "sha": "d1527c8f67ef9af357290475d4af4b0fab8f12e0",
+  "upstream_commit_date": "2026-10-20T15:45:46+02:00",
+  "readme_url": "https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md",
+  "description": "A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults.",
+  "consume_as": "wevm/actions/vendor/Swatinem/rust-cache/v2.9.3@<reviewed-sha>",
+  "files_removed": 45,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

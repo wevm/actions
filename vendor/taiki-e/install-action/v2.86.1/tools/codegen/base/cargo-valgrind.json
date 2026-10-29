@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/jfrimmel/cargo-valgrind",
+  "license_markdown": "[MIT](https://github.com/jfrimmel/cargo-valgrind/blob/master/LICENSE-MIT) OR [Apache-2.0](https://github.com/jfrimmel/cargo-valgrind/blob/master/LICENSE-APACHE)",
+  "tag_prefix": "",
+  "rust_crate": "${package}",
+  "asset_name": "${package}-${version}-${rust_target}.tar.gz",
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {
+      "asset_name": "${package}-${version}-${rust_target}.zip"
+    }
+  }
+}

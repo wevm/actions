@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/benchmark-action/github-action-benchmark",
+  "ref": "v1.22.2",
+  "ref_type": "tag",
+  "sha": "4322e5726e6334590d251fc4f92bec0efafc45dc",
+  "upstream_commit_date": "2026-09-15T12:01:27+02:00",
+  "readme_url": "https://github.com/benchmark-action/github-action-benchmark",
+  "description": "Continuous Benchmark using GitHub pages as dash board for keeping performance",
+  "consume_as": "wevm/actions/vendor/benchmark-action/github-action-benchmark/v1.22.2@<reviewed-sha>",
+  "files_removed": 516,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "size-limit-action",
+  "version": "1.8.0",
+  "private": true,
+  "description": "size-limit action",
+  "main": "dist/index.js",
+  "license": "ISC",
+  "scripts": {
+    "format": "prettier --write **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "test": "jest",
+    "build": "ncc build src/main.ts -o dist",
+    "size-build": "npm run build",
+    "size": "npm run size-build && size-limit"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "4500 ms"
+    }
+  ],
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/exec": "^1.0.3",
+    "@actions/github": "^2.1.1",
+    "bytes": "^3.1.0",
+    "has-pnpm": "^1.1.1",
+    "has-yarn": "^2.1.0",
+    "markdown-table": "^2.0.0"
+  }
+}

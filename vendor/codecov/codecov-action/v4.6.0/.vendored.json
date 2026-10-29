@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/codecov/codecov-action",
+  "ref": "v4.6.0",
+  "ref_type": "tag",
+  "sha": "b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238",
+  "upstream_commit_date": "2024-10-01T09:51:13-05:00",
+  "readme_url": "https://github.com/codecov/codecov-action/blob/b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238/README.md",
+  "description": "GitHub Action that uploads coverage reports for your repository to codecov.io",
+  "consume_as": "wevm/actions/vendor/codecov/codecov-action/v4.6.0@<reviewed-sha>",
+  "files_removed": 32,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

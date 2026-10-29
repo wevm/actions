@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/cloudflare/wrangler-action",
+  "ref": "v4.0.0",
+  "ref_type": "tag",
+  "sha": "ebbaa1584979971c8614a24965b4405ff95890e0",
+  "upstream_commit_date": "2026-05-12T20:35:02Z",
+  "readme_url": "https://github.com/cloudflare/wrangler-action",
+  "description": "Deploy your Cloudflare projects from GitHub using Wrangler",
+  "consume_as": "wevm/actions/vendor/cloudflare/wrangler-action/v4.0.0@<reviewed-sha>",
+  "files_removed": 0,
+  "nested_rewrites": []
+}

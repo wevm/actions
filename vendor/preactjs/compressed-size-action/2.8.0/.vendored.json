@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/preactjs/compressed-size-action",
+  "ref": "2.8.0",
+  "ref_type": "tag",
+  "sha": "946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a",
+  "upstream_commit_date": "2025-02-14T01:04:41-06:00",
+  "readme_url": "https://github.com/preactjs/compressed-size-action/blob/946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a/README.md",
+  "description": "Get compressed size differences for every PR",
+  "consume_as": "wevm/actions/vendor/preactjs/compressed-size-action/2.8.0@<reviewed-sha>",
+  "files_removed": 9,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

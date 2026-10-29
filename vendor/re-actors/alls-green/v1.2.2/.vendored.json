@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/re-actors/alls-green",
+  "ref": "v1.2.2",
+  "ref_type": "tag",
+  "sha": "05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe",
+  "upstream_commit_date": "2022-10-15T00:36:21+02:00",
+  "readme_url": "https://github.com/re-actors/alls-green/blob/05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe/README.md",
+  "description": "GitHub Action for checking that the test matrix jobs are all successful before proceeding. To be used in branch protection",
+  "consume_as": "wevm/actions/vendor/re-actors/alls-green/v1.2.2@<reviewed-sha>",
+  "files_removed": 4,
+  "nested_rewrites": []
+}

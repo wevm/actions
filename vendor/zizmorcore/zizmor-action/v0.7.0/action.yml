@@ -1,0 +1,135 @@
+name: zizmor-action
+description: Run zizmor from GitHub Actions 🌈
+
+branding:
+  icon: "shield"
+  color: "blue"
+
+outputs:
+  output-file:
+    description: Filepath to static analysis results in SARIF format"
+    value: ${{ steps.run-zizmor.outputs.sarif-file }}
+
+inputs:
+  inputs:
+    description: |
+      The inputs to pass to `zizmor`.
+
+      This should be a whitespace-separated list of inputs. Inputs will
+      be split with shell splitting rules.
+    required: false
+    default: "."
+  collect:
+    description: |
+      The collection mode to use.
+
+      This can be 'all', 'default' (default), 'workflows', 'actions', or 'dependabot'.
+
+      See https://docs.zizmor.sh/usage/#input-collection for more information.
+    required: false
+    default: 'default'
+  online-audits:
+    description: |
+      Whether to run online audits.
+    required: false
+    default: "true"
+  persona:
+    description: |
+      The auditing persona to use.
+
+      This can be 'regular' (default), 'pedantic', or 'auditor'.
+    required: false
+    default: "regular"
+  min-severity:
+    description: |
+      The minimum severity to report findings for.
+
+      This can be 'unknown', 'informational', 'low', 'medium', or 'high'.
+    required: false
+  min-confidence:
+    description: |
+      The minimum confidence to report findings for.
+
+      This can be 'unknown', 'low', 'medium', or 'high'.
+    required: false
+  version:
+    description: |
+      The version of zizmor to use.
+
+      Either an exact `X.Y.Z` version or `latest` (the default), i.e. the
+      newest zizmor release this action knows about.
+    required: false
+    default: latest
+  token:
+    description: |
+      The GitHub API token to use for zizmor online-audits (if enabled).
+    required: false
+    default: ${{ github.token }}
+  advanced-security:
+    description: |
+      Whether to enable GitHub Advanced Security for zizmor's results.
+
+      This will use the SARIF output format under the hood and will upload the
+      results to the repository's security tab.
+    required: false
+    default: "true"
+  color:
+    description: |
+      Whether zizmor should output colorized CLI output.
+    required: false
+    default: "true"
+  annotations:
+    description: |
+      Whether to emit GitHub annotations for zizmor's results.
+
+      This will use GitHub's workflow commands under the hood.
+
+      This option is **mutually exclusive** with `advanced-security: true`.
+      You must explicitly set `advanced-security: false` to enable this option.
+    required: false
+    default: "false"
+  config:
+    description: Path to a custom zizmor configuration file Path (e.g., zizmor.yml).
+    required: false
+  fail-on-no-inputs:
+    description: |
+      Whether the action should fail if no inputs are collected by zizmor.
+
+      By default, zizmor will fail if it couldn't collect any inputs to audit.
+      Setting this option to `false` will make the action succeed in such cases,
+      with a warning message instead.
+
+      This input only works with zizmor v1.21.0 and later. Earlier versions
+      will always fail on no inputs.
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Run zizmor
+      id: run-zizmor
+      run: |
+        "${GITHUB_ACTION_PATH}/action.sh"
+      env:
+        GHA_ZIZMOR_INPUTS: ${{ inputs.inputs }}
+        GHA_ZIZMOR_COLLECT: ${{ inputs.collect }}
+        GHA_ZIZMOR_ONLINE_AUDITS: ${{ inputs.online-audits }}
+        GHA_ZIZMOR_PERSONA: ${{ inputs.persona }}
+        GHA_ZIZMOR_MIN_SEVERITY: ${{ inputs.min-severity }}
+        GHA_ZIZMOR_MIN_CONFIDENCE: ${{ inputs.min-confidence }}
+        GHA_ZIZMOR_VERSION: ${{ inputs.version }}
+        GHA_ZIZMOR_TOKEN: ${{ inputs.token }}
+        GHA_ZIZMOR_ADVANCED_SECURITY: ${{ inputs.advanced-security }}
+        GHA_ZIZMOR_COLOR: ${{ inputs.color }}
+        GHA_ZIZMOR_ANNOTATIONS: ${{ inputs.annotations }}
+        GHA_ZIZMOR_CONFIG: ${{ inputs.config }}
+        GHA_ZIZMOR_FAIL_ON_NO_INPUTS: ${{ inputs.fail-on-no-inputs }}
+      shell: bash
+
+    - name: Upload SARIF file to GitHub Advanced Security
+      uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+      if: ${{ inputs.advanced-security == 'true' }}
+      with:
+        sarif_file: ${{ steps.run-zizmor.outputs.sarif-file }}
+        category: zizmor

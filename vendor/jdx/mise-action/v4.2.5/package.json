@@ -1,0 +1,46 @@
+{
+  "name": "mise-action",
+  "description": "mise tool setup action",
+  "version": "4.2.5",
+  "author": "jdx",
+  "type": "module",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdx/mise-action.git"
+  },
+  "keywords": [
+    "actions",
+    "mise",
+    "setup"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "all": "npm run format:write && npm run lint && npm run package",
+    "bundle": "npm run format:write && npm run package",
+    "format:check": "prettier --check **/*.ts",
+    "format:write": "prettier --write **/*.ts",
+    "lint": "eslint . && npm run format:check",
+    "package": "rimraf ./dist && rollup --config rollup.config.mjs",
+    "package:watch": "npm run package -- --watch",
+    "version": "./scripts/version.sh",
+    "prepare": "husky"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@actions/cache": "^6.0.0",
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "@actions/glob": "^0.7.0",
+    "@actions/io": "^3.0.0",
+    "@types/handlebars": "^4.0.40",
+    "handlebars": "^4.7.8"
+  },
+  "aube": {
+    "allowBuilds": {
+      "unrs-resolver": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "repository": "https://github.com/google/osv-scanner",
+  "license_markdown": "[Apache-2.0](https://github.com/google/osv-scanner/blob/main/LICENSE)",
+  "tag_prefix": "v",
+  "version_range": ">= 1.0.0",
+  "platform": {
+    "x86_64_linux_musl": {
+      "asset_name": "${package}_linux_amd64"
+    },
+    "x86_64_macos": {
+      "asset_name": "${package}_darwin_amd64"
+    },
+    "x86_64_windows": {
+      "asset_name": "${package}_windows_amd64${exe}"
+    },
+    "aarch64_linux_musl": {
+      "asset_name": "${package}_linux_arm64"
+    },
+    "aarch64_macos": {
+      "asset_name": "${package}_darwin_arm64"
+    },
+    "aarch64_windows": {
+      "asset_name": "${package}_windows_arm64${exe}"
+    }
+  }
+}

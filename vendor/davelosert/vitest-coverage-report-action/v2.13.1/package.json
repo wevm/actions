@@ -1,0 +1,38 @@
+{
+  "name": "vitest-coverage-report-action",
+  "version": "0.0.0",
+  "description": "A GitHub Action to report the test coverage of vitest",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage.enabled true",
+    "test:export": "npx ts-node test/exportTestTable.ts",
+    "lint": "biome check",
+    "lint:write": "biome check --write",
+    "lint:ci": "biome ci",
+    "build": "rm -rf dist && node esbuild.cjs",
+    "start": "npm run build && node dist/index.js",
+    "typecheck": "npx tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davelosert/vitest-coverage-report-action.git"
+  },
+  "keywords": [
+    "vitest",
+    "coverage",
+    "nyc"
+  ],
+  "author": "David Losert <david@david-losert.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davelosert/vitest-coverage-report-action/issues"
+  },
+  "homepage": "https://github.com/davelosert/vitest-coverage-report-action#readme",
+  "dependencies": {
+    "@actions/core": "3.0.1",
+    "@actions/github": "9.1.1",
+    "common-tags": "1.8.2"
+  }
+}
