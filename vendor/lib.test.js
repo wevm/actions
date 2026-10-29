@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadManifest, applyExcludes, applyPackageTransforms, applySecurityPatches, globToRegExp, matchesAny, rewriteUsesText, compareVersions, normalizeCommitDate, updateReadmeText, README_BEGIN, README_END } from "./lib.mjs";
@@ -165,6 +165,18 @@ test("runtime imports retain nested dependency licenses while excluding document
     const removed = applyExcludes(dir, { keep: [], exclude: [] }, { default_exclude: ["**/*.md"] });
     assert.deepEqual(removed, ["node_modules/dependency/README.md"]);
     assert.equal(readFileSync(join(dependency, "LICENSE.md"), "utf8"), "Upstream license\n");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("exclusions remove documentation symlinks after removing their targets", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vendor-symlink-"));
+  try {
+    writeFileSync(join(dir, "AGENTS.md"), "Upstream guidance\n");
+    symlinkSync("AGENTS.md", join(dir, "CLAUDE.md"));
+    applyExcludes(dir, { keep: [], exclude: [] }, { default_exclude: ["**/*.md"] });
+    assert.deepEqual(readdirSync(dir), []);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

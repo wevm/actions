@@ -2,7 +2,7 @@
 // Manifest: ../vendor-manifest.yml (parsed with `yq`, which GitHub-hosted runners ship).
 // No npm dependencies: node >= 20, git, tar, yq.
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, posix, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -193,7 +193,7 @@ export function applyExcludes(dest, entry, manifest) {
   for (const rel of walk(dest)) {
     if (matchesAny(rel, keep)) continue;
     const hit = matchesAny(rel, exclude);
-    if (hit) { rmSync(join(dest, rel)); removed.push(rel); }
+    if (hit) { unlinkSync(join(dest, rel)); removed.push(rel); }
   }
   removeEmptyDirs(dest);
   return removed;
