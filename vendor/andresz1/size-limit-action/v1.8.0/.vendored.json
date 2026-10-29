@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/andresz1/size-limit-action",
+  "ref": "v1.8.0",
+  "ref_type": "tag",
+  "sha": "94bc357df29c36c8f8d50ea497c3e225c3c95d1d",
+  "upstream_commit_date": "2024-04-06T20:09:22+02:00",
+  "readme_url": "https://github.com/andresz1/size-limit-action/blob/94bc357df29c36c8f8d50ea497c3e225c3c95d1d/README.md",
+  "description": "size-limit action",
+  "consume_as": "wevm/actions/vendor/andresz1/size-limit-action/v1.8.0@<reviewed-sha>",
+  "files_removed": 14,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

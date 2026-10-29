@@ -1,0 +1,26 @@
+{
+  "repository": "https://github.com/taiki-e/cargo-no-dev-deps",
+  "license_markdown": "[Apache-2.0](https://github.com/taiki-e/cargo-no-dev-deps/blob/main/LICENSE-APACHE) OR [MIT](https://github.com/taiki-e/cargo-no-dev-deps/blob/main/LICENSE-MIT)",
+  "tag_prefix": "v",
+  "rust_crate": "${package}",
+  "asset_name": "${package}-${rust_target}.tar.gz",
+  "signing": {
+    "version_range": ">= 0.2.23",
+    "kind": {
+      "gh-attestation": {
+        "signer-workflow": "taiki-e/github-actions/.github/workflows/rust-release.yml"
+      }
+    }
+  },
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {},
+    "aarch64_linux_musl": {},
+    "aarch64_macos": {},
+    "aarch64_windows": {},
+    "powerpc64le_linux_musl": {},
+    "riscv64_linux_musl": {},
+    "s390x_linux_gnu": {}
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/mozilla/sccache",
+  "license_markdown": "[Apache-2.0](https://github.com/mozilla/sccache/blob/main/LICENSE)",
+  "tag_prefix": "v",
+  "rust_crate": "${package}",
+  "asset_name": "${package}-v${version}-${rust_target}.tar.gz",
+  "bin": "${package}-v${version}-${rust_target}/${package}${exe}",
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {},
+    "aarch64_linux_musl": {},
+    "aarch64_macos": {},
+    "aarch64_windows": {},
+    "riscv64_linux_musl": {},
+    "s390x_linux_musl": {}
+  }
+}

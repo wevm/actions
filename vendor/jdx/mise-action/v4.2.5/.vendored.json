@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/jdx/mise-action",
+  "ref": "v4.2.5",
+  "ref_type": "tag",
+  "sha": "3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518",
+  "upstream_commit_date": "2026-08-13T05:23:01-05:00",
+  "readme_url": "https://github.com/jdx/mise-action/blob/3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518/README.md",
+  "description": "Actions for working with mise runtime manager",
+  "consume_as": "wevm/actions/vendor/jdx/mise-action/v4.2.5@<reviewed-sha>",
+  "files_removed": 40,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/autofix-ci/action",
+  "ref": "v1.3.2",
+  "ref_type": "tag",
+  "sha": "635ffb0c9798bd160680f18fd73371e355b85f27",
+  "upstream_commit_date": "2025-06-08T13:36:58+02:00",
+  "readme_url": "https://github.com/autofix-ci/action/blob/635ffb0c9798bd160680f18fd73371e355b85f27/README.md",
+  "description": "Automatically fix formatting/lint issues in pull requests",
+  "consume_as": "wevm/actions/vendor/autofix-ci/action/v1.3.2@<reviewed-sha>",
+  "files_removed": 8,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

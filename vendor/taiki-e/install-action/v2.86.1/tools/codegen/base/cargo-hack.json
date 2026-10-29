@@ -1,0 +1,32 @@
+{
+  "repository": "https://github.com/taiki-e/cargo-hack",
+  "license_markdown": "[Apache-2.0](https://github.com/taiki-e/cargo-hack/blob/main/LICENSE-APACHE) OR [MIT](https://github.com/taiki-e/cargo-hack/blob/main/LICENSE-MIT)",
+  "tag_prefix": "v",
+  "rust_crate": "${package}",
+  "asset_name": [
+    "${package}-${rust_target}.tar.gz",
+    "${package}-v${version}-${rust_target}.tar.gz",
+    "${package}-${rust_target}.zip",
+    "${package}-v${version}-${rust_target}.zip"
+  ],
+  "signing": {
+    "version_range": ">= 0.6.44",
+    "kind": {
+      "gh-attestation": {
+        "signer-workflow": "taiki-e/github-actions/.github/workflows/rust-release.yml"
+      }
+    }
+  },
+  "platform": {
+    "x86_64_linux_gnu": {},
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {},
+    "aarch64_linux_musl": {},
+    "aarch64_macos": {},
+    "aarch64_windows": {},
+    "powerpc64le_linux_musl": {},
+    "riscv64_linux_musl": {},
+    "s390x_linux_gnu": {}
+  }
+}

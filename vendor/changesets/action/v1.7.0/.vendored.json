@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/changesets/action",
+  "ref": "v1.7.0",
+  "ref_type": "tag",
+  "sha": "6a0a831ff30acef54f2c6aa1cbbc1096b066edaf",
+  "upstream_commit_date": "2026-02-12T11:26:04Z",
+  "readme_url": "https://github.com/changesets/action/blob/6a0a831ff30acef54f2c6aa1cbbc1096b066edaf/README.md",
+  "description": "A GitHub action to automate releases with Changesets",
+  "consume_as": "wevm/actions/vendor/changesets/action/v1.7.0@<reviewed-sha>",
+  "files_removed": 38,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

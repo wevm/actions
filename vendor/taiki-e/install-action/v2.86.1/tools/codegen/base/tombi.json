@@ -1,0 +1,43 @@
+{
+  "repository": "https://github.com/tombi-toml/tombi",
+  "website": "https://tombi-toml.github.io/tombi/",
+  "license_markdown": "[MIT](https://github.com/tombi-toml/tombi/blob/main/LICENSE)",
+  "tag_prefix": "v",
+  "version_range": ">= 0.7",
+  "platform": {
+    "x86_64_linux_musl": {
+      "asset_name": [
+        "${package}-cli-${version}-x86_64-unknown-linux-musl.tar.gz",
+        "${package}-cli-${version}-x86_64-unknown-linux-musl.gz"
+      ],
+      "bin": "${package}-cli-${version}-x86_64-unknown-linux-musl/${package}"
+    },
+    "x86_64_macos": {
+      "asset_name": [
+        "${package}-cli-${version}-x86_64-apple-darwin.tar.gz",
+        "${package}-cli-${version}-x86_64-apple-darwin.gz"
+      ],
+      "bin": "${package}-cli-${version}-x86_64-apple-darwin/${package}"
+    },
+    "x86_64_windows": {
+      "asset_name": "${package}-cli-${version}-x86_64-pc-windows-msvc.zip"
+    },
+    "aarch64_linux_musl": {
+      "asset_name": [
+        "${package}-cli-${version}-aarch64-unknown-linux-musl.tar.gz",
+        "${package}-cli-${version}-aarch64-unknown-linux-musl.gz"
+      ],
+      "bin": "${package}-cli-${version}-aarch64-unknown-linux-musl/${package}"
+    },
+    "aarch64_macos": {
+      "asset_name": [
+        "${package}-cli-${version}-aarch64-apple-darwin.tar.gz",
+        "${package}-cli-${version}-aarch64-apple-darwin.gz"
+      ],
+      "bin": "${package}-cli-${version}-aarch64-apple-darwin/${package}"
+    },
+    "aarch64_windows": {
+      "asset_name": "${package}-cli-${version}-aarch64-pc-windows-msvc.zip"
+    }
+  }
+}

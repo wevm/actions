@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "name": "setup-bun",
+  "version": "2.2.0",
+  "description": "Setup Bun on GitHub Actions.",
+  "keywords": [
+    "bun",
+    "bun.js",
+    "github",
+    "actions",
+    "setup"
+  ],
+  "homepage": "https://bun.sh/",
+  "main": "dist/index.js",
+  "repository": "git@github.com:oven-sh/setup-bun.git",
+  "bugs": "https://github.com/oven-sh/setup-bun/issues",
+  "license": "MIT",
+  "author": "xHyroM",
+  "scripts": {
+    "format": "prettier --write src *.yml *.json *.md",
+    "build": "esbuild --target=node24 --outfile=dist/setup/index.js --bundle --keep-names --minify --platform=node --format=cjs src/index.ts && esbuild --target=node24 --outfile=dist/cache-save/index.js --bundle --keep-names --minify --platform=node --format=cjs src/cache-save.ts",
+    "start": "npm run build && node dist/setup/index.js"
+  },
+  "dependencies": {
+    "@actions/cache": "^5.0.5",
+    "@actions/core": "^2.0.3",
+    "@actions/exec": "^2.0.0",
+    "@actions/glob": "^0.5.0",
+    "@actions/io": "^2.0.0",
+    "@actions/tool-cache": "^3.0.0",
+    "@iarna/toml": "^2.2.5",
+    "compare-versions": "^6.1.1"
+  },
+  "patchedDependencies": {
+    "compare-versions@6.1.1": "patches/compare-versions@6.1.1.patch"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
+  }
+}

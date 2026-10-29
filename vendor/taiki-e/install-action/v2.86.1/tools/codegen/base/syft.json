@@ -1,0 +1,37 @@
+{
+  "repository": "https://github.com/anchore/syft",
+  "license_markdown": "[Apache-2.0](https://github.com/anchore/syft/blob/main/LICENSE)",
+  "tag_prefix": "v",
+  "bin": "${package}${exe}",
+  "version_range": ">= 0.83.0",
+  "signing": {
+    "version_range": ">= 0.104.0",
+    "kind": "custom"
+  },
+  "platform": {
+    "x86_64_linux_musl": {
+      "asset_name": "${package}_${version}_linux_amd64.tar.gz"
+    },
+    "x86_64_macos": {
+      "asset_name": "${package}_${version}_darwin_amd64.tar.gz"
+    },
+    "x86_64_windows": {
+      "asset_name": "${package}_${version}_windows_amd64.zip"
+    },
+    "aarch64_linux_musl": {
+      "asset_name": "${package}_${version}_linux_arm64.tar.gz"
+    },
+    "aarch64_macos": {
+      "asset_name": "${package}_${version}_darwin_arm64.tar.gz"
+    },
+    "aarch64_windows": {
+      "asset_name": "${package}_${version}_windows_arm64.zip"
+    },
+    "powerpc64le_linux_musl": {
+      "asset_name": "${package}_${version}_linux_ppc64le.tar.gz"
+    },
+    "s390x_linux_musl": {
+      "asset_name": "${package}_${version}_linux_s390x.tar.gz"
+    }
+  }
+}

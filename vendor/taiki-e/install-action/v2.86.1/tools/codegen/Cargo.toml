@@ -1,0 +1,36 @@
+[package]
+name = "install-action-internal-codegen"
+edition = "2021"
+default-run = "generate-manifest"
+
+[dependencies]
+install-action-manifest-schema = { path = "../manifest-schema" }
+anyhow = "1"
+flate2 = "1"
+fs-err = "3"
+jiff = { version = "0.2", default-features = false, features = ["std", "serde"] }
+minisign-verify = "0.2"
+ring = "0.17"
+semver = { version = "1", features = ["serde"] }
+serde = "1"
+serde_derive = "1"
+serde_json = "1"
+tar = "0.4"
+toml = { version = "1", default-features = false, features = ["parse", "serde"] }
+# TODO: call curl command instead of using ureq?
+ureq = { version = "2", features = ["json"] }
+
+[lints]
+workspace = true
+
+[[bin]]
+bench = false
+name = "generate-manifest"
+path = "src/main.rs"
+test = false
+
+[[bin]]
+bench = false
+name = "generate-tools-markdown"
+path = "src/tools-markdown.rs"
+test = false

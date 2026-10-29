@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/sagiegurari/cargo-make",
+  "license_markdown": "[Apache-2.0](https://github.com/sagiegurari/cargo-make/blob/master/LICENSE)",
+  "tag_prefix": "",
+  "rust_crate": "${package}",
+  "asset_name": "${package}-v${version}-${rust_target}.zip",
+  "bin": "${package}-v${version}-${rust_target}/${package}${exe}",
+  "platform": {
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {
+      "bin": "${package}${exe}"
+    },
+    "aarch64_macos": {}
+  }
+}

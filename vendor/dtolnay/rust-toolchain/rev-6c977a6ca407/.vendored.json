@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/dtolnay/rust-toolchain",
+  "ref": "6c977a6ca407",
+  "ref_type": "commit",
+  "sha": "6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772",
+  "upstream_commit_date": "2026-08-04T21:30:51-07:00",
+  "readme_url": "https://github.com/dtolnay/rust-toolchain/blob/6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772/README.md",
+  "description": "Install the Rust toolchain",
+  "consume_as": "wevm/actions/vendor/dtolnay/rust-toolchain/rev-6c977a6ca407@<reviewed-sha>",
+  "files_removed": 4,
+  "nested_rewrites": []
+}

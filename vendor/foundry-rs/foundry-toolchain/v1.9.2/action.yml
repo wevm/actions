@@ -1,0 +1,52 @@
+name: "foundry-toolchain"
+description: "Install Foundry"
+author: "Foundry"
+branding:
+  color: "gray-dark"
+  icon: "play-circle"
+
+inputs:
+  version:
+    default: "stable"
+    description: |
+      Foundry version to install. Passed to `foundryup --install <version>`.
+
+      This version number has to match a released version of Foundry.
+      The default value is `stable`, which will pull the latest stable build.
+      Other options include `nightly` or a specific version like `v1.3.6`.
+    required: false
+  network:
+    default: "ethereum"
+    description: |
+      **Deprecated.** Tempo is now part of main Foundry; this input will be removed in a future release.
+
+      Network to install Foundry for. Passed to `foundryup --network <network>`.
+    required: false
+  cache:
+    default: "true"
+    description: |
+      Whether to cache Foundry data or not.
+
+      Caching is activated by default.
+    required: false
+  cache-key:
+    default: "${{ github.job }}-${{ github.sha }}"
+    description: |
+      A custom cache key to use.
+
+      This key is used to identify the cache. If not provided, a default key consisting of the job id and the commit hash is used.
+    required: false
+  cache-restore-keys:
+    default: |-
+      ${{ github.job }}-
+    description: |
+      Custom cache restore keys to use.
+
+      This key is used to identify the cache to restore. If not provided, a default key consisting of the job id is used.
+    required: false
+
+runs:
+  using: "node24"
+  main: "dist/index.js"
+  post: "dist/save/index.js"
+  post-if: success()

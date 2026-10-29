@@ -1,0 +1,61 @@
+# Copyright 2021 Security Scorecard Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Action syntax: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions.
+
+name: "OSSF Scorecard action"
+description: "Run OSSF Scorecard checks and output results in SARIF format"
+author: "OSSF - github.com/ossf/scorecard"
+
+inputs:
+  results_file:
+    description: "OUTPUT: Path to file to store results"
+    required: true
+
+  results_format:
+    description: "OUTPUT: format of the results [json, sarif]"
+    required: true
+
+  repo_token:
+    description: "INPUT: GitHub token with read access"
+    required: false
+    default: ${{ github.token }}
+
+  publish_results:
+    description: "INPUT: Publish results"
+    required: false
+    default: false
+
+  file_mode:
+    description: "INPUT: Method to fetch files from GitHub"
+    required: false
+    default: archive
+
+  internal_publish_base_url:
+    description: "INPUT: Base URL for publishing results. Used for testing."
+    required: false
+    default: "https://api.scorecard.dev"
+
+  internal_default_token:
+    description: "INPUT: Default GitHub token. (Internal purpose only, not intended for developers to set. Used for pull requests configured with a PAT)."
+    required: false
+    default: ${{ github.token }}
+
+branding:
+  icon: "mic"
+  color: "white"
+
+runs:
+  using: "docker"
+  image: "docker://ghcr.io/ossf/scorecard-action:v2.4.1"

@@ -1,0 +1,21 @@
+{
+  "repository": "https://github.com/nextest-rs/nextest",
+  "license_markdown": "[Apache-2.0](https://github.com/nextest-rs/nextest/blob/main/LICENSE-APACHE) OR [MIT](https://github.com/nextest-rs/nextest/blob/main/LICENSE-MIT)",
+  "tag_prefix": "cargo-nextest-",
+  "rust_crate": "${package}",
+  "asset_name": "${package}-${version}-${rust_target}.tar.gz",
+  "prefer_linux_gnu": true,
+  "immediate_yank_reflection": true,
+  "platform": {
+    "x86_64_linux_gnu": {},
+    "x86_64_linux_musl": {},
+    "x86_64_macos": {
+      "asset_name": "${package}-${version}-universal-apple-darwin.tar.gz"
+    },
+    "x86_64_windows": {},
+    "aarch64_linux_gnu": {},
+    "aarch64_linux_musl": {},
+    "aarch64_windows": {},
+    "riscv64_linux_gnu": {}
+  }
+}

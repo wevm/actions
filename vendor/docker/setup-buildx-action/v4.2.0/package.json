@@ -1,0 +1,30 @@
+{
+  "name": "docker-setup-buildx",
+  "description": "Set up Docker Buildx",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node24 --format=cjs --outfile=dist/index.cjs --sourcemap --minify --keep-names && yarn run license",
+    "lint": "eslint --max-warnings=0 .",
+    "format": "eslint --fix .",
+    "test": "vitest run",
+    "license": "generate-license-file --input package.json --output dist/licenses.txt --overwrite --ci --no-spinner --eol lf"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/docker/setup-buildx-action.git"
+  },
+  "keywords": [
+    "actions",
+    "docker",
+    "buildx"
+  ],
+  "author": "Docker Inc.",
+  "license": "Apache-2.0",
+  "packageManager": "yarn@4.15.0",
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@docker/actions-toolkit": "^0.92.0",
+    "js-yaml": "^5.2.0"
+  }
+}

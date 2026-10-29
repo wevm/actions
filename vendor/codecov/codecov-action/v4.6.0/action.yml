@@ -1,0 +1,121 @@
+name: 'Codecov'
+description: 'GitHub Action that uploads coverage reports for your repository to codecov.io'
+author: 'Ibrahim Ali <@ibrahim0814> & Thomas Hu <@thomasrockhu> | Codecov'
+inputs:
+  token:
+    description: 'Repository Codecov token. Used to authorize report uploads'
+    required: false
+  codecov_yml_path:
+    description: 'Specify the path to the Codecov YML'
+    required: false
+  commit_parent:
+    description: 'Override to specify the parent commit SHA'
+    required: false
+  directory:
+    description: 'Directory to search for coverage reports.'
+    required: false
+  disable_file_fixes:
+    description: 'Disable file fixes to ignore common lines from coverage (e.g. blank lines or empty brackets)'
+    required: false
+  disable_search:
+    description: 'Disable search for coverage files. This is helpful when specifying what files you want to upload with the --file option.'
+    required: false
+  disable_safe_directory:
+    description: 'Disable setting safe directory. Set to true to disable.'
+    required: false
+  dry_run:
+    description: "Don't upload files to Codecov"
+    required: false
+  env_vars:
+    description: 'Environment variables to tag the upload with (e.g. PYTHON | OS,PYTHON)'
+    required: false
+  exclude:
+    description: 'Folders to exclude from search'
+    required: false
+  fail_ci_if_error:
+    description: 'Specify whether or not CI build should fail if Codecov runs into an error during upload'
+    required: false
+  file:
+    description: 'Path to coverage file to upload'
+    required: false
+  files:
+    description: 'Comma-separated list of files to upload'
+    required: false
+  flags:
+    description: 'Flag upload to group coverage metrics (e.g. unittests | integration | ui,chrome)'
+    required: false
+  git_service:
+    description: 'Override the git_service (e.g. github_enterprise)'
+    required: false
+  handle_no_reports_found:
+    description: 'Raise no exceptions when no coverage reports found'
+    required: false
+  job_code:
+    description: 'The job code'
+    required: false
+  name:
+    description: 'User defined upload name. Visible in Codecov UI'
+    required: false
+  network_filter:
+    description: 'Specify a filter on the files listed in the network section of the Codecov report. This will only add files whose path begin with the specified filter. Useful for upload-specific path fixing'
+    required: false
+  network_prefix:
+    description: 'Specify a prefix on files listed in the network section of the Codecov report. Useful to help resolve path fixing'
+    required: false
+  os:
+    description: 'Override the assumed OS. Options are linux | macos | windows.'
+    required: false
+  override_branch:
+    description: 'Specify the branch name'
+    required: false
+  override_build:
+    description: 'Specify the build number'
+    required: false
+  override_build_url:
+    description: 'The URL of the build where this is running'
+    required: false
+  override_commit:
+    description: 'Specify the commit SHA'
+    required: false
+  override_pr:
+    description: 'Specify the pull request number'
+    required: false
+  plugin:
+    description: 'plugins to run. Options: xcode, gcov, pycoverage. The default behavior runs them all.'
+    required: false
+  plugins:
+    description: 'Comma-separated list of plugins for use during upload.'
+    required: false
+  report_code:
+    description: 'The code of the report. If unsure, do not include'
+    required: false
+  root_dir:
+    description: 'Used when not in git/hg project to identify project root directory'
+    required: false
+  slug:
+    description: 'Specify the slug manually (Enterprise use)'
+    required: false
+  url:
+    description: 'Specify the base url to upload (Enterprise use)'
+    required: false
+  use_legacy_upload_endpoint:
+    description: 'Use the legacy upload endpoint'
+    required: false
+  use_oidc:
+    description: 'Use OIDC instead of token. This will ignore any token supplied'
+    required: false
+  verbose:
+    description: 'Specify whether the Codecov output should be verbose'
+    required: false
+  version:
+    description: 'Specify which version of the Codecov CLI should be used. Defaults to `latest`'
+    required: false
+  working-directory:
+    description: 'Directory in which to execute codecov.sh'
+    required: false
+branding:
+  color: 'red'
+  icon: 'umbrella'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

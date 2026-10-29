@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/planetscale/setup-pscale-action",
+  "ref": "v1",
+  "ref_type": "tag",
+  "sha": "b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af",
+  "upstream_commit_date": "2026-03-14T17:52:04-04:00",
+  "readme_url": "https://github.com/planetscale/setup-pscale-action/blob/b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af/README.md",
+  "description": "Installs the PlanetScale CLI",
+  "consume_as": "wevm/actions/vendor/planetscale/setup-pscale-action/rev-b6a50ee45b4b@<reviewed-sha>",
+  "files_removed": 17,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

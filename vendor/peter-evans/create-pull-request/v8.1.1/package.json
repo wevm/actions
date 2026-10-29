@@ -1,0 +1,47 @@
+{
+  "name": "create-pull-request",
+  "version": "8.0.0",
+  "private": true,
+  "description": "Creates a pull request for changes to your repository in the actions workspace",
+  "main": "lib/main.js",
+  "engines": {
+    "node": ">=24.4.0"
+  },
+  "scripts": {
+    "build": "tsc && ncc build",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "test:unit": "jest unit",
+    "test:int": "__test__/integration-tests.sh",
+    "test": "npm run test:unit && npm run test:int"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peter-evans/create-pull-request.git"
+  },
+  "keywords": [
+    "actions",
+    "pull",
+    "request"
+  ],
+  "author": "Peter Evans",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peter-evans/create-pull-request/issues"
+  },
+  "homepage": "https://github.com/peter-evans/create-pull-request",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/exec": "^1.1.1",
+    "@octokit/core": "^6.1.6",
+    "@octokit/plugin-paginate-rest": "^11.6.0",
+    "@octokit/plugin-rest-endpoint-methods": "^13.5.0",
+    "@octokit/plugin-retry": "^7.2.1",
+    "@octokit/plugin-throttling": "^9.6.1",
+    "@octokit/request-error": "^6.1.8",
+    "node-fetch-native": "^1.6.7",
+    "p-limit": "^6.2.0",
+    "uuid": "^9.0.1"
+  }
+}

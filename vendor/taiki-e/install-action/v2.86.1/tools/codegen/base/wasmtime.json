@@ -1,0 +1,33 @@
+{
+  "repository": "https://github.com/bytecodealliance/wasmtime",
+  "license_markdown": "[Apache-2.0 WITH LLVM-exception](https://github.com/bytecodealliance/wasmtime/blob/main/LICENSE)",
+  "tag_prefix": "v",
+  "rust_crate": "${package}-cli",
+  "asset_name": "${package}-v${version}-${rust_target_arch}-${rust_target_os}.tar.xz",
+  "bin": "${package}-v${version}-${rust_target_arch}-${rust_target_os}/${package}${exe}",
+  "signing": {
+    "version_range": ">= 28.0.0",
+    "kind": {
+      "gh-attestation": {
+        "signer-workflow": "${repo}/.github/workflows/publish-artifacts.yml"
+      }
+    }
+  },
+  "platform": {
+    "x86_64_linux_gnu": {},
+    "x86_64_macos": {},
+    "x86_64_windows": {
+      "asset_name": "${package}-v${version}-${rust_target_arch}-${rust_target_os}.zip"
+    },
+    "aarch64_linux_gnu": {},
+    "aarch64_macos": {},
+    "aarch64_windows": {
+      "asset_name": "${package}-v${version}-${rust_target_arch}-${rust_target_os}.zip"
+    },
+    "riscv64_linux_gnu": {
+      "asset_name": "${package}-v${version}-riscv64gc-${rust_target_os}.tar.xz",
+      "bin": "${package}-v${version}-riscv64gc-${rust_target_os}/${package}${exe}"
+    },
+    "s390x_linux_gnu": {}
+  }
+}

@@ -2,7 +2,7 @@
 // Manifest: ../vendor-manifest.yml (parsed with `yq`, which GitHub-hosted runners ship).
 // No npm dependencies: node >= 20, git, tar, yq.
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, posix, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,7 +14,7 @@ export const MANIFEST_PATH = join(ROOT, MANIFEST_FILE);
 // Files every vendored tree keeps regardless of exclude patterns.
 // .github/*.json files are problem matchers and release manifests that actions load at run time
 // (astral-sh/setup-uv registers .github/python.json via ::add-matcher), so they are never excluded.
-export const ALWAYS_KEEP = ["action.yml", "action.yaml", "LICENSE*", "LICENCE*", "NOTICE*", "COPYING*", "package.json", ".vendored.json", ".github/*.json"];
+export const ALWAYS_KEEP = ["action.yml", "action.yaml", "**/LICENSE*", "**/LICENCE*", "**/NOTICE*", "**/COPYING*", "package.json", ".vendored.json", ".github/*.json"];
 
 export const NODE_BUILTINS = new Set(["assert", "async_hooks", "buffer", "child_process", "cluster", "console", "constants", "crypto", "dgram", "diagnostics_channel", "dns", "domain", "events", "fs", "http", "http2", "https", "inspector", "module", "net", "os", "path", "perf_hooks", "process", "punycode", "querystring", "readline", "repl", "stream", "string_decoder", "sys", "test", "timers", "tls", "trace_events", "tty", "url", "util", "v8", "vm", "wasi", "worker_threads", "zlib"]);
 
@@ -193,7 +193,7 @@ export function applyExcludes(dest, entry, manifest) {
   for (const rel of walk(dest)) {
     if (matchesAny(rel, keep)) continue;
     const hit = matchesAny(rel, exclude);
-    if (hit) { rmSync(join(dest, rel)); removed.push(rel); }
+    if (hit) { unlinkSync(join(dest, rel)); removed.push(rel); }
   }
   removeEmptyDirs(dest);
   return removed;
@@ -221,9 +221,15 @@ export function applySecurityPatches(dest, entry, base = ROOT) {
 
 // ---------- nested `uses:` rewriting ----------
 const USES_RE = /^(\s*-?\s*uses:\s*)(["']?)([^\s"'#]+)\2(\s*(?:#.*)?)$/gm;
+function nestedUses(text) {
+  return yqJsonFromString(text, '[.. | select(tag == "!!map") | select(has("uses")) | .uses | select(tag == "!!str") | {"target": ., "line": line}]');
+}
 export function rewriteUsesText(text, { org, allowedUpstreams, vendored, pinNested, selfSha, selfTag }) {
   const missing = new Set(), unpinned = new Set(), changes = [];
-  const out = text.replace(USES_RE, (m, lead, q, target, tail) => {
+  const lines = new Set(nestedUses(text).map((use) => use.line));
+  const out = text.replace(USES_RE, (m, lead, q, target, tail, offset) => {
+    // Description examples and run-script heredocs are scalar text, not action dependencies.
+    if (!lines.has(text.slice(0, offset + lead.length).split("\n").length)) return m;
     if (/^(\.\/|docker:\/\/)/.test(target) || target.startsWith(`${org}/`)) return m;
     const at = target.indexOf("@");
     const path = at === -1 ? target : target.slice(0, at), ref = at === -1 ? "" : target.slice(at + 1);
@@ -258,7 +264,7 @@ export function rewriteUsesInTree(dest, entry, manifest) {
 export function collectNestedUses(dest) {
   const found = [];
   for (const rel of walk(dest).filter((p) => /(^|\/)action\.ya?ml$/.test(p) && !p.startsWith(".github/"))) {
-    for (const m of readFileSync(join(dest, rel), "utf8").matchAll(USES_RE)) found.push({ file: rel, target: m[3] });
+    for (const { target } of nestedUses(readFileSync(join(dest, rel), "utf8"))) found.push({ file: rel, target });
   }
   return found;
 }

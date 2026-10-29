@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/docker/login-action",
+  "ref": "v4.6.0",
+  "ref_type": "tag",
+  "sha": "dbcb813823bdd20940b903addbd779551569679f",
+  "upstream_commit_date": "2026-07-29T13:33:29+02:00",
+  "readme_url": "https://github.com/docker/login-action/blob/dbcb813823bdd20940b903addbd779551569679f/README.md",
+  "description": "GitHub Action to login against a Docker registry",
+  "consume_as": "wevm/actions/vendor/docker/login-action/v4.6.0@<reviewed-sha>",
+  "files_removed": 43,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}

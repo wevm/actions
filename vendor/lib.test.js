@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { loadManifest, applyPackageTransforms, applySecurityPatches, globToRegExp, matchesAny, rewriteUsesText, compareVersions, normalizeCommitDate, updateReadmeText, README_BEGIN, README_END } from "./lib.mjs";
+import { loadManifest, applyExcludes, applyPackageTransforms, applySecurityPatches, globToRegExp, matchesAny, rewriteUsesText, compareVersions, normalizeCommitDate, updateReadmeText, README_BEGIN, README_END } from "./lib.mjs";
 
 test("manifest keeps independent versions of one upstream in separate slots", () => {
   const dir = mkdtempSync(join(tmpdir(), "vendor-slots-"));
@@ -72,6 +72,10 @@ test("glob patterns are anchored at the tree root and match whole directories", 
 
 test("nested uses: third-party refs get repository pins, GitHub-authored refs stay or get pinned", () => {
   const text = [
+    "description: |",
+    "  Example:",
+    "    - uses: actions/cache@v4",
+    "    - uses: example/not-an-action@main",
     "runs:",
     "  using: composite",
     "  steps:",
@@ -82,6 +86,10 @@ test("nested uses: third-party refs get repository pins, GitHub-authored refs st
     "    - uses: ./local",
     "    - uses: docker://alpine:3",
     "    - uses: tempoxyz/gh-actions/actions/github-sts@abc",
+    "    - run: |",
+    "        cat <<'YAML'",
+    "        - uses: actions/cache@v4",
+    "        YAML",
   ].join("\n");
   const ctx = { org: "tempoxyz/gh-actions", allowedUpstreams: ["actions/", "github/"], vendored: new Set(["peter-evans/create-pull-request"]), pinNested: { "actions/cache@v4": "0123456789012345678901234567890123456789" }, selfSha: "7e2ea6e1a8f5a22f16c2d4b389ffde25da93fa1b", selfTag: "2026-09-22T22-21-59Z-7e2ea6e1" };
   const r = rewriteUsesText(text, ctx);
@@ -92,6 +100,8 @@ test("nested uses: third-party refs get repository pins, GitHub-authored refs st
   assert.match(r.text, /uses: actions\/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1/);
   assert.match(r.text, /uses: \.\/local/);
   assert.match(r.text, /uses: docker:\/\/alpine:3/);
+  assert.ok(r.text.startsWith("description: |\n  Example:\n    - uses: actions/cache@v4\n    - uses: example/not-an-action@main\n"));
+  assert.ok(r.text.endsWith("    - run: |\n        cat <<'YAML'\n        - uses: actions/cache@v4\n        YAML"));
   const r2 = rewriteUsesText("    - uses: github/codeql-action/upload-sarif@v3\n", { ...ctx, pinNested: {} });
   assert.deepEqual(r2.unpinned, ["github/codeql-action/upload-sarif@v3"]);
 });
@@ -140,6 +150,33 @@ test("package transform removes development-only dependencies", () => {
       name: "prebuilt-action",
       dependencies: { runtime: "1.0.0" },
     });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("runtime imports retain nested dependency licenses while excluding documentation", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vendor-license-"));
+  try {
+    const dependency = join(dir, "node_modules/dependency");
+    mkdirSync(dependency, { recursive: true });
+    writeFileSync(join(dependency, "LICENSE.md"), "Upstream license\n");
+    writeFileSync(join(dependency, "README.md"), "Usage docs\n");
+    const removed = applyExcludes(dir, { keep: [], exclude: [] }, { default_exclude: ["**/*.md"] });
+    assert.deepEqual(removed, ["node_modules/dependency/README.md"]);
+    assert.equal(readFileSync(join(dependency, "LICENSE.md"), "utf8"), "Upstream license\n");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("exclusions remove documentation symlinks after removing their targets", () => {
+  const dir = mkdtempSync(join(tmpdir(), "vendor-symlink-"));
+  try {
+    writeFileSync(join(dir, "AGENTS.md"), "Upstream guidance\n");
+    symlinkSync("AGENTS.md", join(dir, "CLAUDE.md"));
+    applyExcludes(dir, { keep: [], exclude: [] }, { default_exclude: ["**/*.md"] });
+    assert.deepEqual(readdirSync(dir), []);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

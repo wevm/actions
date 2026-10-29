@@ -1,0 +1,15 @@
+{
+  "upstream": "https://github.com/oven-sh/setup-bun",
+  "ref": "v2.2.0",
+  "ref_type": "tag",
+  "sha": "0c5077e51419868618aeaa5fe8019c62421857d6",
+  "upstream_commit_date": "2026-03-14T10:37:27+01:00",
+  "readme_url": "https://github.com/oven-sh/setup-bun/blob/0c5077e51419868618aeaa5fe8019c62421857d6/README.md",
+  "description": "Download, install, and setup Bun to your path.",
+  "consume_as": "wevm/actions/vendor/oven-sh/setup-bun/v2.2.0@<reviewed-sha>",
+  "files_removed": 25,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
+}
