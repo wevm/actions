@@ -1,9 +1,9 @@
-# Token issuance only from a manual run of the reviewed default-branch workflow.
+# Token issuance only from scheduled or manual runs of the reviewed default-branch workflow.
 subject: repo:wevm/actions:ref:refs/heads/main
 claim_pattern:
   repository_id: '804527424'
   repository_owner_id: '109633172'
-  event_name: workflow_dispatch
+  event_name: '(workflow_dispatch|schedule)'
   ref: refs/heads/main
   workflow_ref: 'wevm/actions/\.github/workflows/vendor-update\.yml@refs/heads/main'
 permissions:

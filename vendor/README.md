@@ -35,7 +35,8 @@ commit: publish the dependency snapshot first, then pin wrappers to it.
 
 ## Updates and STS
 
-Run **Vendor Update** manually on `main`, optionally selecting one manifest name.
+**Vendor Update** runs weekly on Mondays at 09:17 UTC. It can also be run manually
+on `main`, optionally selecting one manifest name.
 It proposes updates at least seven days old, one PR per slot, without auto-merging
 or changing consumer pins. Review the upstream source compare and bundled diff;
 passing regeneration only proves the copy matches its recorded source.
@@ -46,7 +47,7 @@ Before the first run, merge `.github/sts/vendor-update.sts.yaml` to `main` and
 confirm the production STS App installation includes `wevm/actions` with contents
 and pull-request write permissions. Do not expand App access automatically.
 The policy restricts issuance to this repository ID, owner ID, workflow, and a
-manual run on `main`; it does **not** restrict the token to a branch, so branch
+scheduled or manual run on `main`; it does **not** restrict the token to a branch, so branch
 protection and human review remain necessary. STS replaces a long-lived PAT,
 not the review gate.
 
