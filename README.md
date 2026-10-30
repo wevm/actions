@@ -29,10 +29,7 @@ steps:
     run: gh api "repos/${GITHUB_REPOSITORY}"
 ```
 
-The isolated account's endpoints, `gh-sts.wevm.run` and
-`staging.gh-sts.wevm.run`, can be selected explicitly with `host`. The default
-remains `gh-sts.wevm.dev` during migration; existing callers do not switch
-endpoints merely by updating the action.
+The isolated account's endpoints, `gh-sts.wevm.run` and `staging.gh-sts.wevm.run`, can be selected explicitly with `host`. The default remains `gh-sts.wevm.dev` during migration; existing callers do not switch endpoints merely by updating the action.
 
 Outputs: `token`, `expires-at`.
 
