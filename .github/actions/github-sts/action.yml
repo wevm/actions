@@ -14,7 +14,7 @@ inputs:
     required: false
     default: ''
   host:
-    description: 'GitHub STS hostname (gh-sts.wevm.dev or staging.gh-sts.wevm.dev)'
+    description: 'GitHub STS hostname (production or staging on wevm.dev or wevm.run)'
     required: false
     default: gh-sts.wevm.dev
   retry-timeout:
@@ -39,9 +39,9 @@ runs:
         STS_HOST: ${{ inputs.host }}
       run: |
         case "$STS_HOST" in
-          gh-sts.wevm.dev|staging.gh-sts.wevm.dev) ;;
+          gh-sts.wevm.dev|staging.gh-sts.wevm.dev|gh-sts.wevm.run|staging.gh-sts.wevm.run) ;;
           *)
-            echo "::error title=github-sts::host must be gh-sts.wevm.dev or staging.gh-sts.wevm.dev"
+            echo "::error title=github-sts::host must be a production or staging GitHub STS hostname on wevm.dev or wevm.run"
             exit 1
             ;;
         esac
