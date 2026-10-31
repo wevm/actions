@@ -15,7 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up pnpm
-      uses: wevm/actions/vendor/pnpm/action-setup/v4@817c9008b1112c1d61003f2f155687c30601de97 # upstream v4.1.0
+      uses: wevm/actions/vendor/pnpm/action-setup/v4@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v4.1.0
 
     - name: Set up node with cache
       if: ${{ inputs.skip-cache != 'true' }}
