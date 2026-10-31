@@ -7,11 +7,7 @@ This repository contains GitHub Actions that are shared across repos in the `wev
 
 ## Releases
 
-[Changesets](.changeset/README.md) maintains a manually reviewed version PR for
-the whole repository. Merging it approves an immutable `vX.Y.Z` tag and GitHub
-Release with changelog notes, only after full Vendor check success on the merge
-commit. There is no npm publishing. Consumers should keep full SHA pins and review
-their update proposals; independent upstream slots and major paths are retained.
+[Changesets](.changeset/README.md) maintains a manually reviewed version PR for the whole repository. Merging it approves an immutable `vX.Y.Z` tag and GitHub Release with changelog notes, only after full Vendor check success on the merge commit. There is no npm publishing. Consumers should keep full SHA pins and review their update proposals; independent upstream slots and major paths are retained.
 
 ## `github-sts`
 
@@ -43,9 +39,7 @@ Outputs: `token`, `expires-at`.
 
 ## `cloudflare-sts`
 
-Exchanges GitHub OIDC for a short-lived, runner-IP-restricted Cloudflare token.
-Only the `wevm` application account is supported; the isolated STS hosting account
-is never a target. Policies are registered centrally in `wevm/cloudflare-sts`.
+Exchanges GitHub OIDC for a short-lived, runner-IP-restricted Cloudflare token. Only the `wevm` application account is supported; the isolated STS hosting account is never a target. Policies are registered centrally in `wevm/cloudflare-sts`.
 
 ```yaml
 permissions:
@@ -66,38 +60,21 @@ steps:
     run: pnpm exec wrangler deploy
 ```
 
-Mint immediately before deployment, after builds and other preparation. The
-post-job hook revokes the token with a fresh OIDC assertion, including after a
-failed deployment. There is no fallback to a stored credential. Network and
-transient HTTP failures retry within a 90-second budget; authorization denials
-fail immediately. The service caps `ttl` at the policy limit (at most one hour)
-and sweeps expired tokens if a runner disappears before cleanup.
+Mint immediately before deployment, after builds and other preparation. The post-job hook revokes the token with a fresh OIDC assertion, including after a failed deployment. There is no fallback to a stored credential. Network and transient HTTP failures retry within a 90-second budget; authorization denials fail immediately. The service caps `ttl` at the policy limit (at most one hour) and sweeps expired tokens if a runner disappears before cleanup.
 
-Outputs: `token`, `account-id`, `expires-at`. The client runs directly on Node 24
-without installing dependencies. Test it with
-`node --test .github/actions/cloudflare-sts/*.test.mjs`.
+Outputs: `token`, `account-id`, `expires-at`. The client runs directly on Node 24 without installing dependencies. Test it with `node --test .github/actions/cloudflare-sts/*.test.mjs`.
 
 ## Vendored actions
 
-Third-party action runtime files are copied at exact upstream commits; GitHub-owned
-actions remain upstream and SHA-pinned. Consumers use
-`wevm/actions/vendor/<owner>/<repo>/<slot>@<reviewed-sha>` with the same inputs as
-upstream. Older slots preserve compatibility while consumers migrate; the pnpm v6
-slot includes the patched bootstrap update. Pin the **wevm/actions commit**, not the
-upstream commit listed below.
+Third-party action runtime files are copied at exact upstream commits; GitHub-owned actions remain upstream and SHA-pinned. Consumers use `wevm/actions/vendor/<owner>/<repo>/<slot>@<reviewed-sha>` with the same inputs as upstream. Older slots preserve compatibility while consumers migrate; the pnpm v6 slot includes the patched bootstrap update. Pin the **wevm/actions commit**, not the upstream commit listed below.
 
 For consumer upgrades, use these shared entrypoints:
 
-- `.github/actions/pnpm`: pnpm setup v6.1.0 and Node setup v6.4.0. Each repository's
-  `packageManager` still selects its pnpm version; `skip-cache` remains supported.
-- `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation,
-  for callers that need a custom destination or `package_json_file`.
+- `.github/actions/pnpm`: pnpm setup v6.1.0 and Node setup v6.4.0. Each repository's `packageManager` still selects its pnpm version; `skip-cache` remains supported.
+- `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation, for callers that need a custom destination or `package_json_file`.
 - `.github/workflows/lock-issue.yml`: lock-threads v6.0.2 with the existing 14-day policy.
 
-The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available while
-consumers migrate. Changesets requires a separate CLI migration: action v2 targets
-Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by
-changing only the action path or its input names.
+The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available while consumers migrate. Changesets requires a separate CLI migration: action v2 targets Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by changing only the action path or its input names.
 
 <!-- vendored-actions:begin -->
 | Action | Version | Description |
@@ -154,10 +131,4 @@ changing only the action path or its input names.
 | [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/f9597c869b2e67095f9b527070297a13a6efe928/README.md) | v0.7.0 (`f9597c8`) | Run zizmor from GitHub Actions 🌈 |
 <!-- vendored-actions:end -->
 
-See [vendor/README.md](vendor/README.md) for imports, verification, updates, and
-the STS rollout prerequisites. Vendoring controls when upstream code changes enter
-our workflows; it does not sandbox actions or eliminate vulnerabilities in a pinned
-version. Other third-party actions are not yet migrated, so org-wide enforcement
-must wait. The issue-labeled workflow uses the runner's GitHub CLI to post the
-reproduction request and close the issue as `not_planned`, with `issues: write`
-permission.
+See [vendor/README.md](vendor/README.md) for imports, verification, updates, and the STS rollout prerequisites. Vendoring controls when upstream code changes enter our workflows; it does not sandbox actions or eliminate vulnerabilities in a pinned version. Other third-party actions are not yet migrated, so org-wide enforcement must wait. The issue-labeled workflow uses the runner's GitHub CLI to post the reproduction request and close the issue as `not_planned`, with `issues: write` permission.
