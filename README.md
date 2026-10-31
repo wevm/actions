@@ -5,6 +5,14 @@ This repository contains GitHub Actions that are shared across repos in the `wev
 > [!WARNING]  
 > These actions are not designed for use _outside_ of the `wevm` GitHub org.
 
+## Releases
+
+[Changesets](.changeset/README.md) maintains a manually reviewed version PR for
+the whole repository. Merging it approves an immutable `vX.Y.Z` tag and GitHub
+Release with changelog notes, only after full Vendor check success on the merge
+commit. There is no npm publishing. Consumers should keep full SHA pins and review
+their update proposals; independent upstream slots and major paths are retained.
+
 ## `github-sts`
 
 Exchanges the workflow's GitHub OIDC token for a short-lived GitHub App token, scoped by a trust policy at `.github/sts/<policy>.sts.yaml` in the `scope` repository. The token is revoked automatically when the job finishes.

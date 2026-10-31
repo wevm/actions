@@ -1,0 +1,123 @@
+name: Release
+
+on:
+  workflow_run: # zizmor: ignore[dangerous-triggers] Only successful same-repo main pushes; revalidate workflow and exact SHA before writes. No PR artifacts or unmerged code.
+    workflows: [Vendor check]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reviewed-releases
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    if: >-
+      github.repository == 'wevm/actions' &&
+      github.event.workflow_run.head_repository.full_name == 'wevm/actions' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    outputs:
+      mode: ${{ steps.plan.outputs.mode }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check exact CI result and release intent
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release.mjs
+
+  version:
+    needs: plan
+    if: needs.plan.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Recheck before obtaining write access
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release.mjs
+      - name: Obtain short-lived version PR token (allows PR CI to run)
+        if: steps.plan.outputs.mode == 'version'
+        id: sts
+        uses: wevm/actions/.github/actions/github-sts@8963daf30237417f873c8e2f17e3bf9415e3a7b9
+        with:
+          host: gh-sts.wevm.run
+          policy: release-pr
+          ttl: 5m
+      - name: Maintain manually reviewed version PR; never publish
+        if: steps.plan.outputs.mode == 'version'
+        id: changesets
+        uses: wevm/actions/vendor/changesets/action/abitype@8963daf30237417f873c8e2f17e3bf9415e3a7b9 # upstream v2.1.2; CLI v3
+        with:
+          github-token: ${{ steps.sts.outputs.token }}
+          version-script: npm run version:release
+          pr-title: 'chore: release actions snapshot'
+          commit-message: 'chore: release actions snapshot'
+          pr-base-branch: main
+          create-github-releases: false
+          push-git-tags: false
+          push-with-git-cli: false
+        env:
+          RELEASE_BASE_SHA: ${{ github.event.workflow_run.head_sha }}
+      - name: Explain GitHub-only publication on the version PR
+        if: steps.changesets.outputs.pr-number != ''
+        env:
+          GH_TOKEN: ${{ steps.sts.outputs.token }}
+          PR_NUMBER: ${{ steps.changesets.outputs.pr-number }}
+        run: |
+          set -euo pipefail
+          body=$(gh api "repos/wevm/actions/pulls/$PR_NUMBER" --jq '.body' | jq -Rsr '
+            capture("# Releases(?<notes>[\\s\\S]*)").notes |
+            "Review the version, changelog, and refreshed wrapper pins. Merging this PR approves an immutable vX.Y.Z tag and GitHub Release with these notes, only after the full Vendor check succeeds on the merge SHA. Nothing is published to npm. See .changeset/README.md for publishing and retry instructions.\n\n# Releases" + .')
+          gh api --method PATCH "repos/wevm/actions/pulls/$PR_NUMBER" --raw-field "body=$body"
+
+  publish:
+    needs: plan
+    if: needs.plan.outputs.mode == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Create immutable tag and GitHub Release from reviewed changelog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release.mjs --publish
