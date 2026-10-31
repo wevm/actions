@@ -51,7 +51,7 @@ jobs:
           tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
           "$RUNNER_TEMP/actionlint" .github/workflows/*.yml
       - name: Scan first-party workflows and actions
-        uses: wevm/actions/vendor/zizmorcore/zizmor-action/v0.7.0@8963daf30237417f873c8e2f17e3bf9415e3a7b9
+        uses: wevm/actions/vendor/zizmorcore/zizmor-action/v0.7.0@ff2e489195c2eb75f07b3fecad79cec5b39854c5
         with:
           inputs: .github/workflows .github/actions
           version: 1.31.0

@@ -1,7 +1,7 @@
 {
   "name": "@wevm/actions",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "changeset": "changeset",
     "version:release": "node .github/scripts/version.mjs"
