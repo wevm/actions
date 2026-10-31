@@ -16,7 +16,7 @@ inputs:
   host:
     description: 'GitHub STS hostname (production or staging on wevm.dev or wevm.run)'
     required: false
-    default: gh-sts.wevm.dev
+    default: gh-sts.wevm.run
   retry-timeout:
     description: 'Total OIDC/exchange retry budget in seconds (1-3600)'
     required: false

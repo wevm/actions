@@ -21,7 +21,7 @@ steps:
       policy: deploy
       ttl: 15m
       # scope: wevm/viem             # defaults to the current repository
-      # host: staging.gh-sts.wevm.dev # defaults to gh-sts.wevm.dev
+      # host: staging.gh-sts.wevm.run # defaults to gh-sts.wevm.run
       # retry-timeout: 90
 
   - env:
@@ -29,7 +29,7 @@ steps:
     run: gh api "repos/${GITHUB_REPOSITORY}"
 ```
 
-The isolated account's endpoints, `gh-sts.wevm.run` and `staging.gh-sts.wevm.run`, can be selected explicitly with `host`. The default remains `gh-sts.wevm.dev` during migration; existing callers do not switch endpoints merely by updating the action.
+The service runs in the isolated Wevm STS account. The default host is `gh-sts.wevm.run`; select `staging.gh-sts.wevm.run` explicitly for staging. Callers pinned to an older action revision must update their pin and host before the old `.wevm.dev` services are retired.
 
 Outputs: `token`, `expires-at`.
 
