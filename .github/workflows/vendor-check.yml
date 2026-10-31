@@ -20,6 +20,76 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - run: node --test vendor/lib.test.js
-      - run: node --test .github/actions/cloudflare-sts/*.test.mjs
+      - name: Test tooling, first-party actions and reusable workflows
+        shell: bash
+        run: |
+          mapfile -d '' tests < <(
+            find vendor -maxdepth 1 -type f \( -name '*.test.js' -o -name '*.test.mjs' \) -print0
+            find .github -type f \( -name '*.test.js' -o -name '*.test.mjs' \) -print0
+          )
+          node --test "${tests[@]}"
       - run: node vendor/sync.mjs --check
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Validate workflows with actionlint
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+        run: |
+          curl --fail --silent --show-error --location \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+            -o "$RUNNER_TEMP/actionlint.tar.gz"
+          echo "$ACTIONLINT_SHA256  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check --strict
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" .github/workflows/*.yml
+      - name: Scan first-party workflows and actions
+        uses: wevm/actions/vendor/zizmorcore/zizmor-action/v0.7.0@f681dd57021d3617312d8dd42bd2806076de77cc
+        with:
+          inputs: .github/workflows .github/actions
+          version: 1.31.0
+          advanced-security: false
+          online-audits: false
+
+  pnpm-smoke:
+    name: ${{ matrix.action }} (skip-cache=${{ matrix.skip-cache }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        action: [pnpm, pnpm-v4]
+        skip-cache: ['false', 'true']
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          path: actions
+      - name: Prepare a dependency-install fixture and the wrapper under review
+        env:
+          ACTION: ${{ matrix.action }}
+        run: |
+          cp -R actions/.github/fixtures/pnpm/. .
+          mkdir -p actions/.amp/in
+          cp -R "actions/.github/actions/$ACTION" actions/.amp/in/pnpm-action
+      - name: Install with default Node and caching
+        if: matrix.skip-cache == 'false'
+        uses: ./actions/.amp/in/pnpm-action # zizmor: ignore[self-repository] The wrapper is staged dynamically, not committed at this path.
+      - name: Install with custom Node and no caching
+        if: matrix.skip-cache == 'true'
+        uses: ./actions/.amp/in/pnpm-action # zizmor: ignore[self-repository] The wrapper is staged dynamically, not committed at this path.
+        with:
+          node-version: 24.0.0
+          skip-cache: 'true'
+      - name: Verify the installed dependency and tool versions
+        env:
+          EXPECTED_NODE: ${{ matrix.skip-cache == 'true' && 'v24.0.0' || 'v22.18.0' }}
+        run: |
+          test "$(node --version)" = "$EXPECTED_NODE"
+          test "$(pnpm --version)" = '10.11.0'
+          node -e 'require("node:assert/strict").equal(require("fixture-value"), 37)'

@@ -4,7 +4,7 @@
 //   node vendor/update.mjs                       table of available updates (respects the cooldown)
 //   node vendor/update.mjs --json                machine-readable list, used by .github/workflows/vendor-update.yml
 //   node vendor/update.mjs --apply <name>...     bump ref/sha in vendor-manifest.yml and re-sync those entries
-//   flags: --min-age-days N   ignore upstream commits younger than N days (default 7, matches .pinact.yaml)
+//   flags: --min-age-days N   ignore upstream commits younger than N days (default 7)
 //          --all              include entries whose upstream commit is still inside the cooldown
 //
 // Tracking rules: a semver tag tracks the highest tag in the same major (v3.6.0 -> v3.x.y); a major-only
@@ -36,28 +36,34 @@ export function findUpdate(entry) {
   if (entry.ref_type === "commit") return { entry, status: "pinned commit; not tracked" };
   const upstream = entry.upstream ?? entry.name;
   const remote = lsRemoteAll(upstream);
-  let candidate;
+  let candidates;
   if (entry.ref_type === "branch") {
     const tip = remote.find((r) => r.ref === `refs/heads/${entry.ref}`);
-    if (!tip) return { entry, status: `branch ${entry.ref} no longer exists upstream` };
-    candidate = { ref: entry.ref, sha: tip.sha };
+    if (!tip) throw new VendorError(`${upstream}: branch ${entry.ref} no longer exists upstream`);
+    candidates = [{ ref: entry.ref, sha: tip.sha }];
   } else if (SEMVER.test(entry.ref)) {
     const major = entry.ref.match(SEMVER)[1], vPrefix = entry.ref.startsWith("v");
     const tags = remote.filter((r) => r.ref.startsWith("refs/tags/")).map((r) => ({ name: r.ref.slice(10).replace(/\^\{\}$/, ""), sha: r.sha, peeled: r.ref.endsWith("^{}") }));
     const names = [...new Set(tags.map((t) => t.name))].filter((n) => SEMVER.test(n) && n.match(SEMVER)[1] === major && n.startsWith("v") === vPrefix && !/[-+]/.test(n)).sort(compareVersions);
-    const best = names[names.length - 1];
-    if (!best) return { entry, status: `no ${vPrefix ? "v" : ""}${major}.x tags upstream` };
-    const sha = (tags.find((t) => t.name === best && t.peeled) ?? tags.find((t) => t.name === best)).sha;
-    candidate = { ref: best, sha };
+    if (!names.length) throw new VendorError(`${upstream}: no ${vPrefix ? "v" : ""}${major}.x tags upstream`);
+    candidates = names.filter((name) => compareVersions(name, entry.ref) >= 0).reverse().map((ref) => ({
+      ref, sha: (tags.find((t) => t.name === ref && t.peeled) ?? tags.find((t) => t.name === ref)).sha,
+    }));
   } else {
     // moving tag such as v1 or a tool name: follow the same tag
-    try { const r = resolveRef(upstream, entry.ref, remote); candidate = { ref: entry.ref, sha: r.sha }; }
-    catch (e) { return { entry, status: e.message }; }
+    const r = resolveRef(upstream, entry.ref, remote);
+    candidates = [{ ref: entry.ref, sha: r.sha }];
   }
-  if (candidate.sha === entry.sha) return { entry, status: "up to date" };
-  const date = commitDate(upstream, candidate.sha);
-  const ageDays = (Date.now() - date.getTime()) / 86400000;
-  return { entry, update: { ...candidate, commit_date: date.toISOString(), age_days: Math.floor(ageDays), compare_url: `https://github.com/${upstream}/compare/${entry.sha}...${candidate.sha}` }, status: ageDays < minAgeDays ? `too new (${Math.floor(ageDays)}d < ${minAgeDays}d cooldown)` : "update available" };
+  let coolingDown;
+  for (const candidate of candidates) {
+    if (candidate.sha === entry.sha) break;
+    const date = commitDate(upstream, candidate.sha);
+    const ageDays = (Date.now() - date.getTime()) / 86400000;
+    const result = { entry, update: { ...candidate, commit_date: date.toISOString(), age_days: Math.floor(ageDays), compare_url: `https://github.com/${upstream}/compare/${entry.sha}...${candidate.sha}` }, status: ageDays < minAgeDays ? `too new (${Math.floor(ageDays)}d < ${minAgeDays}d cooldown)` : "update available" };
+    if (ageDays >= minAgeDays || flag("--all")) return result;
+    coolingDown ??= result;
+  }
+  return coolingDown ?? { entry, status: "up to date" };
 }
 
 export function applyUpdate(entry, update, manifest) {
@@ -82,6 +88,7 @@ export function applyUpdate(entry, update, manifest) {
   return syncEntry(final.actions.find((a) => a.name === entry.name), final, dirname(MANIFEST_PATH));
 }
 function main() {
+  if (!Number.isFinite(minAgeDays) || minAgeDays < 0) throw new VendorError("--min-age-days must be a nonnegative number");
   const manifest = loadManifest();
   if (applyNames.length) {
     for (const name of applyNames) {
@@ -96,7 +103,7 @@ function main() {
     refreshReadme();
     return;
   }
-  const results = manifest.actions.map((a) => { try { return findUpdate(a); } catch (e) { return { entry: a, status: `error: ${e.message}` }; } });
+  const results = manifest.actions.map((a) => findUpdate(a));
   const updates = results.filter((r) => r.update && (flag("--all") || r.status === "update available"));
   if (flag("--json")) { console.log(JSON.stringify(updates.map((r) => ({ name: r.entry.name, current_ref: r.entry.ref, current_sha: r.entry.sha, new_ref: r.update.ref, new_sha: r.update.sha, commit_date: r.update.commit_date, age_days: r.update.age_days, compare_url: r.update.compare_url, status: r.status })), null, 2)); return; }
   for (const r of results) {

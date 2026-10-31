@@ -1,0 +1,8 @@
+{
+  "name": "pnpm-wrapper-fixture",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "fixture-value": "file:./dependency"
+  }
+}
