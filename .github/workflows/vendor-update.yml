@@ -78,7 +78,7 @@ jobs:
             echo 'changed=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          node --test vendor/lib.test.js
+          node --test vendor/*.test.js .github/workflows/vendor-update.test.mjs
           node vendor/sync.mjs --check
           {
             echo 'changed=true'
@@ -106,19 +106,34 @@ jobs:
           upstream=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .upstream' vendor-manifest.yml)
           new_ref=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .ref' vendor-manifest.yml)
           branch="vendor/$NAME-$NEW_SHA"
-          gh auth setup-git
-          # Never rewrite a proposal branch or replace a reviewer's PR description.
-          remote=$(git ls-remote --heads origin "refs/heads/$branch")
-          if [ -n "$remote" ]; then
-            echo "Proposal branch $branch already exists; leaving it unchanged." >> "$GITHUB_STEP_SUMMARY"
+          # Keep one open proposal per slot, including proposals for older upstream SHAs.
+          open=$(gh api --paginate "repos/$REPO/pulls?state=open&base=main&per_page=100" \
+            | jq -r --arg prefix "vendor/$NAME-" --arg repo "$REPO" \
+              '.[] | select(.head.repo.full_name == $repo) | .head.ref |
+              select(startswith($prefix)) | select(ltrimstr($prefix) | test("^[0-9a-f]{40}$"))')
+          if [ -n "$open" ]; then
+            echo "An open proposal already exists for $NAME; leaving it unchanged." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git switch -c "$branch"
-          git add -- vendor-manifest.yml "vendor/$NAME" README.md
-          git commit -m "chore(vendor): update $NAME to $new_ref"
-          git push origin "HEAD:refs/heads/$branch"
+          # A closed proposal is a review decision, not a failed attempt to create a PR.
+          existing=$(gh api --method GET --paginate "repos/$REPO/pulls" \
+            -f state=all -f base=main -f head="${REPO%%/*}:$branch" \
+            --jq '.[].number')
+          if [ -n "$existing" ]; then
+            echo "A proposal for $branch was already reviewed; leaving it unchanged." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          gh auth setup-git
+          # Recover a push whose PR creation failed without rewriting the remote branch.
+          remote=$(git ls-remote --heads origin "refs/heads/$branch")
+          if [ -z "$remote" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git switch -c "$branch"
+            git add -- vendor-manifest.yml "vendor/$NAME" README.md
+            git commit -m "chore(vendor): update $NAME to $new_ref"
+            git push origin "HEAD:refs/heads/$branch"
+          fi
           body=$(printf '%s\n\n%s\n\n%s' \
             "Updates $NAME to $new_ref ($NEW_SHA)." \
             "Upstream compare: https://github.com/$upstream/compare/$OLD_SHA...$NEW_SHA" \

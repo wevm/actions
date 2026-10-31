@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      fixture-value:
+        specifier: file:./dependency
+        version: file:dependency
+
+packages:
+
+  fixture-value@file:dependency:
+    resolution: {directory: dependency, type: directory}
+
+snapshots:
+
+  fixture-value@file:dependency: {}

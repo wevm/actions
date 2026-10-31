@@ -37,8 +37,15 @@ commit: publish the dependency snapshot first, then pin wrappers to it.
 
 **Vendor Update** runs weekly on Mondays at 09:17 UTC. It can also be run manually
 on `main`, optionally selecting one manifest name.
-It proposes updates at least seven days old, one PR per slot, without auto-merging
-or changing consumer pins. Review the upstream source compare and bundled diff;
+It selects the newest same-major release whose upstream commit is at least seven
+days old, falling back to an eligible older release while the latest cools down.
+The cooldown measures commit age, not release publication age. Failed upstream
+lookups fail the run rather than being reported as no updates.
+
+It keeps at most one open proposal per slot, without auto-merging or changing
+consumer pins. Existing PRs and reviewer edits are left alone; a closed proposal
+is not reopened. If a push succeeds but PR creation fails, a rerun creates the
+missing PR without rewriting the branch. Review the upstream source compare and bundled diff;
 passing regeneration only proves the copy matches its recorded source.
 After merging an update, separately update the SHA in wrappers and consumers.
 
@@ -54,6 +61,23 @@ not the review gate.
 No deployment, release, org-wide policy change, or privileged update run is part
 of the migration. The issue-label workflow uses the runner's GitHub CLI instead
 of the inaccessible upstream issue helper.
+
+## CI coverage
+
+PRs and pushes to `main` run vendor reproducibility checks, automatically discover
+tooling and first-party tests, and lint first-party workflows/actions with
+actionlint and offline zizmor. Vendored source is not linted to our conventions.
+GitHub-hosted smoke jobs exercise both pnpm wrappers with caching enabled and
+disabled, default and custom Node versions, and a local dependency fixture.
+STS forwarding and issue automation have local contract tests; live STS exchange
+tests remain in the separate STS fixture repositories.
+
+Run the local tests with:
+
+```sh
+node --test vendor/*.test.js .github/actions/*/*.test.mjs .github/workflows/*.test.mjs
+actionlint .github/workflows/*.yml
+```
 
 ## Active-repository rollout
 
