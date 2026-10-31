@@ -33,6 +33,42 @@ The service runs in the isolated Wevm STS account. The default host is `gh-sts.w
 
 Outputs: `token`, `expires-at`.
 
+## `cloudflare-sts`
+
+Exchanges GitHub OIDC for a short-lived, runner-IP-restricted Cloudflare token.
+Only the `wevm` application account is supported; the isolated STS hosting account
+is never a target. Policies are registered centrally in `wevm/cloudflare-sts`.
+
+```yaml
+permissions:
+  contents: read
+  id-token: write
+
+steps:
+  - id: cloudflare
+    uses: wevm/actions/.github/actions/cloudflare-sts@<reviewed-commit-sha>
+    with:
+      policy: deploy-production
+      ttl: 15m
+      # host: staging.cf-sts.wevm.run # defaults to cf-sts.wevm.run
+
+  - env:
+      CLOUDFLARE_API_TOKEN: ${{ steps.cloudflare.outputs.token }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ steps.cloudflare.outputs.account-id }}
+    run: pnpm exec wrangler deploy
+```
+
+Mint immediately before deployment, after builds and other preparation. The
+post-job hook revokes the token with a fresh OIDC assertion, including after a
+failed deployment. There is no fallback to a stored credential. Network and
+transient HTTP failures retry within a 90-second budget; authorization denials
+fail immediately. The service caps `ttl` at the policy limit (at most one hour)
+and sweeps expired tokens if a runner disappears before cleanup.
+
+Outputs: `token`, `account-id`, `expires-at`. The client runs directly on Node 24
+without installing dependencies. Test it with
+`node --test .github/actions/cloudflare-sts/*.test.mjs`.
+
 ## Vendored actions
 
 Third-party action runtime files are copied at exact upstream commits; GitHub-owned

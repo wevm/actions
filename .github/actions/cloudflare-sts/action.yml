@@ -1,0 +1,29 @@
+name: Cloudflare STS
+description: Exchange GitHub OIDC for a short-lived Wevm Cloudflare token, revoked after the job
+
+inputs:
+  account:
+    description: Cloudflare resource account alias
+    default: wevm
+  policy:
+    description: Trust policy registered in wevm/cloudflare-sts
+    required: true
+  host:
+    description: Production or staging Wevm Cloudflare STS hostname
+    default: cf-sts.wevm.run
+  ttl:
+    description: Requested lifetime, capped by the policy and one hour
+    default: 15m
+
+outputs:
+  token:
+    description: Short-lived Cloudflare API token
+  account-id:
+    description: Cloudflare resource account ID
+  expires-at:
+    description: Token expiry timestamp
+
+runs:
+  using: node24
+  main: main.mjs
+  post: post.mjs
