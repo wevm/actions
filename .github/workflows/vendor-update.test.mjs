@@ -6,8 +6,10 @@ import { join } from 'node:path'
 import { test } from 'node:test'
 import { ROOT, yqJson } from '../../vendor/lib.mjs'
 
-const script = yqJson(join(ROOT, '.github/workflows/vendor-update.yml')).jobs.propose.steps
-  .find((step) => step.name === 'Propose reviewed update').run
+const steps = yqJson(join(ROOT, '.github/workflows/vendor-update.yml')).jobs.propose.steps
+const script = steps.find((step) => step.name === 'Propose reviewed update').run
+const apply = steps.find((step) => step.id === 'apply').run
+const changesetScript = apply.slice(apply.indexOf('new_ref='), apply.indexOf('node --test'))
 const name = 'example/action/v1'
 const sha = 'a'.repeat(40)
 const branch = `vendor/${name}-${sha}`
@@ -64,6 +66,10 @@ if (args[0] === 'api') {
   git('commit', '-qm', 'Initial fixture')
   git('push', '-q', 'origin', 'main')
   writeFileSync(join(root, 'README.md'), 'Updated\n')
+  const generated = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', changesetScript], {
+    cwd: root, env: { ...env, new_sha: sha }, encoding: 'utf8',
+  })
+  assert.equal(generated.status, 0, generated.stderr)
   const save = state => writeFileSync(stateFile, JSON.stringify(state))
   save({ prs: [] })
   return {
@@ -77,6 +83,8 @@ test('proposal retry recovers a pushed branch and never overwrites later reviewe
   const f = fixture(t)
   f.save({ prs: [], failCreate: true })
   assert.notEqual(f.run().status, 0)
+  assert.equal(f.git('show', `HEAD:.changeset/vendor-example-action-v1-${sha}.md`),
+    `---\n"@wevm/actions": patch\n---\n\nUpdate vendored \`${name}\` to \`v1.1.0\` (${sha}).`)
   f.git('commit', '--allow-empty', '-qm', 'Reviewer commit after the initial push')
   f.git('push', 'origin', `HEAD:refs/heads/${branch}`)
   const pushed = f.remote()

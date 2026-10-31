@@ -1,0 +1,14 @@
+# Only the default-branch Release workflow can maintain the reviewed version PR.
+# The workflow independently verifies the successful Vendor check push and exact SHA.
+subject: repo:wevm/actions:ref:refs/heads/main
+claim_pattern:
+  repository_id: '804527424'
+  repository_owner_id: '109633172'
+  event_name: 'workflow_run'
+  ref: refs/heads/main
+  workflow_ref: 'wevm/actions/\.github/workflows/release\.yml@refs/heads/main'
+permissions:
+  contents: write
+  pull_requests: write
+  workflows: write # The version PR refreshes first-party workflow SHA pins.
+max_ttl: 5m

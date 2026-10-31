@@ -47,16 +47,22 @@ consumer pins. Existing PRs and reviewer edits are left alone; a closed proposal
 is not reopened. If a push succeeds but PR creation fails, a rerun creates the
 missing PR without rewriting the branch. Review the upstream source compare and bundled diff;
 passing regeneration only proves the copy matches its recorded source.
-After merging an update, separately update the SHA in wrappers and consumers.
+Each proposal includes a patch changeset. After merging, the reviewed version PR
+refreshes first-party wrapper/workflow pins; consumers still update separately.
 
 ### Delivering updates to consumers
 
-Maintainers publish immutable version tags such as `v1.0.0` on reviewed `main`
-commits after CI passes. Never move an existing tag. These versions identify the
+Maintainers approve publication by manually merging a Changesets version PR.
+After full Vendor check success on that exact merge SHA, automation creates an
+immutable version tag and GitHub Release with generated changelog notes. Never
+move an existing tag. These versions identify the
 whole WEVM snapshot, not the upstream versions in the vendor paths. Consumers
 continue to pin full commit SHAs; Dependabot uses version tags to discover updates.
 Pin the initial snapshot explicitly so later updates follow tagged releases rather
 than relying on Dependabot's branch lookup for untagged commits.
+See [reviewed snapshot releases](../.changeset/README.md) for Changesets usage,
+publication gates, STS prerequisites, and retry/recovery instructions. The private
+root package starts at the existing v1.0.0; nothing is published to npm.
 
 Dependabot checks workflows and first-party composites under `.github/actions/*`
 weekly on Mondays, with a seven-day cooldown and one grouped version-update PR.
@@ -67,14 +73,15 @@ the same group and require their own compatibility review.
 
 The delivery order is:
 
-1. Review and merge a vendor update, verify CI, then publish a new snapshot tag.
-2. Review and merge the wrapper-pin update, verify CI, then tag that snapshot too.
-3. Review consumer proposals pointing at the tagged wrapper snapshot. Direct
-   vendor consumers can use the first snapshot without waiting for wrapper changes.
+1. Review and merge a vendor update with its patch changeset; wait for full CI.
+2. Review the generated version PR, including its changelog and wrapper/workflow
+   pins to the already-merged vendor commit. Merge it when ready to release.
+3. Wait for full CI on the merge SHA and its immutable tag/GitHub Release, then
+   review consumer proposals pointing at that snapshot.
 
 Keep existing vendor paths when updating SHAs. Moving to another major-version
-slot is a separate compatibility change. Tag publication is manual; merging a
-vendor PR alone does not publish a release or update downstream pins.
+slot is a separate compatibility change. Publication approval is manual; merging
+a vendor PR alone does not publish a release or update downstream pins.
 
 ### Updater authentication
 
@@ -87,9 +94,10 @@ scheduled or manual run on `main`; it does **not** restrict the token to a branc
 protection and human review remain necessary. STS replaces a long-lived PAT,
 not the review gate.
 
-No deployment, release, org-wide policy change, or privileged update run is part
-of the migration. The issue-label workflow uses the runner's GitHub CLI instead
-of the inaccessible upstream issue helper.
+The updater does not deploy or release, and no org-wide policy change is part of
+this setup. Release automation has a separate checked-in STS policy and explicit
+version-PR review gate. The issue-label workflow uses the runner's GitHub CLI
+instead of the inaccessible upstream issue helper.
 
 ## CI coverage
 
@@ -104,7 +112,8 @@ tests remain in the separate STS fixture repositories.
 Run the local tests with:
 
 ```sh
-node --test vendor/*.test.js .github/actions/*/*.test.mjs .github/workflows/*.test.mjs
+npm ci --ignore-scripts # Node 24; installs release tooling, not vendored actions.
+node --test vendor/*.test.js .github/actions/*/*.test.mjs .github/workflows/*.test.mjs .github/scripts/*.test.mjs
 actionlint .github/workflows/*.yml
 ```
 

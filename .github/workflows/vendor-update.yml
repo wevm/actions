@@ -78,6 +78,11 @@ jobs:
             echo 'changed=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          new_ref=$(yq -r '.actions[] | select(.name == strenv(NAME)) | .ref' vendor-manifest.yml)
+          mkdir -p .changeset
+          # shellcheck disable=SC2016 # Markdown backticks are literal, not shell substitutions.
+          printf -- '---\n"@wevm/actions": patch\n---\n\nUpdate vendored `%s` to `%s` (%s).\n' \
+            "$NAME" "$new_ref" "$new_sha" > ".changeset/vendor-${NAME//\//-}-$new_sha.md"
           node --test vendor/*.test.js .github/workflows/vendor-update.test.mjs
           node vendor/sync.mjs --check
           {
@@ -123,16 +128,16 @@ jobs:
             echo "A proposal for $branch was already reviewed; leaving it unchanged." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          gh auth setup-git
           # Recover a push whose PR creation failed without rewriting the remote branch.
           remote=$(git ls-remote --heads origin "refs/heads/$branch")
           if [ -z "$remote" ]; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git switch -c "$branch"
-            git add -- vendor-manifest.yml "vendor/$NAME" README.md
+            git add -- vendor-manifest.yml "vendor/$NAME" README.md .changeset
             git commit -m "chore(vendor): update $NAME to $new_ref"
-            git push origin "HEAD:refs/heads/$branch"
+            git -c credential.helper= -c 'credential.helper=!gh auth git-credential' \
+              push origin "HEAD:refs/heads/$branch"
           fi
           body=$(printf '%s\n\n%s\n\n%s' \
             "Updates $NAME to $new_ref ($NEW_SHA)." \

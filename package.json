@@ -1,0 +1,15 @@
+{
+  "name": "@wevm/actions",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "changeset": "changeset",
+    "version:release": "node .github/scripts/version.mjs"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.3"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
