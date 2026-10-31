@@ -19,14 +19,14 @@ runs:
 
     - name: Set up node with cache
       if: ${{ inputs.skip-cache != 'true' }}
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
       with:
         cache: pnpm
         node-version: ${{ inputs.node-version }}
 
     - name: Set up node without cache
       if: ${{ inputs.skip-cache == 'true' }}
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
       with:
         node-version: ${{ inputs.node-version }}
 
