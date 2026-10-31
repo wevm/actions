@@ -67,7 +67,7 @@ changing only the action path or its input names.
 | [`awalsh128/cache-apt-pkgs-action/rev-553a35bb8ebd`](https://github.com/awalsh128/cache-apt-pkgs-action/blob/553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9/README.md) | latest (`553a35b`) | Install APT based packages and cache them for future runs. |
 | [`benchmark-action/github-action-benchmark/v1.22.2`](https://github.com/benchmark-action/github-action-benchmark) | v1.22.2 (`4322e57`) | Continuous Benchmark using GitHub pages as dash board for keeping performance |
 | [`changesets/action/abitype`](https://github.com/changesets/action/blob/ae32849d5ba541f9ae29e40e22a623bc13562f51/README.md) | v2.1.2 (`ae32849`) | A GitHub action to automate releases with Changesets |
-| [`changesets/action/ox`](https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md) | v1.5.3 (`e0145ed`) | A GitHub action to automate releases with Changesets |
+| [`changesets/action/ox`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |
 | [`changesets/action/v1.7.0`](https://github.com/changesets/action/blob/6a0a831ff30acef54f2c6aa1cbbc1096b066edaf/README.md) | v1.7.0 (`6a0a831`) | A GitHub action to automate releases with Changesets |
 | [`changesets/action/viem`](https://github.com/changesets/action/blob/06245a4e0a36c064a573d4150030f5ec548e4fcc/README.md) | v1.4.10 (`06245a4`) | A GitHub action to automate releases with Changesets |
 | [`changesets/action/wagmi`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |

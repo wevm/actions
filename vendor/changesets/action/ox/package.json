@@ -1,46 +1,40 @@
 {
   "name": "@changesets/action",
-  "version": "1.5.3",
-  "main": "dist/index.js",
-  "type": "module",
+  "version": "1.9.0",
   "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rolldown -c",
     "test": "vitest",
-    "test:watch": "yarn test --watch",
+    "test:watch": "pnpm test --watch",
     "typecheck": "tsc",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
     "changeset": "changeset",
     "bump": "node --experimental-strip-types ./scripts/bump.ts",
     "release": "node --experimental-strip-types ./scripts/release.ts",
     "release:pr": "node --experimental-strip-types ./scripts/release-pr.ts"
   },
-  "engines": {
-    "node": ">= 20"
-  },
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "@actions/github": "^6.0.1",
-    "@changesets/ghcommit": "^2.0.0",
+    "@actions/core": "^3.0.1",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.1.1",
+    "@changesets/get-release-plan": "^4.0.16",
+    "@changesets/ghcommit": "^2.1.1",
+    "@changesets/git": "^3.0.4",
     "@changesets/pre": "^2.0.2",
-    "@changesets/read": "^0.6.5",
+    "@changesets/read": "^0.6.7",
     "@manypkg/get-packages": "^1.1.3",
-    "@octokit/core": "^5.2.1",
-    "@octokit/plugin-throttling": "^8.0.0",
-    "@types/mdast": "^3.0.0",
-    "mdast-util-to-string": "^1.0.6",
-    "remark-parse": "^7.0.1",
-    "remark-stringify": "^7.0.3",
-    "semver": "^7.5.3",
-    "unified": "^8.3.2"
+    "@octokit/core": "^7.0.6",
+    "@octokit/plugin-throttling": "^11.0.3",
+    "human-id": "^4.1.3",
+    "markdown-table": "^3.0.4",
+    "semver": "^7.8.0",
+    "tinyexec": "^1.1.2"
   },
-  "husky": {
-    "hooks": {}
+  "engines": {
+    "node": ">=24"
   },
-  "prettier": {},
-  "resolutions": {
-    "trim": "^0.0.3",
-    "y18n": "^4.0.1"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@11.1.1+sha512.d1fdf5f73c617b64fa1a56a81c3c8dfe0e966e33a6010aa256b517ae77be21d93e05affc0de1a83b0e4f29d569f68b446ae8f068cd7247c0bb3df0fb4d7bdf9a"
 }

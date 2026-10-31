@@ -185,9 +185,9 @@ actions:
     upstream: changesets/action
 
   - name: changesets/action/ox
-    ref: v1.5.3
+    ref: v1.9.0
     ref_type: tag
-    sha: e0145edc7d9d8679003495b11f87bd8ef63c0cba
+    sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
     strip_dev_dependencies: true
     exclude:
       - src/

@@ -1,13 +1,13 @@
 {
   "upstream": "https://github.com/changesets/action",
-  "ref": "v1.5.3",
+  "ref": "v1.9.0",
   "ref_type": "tag",
-  "sha": "e0145edc7d9d8679003495b11f87bd8ef63c0cba",
-  "upstream_commit_date": "2025-05-17T16:42:57Z",
-  "readme_url": "https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md",
+  "sha": "a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d",
+  "upstream_commit_date": "2026-06-03T07:05:44Z",
+  "readme_url": "https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md",
   "description": "A GitHub action to automate releases with Changesets",
   "consume_as": "wevm/actions/vendor/changesets/action/ox@<reviewed-sha>",
-  "files_removed": 38,
+  "files_removed": 36,
   "nested_rewrites": [],
   "transforms": [
     "package.json:devDependencies"
