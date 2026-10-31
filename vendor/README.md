@@ -49,6 +49,35 @@ missing PR without rewriting the branch. Review the upstream source compare and 
 passing regeneration only proves the copy matches its recorded source.
 After merging an update, separately update the SHA in wrappers and consumers.
 
+### Delivering updates to consumers
+
+Maintainers publish immutable version tags such as `v1.0.0` on reviewed `main`
+commits after CI passes. Never move an existing tag. These versions identify the
+whole WEVM snapshot, not the upstream versions in the vendor paths. Consumers
+continue to pin full commit SHAs; Dependabot uses version tags to discover updates.
+Pin the initial snapshot explicitly so later updates follow tagged releases rather
+than relying on Dependabot's branch lookup for untagged commits.
+
+Dependabot checks workflows and first-party composites under `.github/actions/*`
+weekly on Mondays, with a seven-day cooldown and one grouped version-update PR.
+It does not scan generated `vendor/` trees. Consumers need the same directory
+coverage in their own configuration; a root-only entry misses nested composites.
+Review and merge proposals manually. GitHub-owned action upgrades can appear in
+the same group and require their own compatibility review.
+
+The delivery order is:
+
+1. Review and merge a vendor update, verify CI, then publish a new snapshot tag.
+2. Review and merge the wrapper-pin update, verify CI, then tag that snapshot too.
+3. Review consumer proposals pointing at the tagged wrapper snapshot. Direct
+   vendor consumers can use the first snapshot without waiting for wrapper changes.
+
+Keep existing vendor paths when updating SHAs. Moving to another major-version
+slot is a separate compatibility change. Tag publication is manual; merging a
+vendor PR alone does not publish a release or update downstream pins.
+
+### Updater authentication
+
 The workflow uses a five-minute STS token only to push its proposal and open a PR.
 Before the first run, merge `.github/sts/vendor-update.sts.yaml` to `main` and
 confirm the production STS App installation includes `wevm/actions` with contents
