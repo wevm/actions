@@ -93,5 +93,5 @@ jobs:
           EXPECTED_NODE: ${{ matrix.skip-cache == 'true' && 'v24.0.0' || 'v22.18.0' }}
         run: |
           test "$(node --version)" = "$EXPECTED_NODE"
-          test "$(pnpm --version)" = '10.11.0'
+          test "$(pnpm --version)" = '12.16.1'
           node -e 'require("node:assert/strict").equal(require("fixture-value"), 37)'
