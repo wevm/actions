@@ -209,9 +209,9 @@ actions:
     upstream: changesets/action
 
   - name: changesets/action/v1.7.0
-    ref: v1.7.0
+    ref: v1.9.0
     ref_type: tag
-    sha: 6a0a831ff30acef54f2c6aa1cbbc1096b066edaf
+    sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
     exclude:
       - src/
       - __fixtures__/
