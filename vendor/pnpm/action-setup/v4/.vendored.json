@@ -1,13 +1,13 @@
 {
   "upstream": "https://github.com/pnpm/action-setup",
-  "ref": "v4.1.0",
+  "ref": "v4.4.0",
   "ref_type": "tag",
-  "sha": "a7487c7e89a18df4991f7f222e4898a00d66ddda",
-  "upstream_commit_date": "2025-02-06T22:30:07+01:00",
-  "readme_url": "https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md",
+  "sha": "fc06bc1257f339d1d5d8b3a19a8cae5388b55320",
+  "upstream_commit_date": "2026-03-13T11:30:26+01:00",
+  "readme_url": "https://github.com/pnpm/action-setup/blob/fc06bc1257f339d1d5d8b3a19a8cae5388b55320/README.md",
   "description": "Install pnpm package manager",
   "consume_as": "wevm/actions/vendor/pnpm/action-setup/v4@<reviewed-sha>",
-  "files_removed": 19,
+  "files_removed": 23,
   "nested_rewrites": [],
   "transforms": [
     "package.json:devDependencies"

@@ -742,9 +742,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: pnpm/action-setup/v4
-    ref: v4.1.0
+    ref: v4.4.0
     ref_type: tag
-    sha: a7487c7e89a18df4991f7f222e4898a00d66ddda
+    sha: fc06bc1257f339d1d5d8b3a19a8cae5388b55320
     strip_dev_dependencies: true
     exclude:
       - src/

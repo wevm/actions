@@ -119,7 +119,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`oven-sh/setup-bun/v2.2.0`](https://github.com/oven-sh/setup-bun/blob/0c5077e51419868618aeaa5fe8019c62421857d6/README.md) | v2.2.0 (`0c5077e`) | Download, install, and setup Bun to your path. |
 | [`peter-evans/create-pull-request/v8.1.1`](https://github.com/peter-evans/create-pull-request/blob/5f6978faf089d4d20b00c7766989d076bb2fc7f1/README.md) | v8.1.1 (`5f6978f`) | Creates a pull request for changes to your repository in the actions workspace |
 | [`planetscale/setup-pscale-action/rev-b6a50ee45b4b`](https://github.com/planetscale/setup-pscale-action/blob/b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af/README.md) | v1 (`b6a50ee`) | Installs the PlanetScale CLI |
-| [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md) | v4.1.0 (`a7487c7`) | Install pnpm package manager |
+| [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/fc06bc1257f339d1d5d8b3a19a8cae5388b55320/README.md) | v4.4.0 (`fc06bc1`) | Install pnpm package manager |
 | [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/ea17c68df8912ef543352723c149a84f56e3d413/README.md) | v6.1.0 (`ea17c68`) | Install pnpm package manager |
 | [`pnpm/action-setup/viem-wagmi`](https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md) | v4.3.0 (`b906aff`) | Install pnpm package manager |
 | [`preactjs/compressed-size-action/2.8.0`](https://github.com/preactjs/compressed-size-action/blob/946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a/README.md) | 2.8.0 (`946a292`) | Get compressed size differences for every PR |
