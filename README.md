@@ -93,7 +93,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`changesets/action/viem`](https://github.com/changesets/action/blob/06245a4e0a36c064a573d4150030f5ec548e4fcc/README.md) | v1.4.10 (`06245a4`) | A GitHub action to automate releases with Changesets |
 | [`changesets/action/wagmi`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |
 | [`cloudflare/wrangler-action/rev-9acf94ace14e`](https://github.com/cloudflare/wrangler-action) | v3.15.0 (`9acf94a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
-| [`cloudflare/wrangler-action/v3.14.1`](https://github.com/cloudflare/wrangler-action) | v3.14.1 (`da0e0df`) | Deploy your Cloudflare projects from GitHub using Wrangler |
+| [`cloudflare/wrangler-action/v3.14.1`](https://github.com/cloudflare/wrangler-action) | v3.15.0 (`9acf94a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v4.0.0`](https://github.com/cloudflare/wrangler-action) | v4.0.0 (`ebbaa15`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v4.1.3`](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/README.md) | v4.1.3 (`953926a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`codecov/codecov-action/rev-fb8b3582c8e4`](https://github.com/codecov/codecov-action/blob/fb8b3582c8e4def4969c97caa2f19720cb33a72f/README.md) | v7.0.0 (`fb8b358`) | GitHub Action that uploads coverage reports for your repository to codecov.io |

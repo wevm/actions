@@ -289,9 +289,9 @@ actions:
     upstream: cloudflare/wrangler-action
 
   - name: cloudflare/wrangler-action/v3.14.1
-    ref: v3.14.1
+    ref: v3.15.0
     ref_type: tag
-    sha: da0e0dfe58b7a431659754fdf3f186c529afbe65
+    sha: 9acf94ace14e7dc412b076f2c5c20b8ce93c79cd
     exclude: []
     notes: >-
       Node action; runs dist/index.mjs. Consumers: curl.md.
