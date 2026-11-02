@@ -363,9 +363,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: codecov/codecov-action/v5.5.1
-    ref: v5.5.1
+    ref: v5.5.5
     ref_type: tag
-    sha: 5a1091511ad55cbe89839c7260b706298ca349f7
+    sha: 0fb7174895f61a3b6b78fc075e0cd60383518dac
     exclude: []
     notes: >-
       whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
