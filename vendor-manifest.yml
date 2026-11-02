@@ -116,9 +116,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: autofix-ci/action/v1.3.2
-    ref: v1.3.2
+    ref: v1.3.4
     ref_type: tag
-    sha: 635ffb0c9798bd160680f18fd73371e355b85f27
+    sha: c5b2d67aa2274e7b5a18224e8171550871fc7e4a
     exclude:
       - tsconfig*.json
       - package-lock.json
