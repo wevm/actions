@@ -94,7 +94,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`changesets/action/wagmi`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |
 | [`cloudflare/wrangler-action/rev-9acf94ace14e`](https://github.com/cloudflare/wrangler-action) | v3.15.0 (`9acf94a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v3.14.1`](https://github.com/cloudflare/wrangler-action) | v3.14.1 (`da0e0df`) | Deploy your Cloudflare projects from GitHub using Wrangler |
-| [`cloudflare/wrangler-action/v4.0.0`](https://github.com/cloudflare/wrangler-action) | v4.0.0 (`ebbaa15`) | Deploy your Cloudflare projects from GitHub using Wrangler |
+| [`cloudflare/wrangler-action/v4.0.0`](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/README.md) | v4.1.3 (`953926a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v4.1.3`](https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/README.md) | v4.1.3 (`953926a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`codecov/codecov-action/rev-fb8b3582c8e4`](https://github.com/codecov/codecov-action/blob/fb8b3582c8e4def4969c97caa2f19720cb33a72f/README.md) | v7.0.0 (`fb8b358`) | GitHub Action that uploads coverage reports for your repository to codecov.io |
 | [`codecov/codecov-action/v4.6.0`](https://github.com/codecov/codecov-action/blob/b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238/README.md) | v4.6.0 (`b9fd7d1`) | GitHub Action that uploads coverage reports for your repository to codecov.io |
