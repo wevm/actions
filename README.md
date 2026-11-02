@@ -128,7 +128,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`stefanzweifel/git-auto-commit-action/v6.0.1`](https://github.com/stefanzweifel/git-auto-commit-action/blob/778341af668090896ca464160c2def5d1d1a3eb0/README.md) | v6.0.1 (`778341a`) | Automatically commits files which have been changed during the workflow run and push changes back to remote repository. |
 | [`taiki-e/install-action/v2.86.1`](https://github.com/taiki-e/install-action/blob/288e746965032cfcc232e09af2daf5f23c14d780/README.md) | v2.86.1 (`288e746`) | GitHub Action for installing development tools |
 | [`zizmorcore/zizmor-action/v0.5.4`](https://github.com/zizmorcore/zizmor-action/blob/b572f7b1a1c2d41efaab43d504f68d215c3cd727/README.md) | v0.5.4 (`b572f7b`) | Run zizmor from GitHub Actions 🌈 |
-| [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/f9597c869b2e67095f9b527070297a13a6efe928/README.md) | v0.7.0 (`f9597c8`) | Run zizmor from GitHub Actions 🌈 |
+| [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/53290badfa369cb0bf7ad16342cb62c2fa47ac7b/README.md) | v0.8.0 (`53290ba`) | Run zizmor from GitHub Actions 🌈 |
 <!-- vendored-actions:end -->
 
 See [vendor/README.md](vendor/README.md) for imports, verification, updates, and the STS rollout prerequisites. Vendoring controls when upstream code changes enter our workflows; it does not sandbox actions or eliminate vulnerabilities in a pinned version. Other third-party actions are not yet migrated, so org-wide enforcement must wait. The issue-labeled workflow uses the runner's GitHub CLI to post the reproduction request and close the issue as `not_planned`, with `issues: write` permission.
