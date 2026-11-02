@@ -787,9 +787,9 @@ actions:
     upstream: pnpm/action-setup
 
   - name: preactjs/compressed-size-action/2.8.0
-    ref: 2.8.0
+    ref: 2.10.0
     ref_type: tag
-    sha: 946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a
+    sha: f322c295dde06a1cb7ccaef105732dd8a726d1d9
     exclude:
       - src/
       - tests/
