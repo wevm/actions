@@ -443,9 +443,9 @@ actions:
     upstream: dessant/lock-threads
 
   - name: docker/login-action/v4.6.0
-    ref: v4.6.0
+    ref: v4.7.0
     ref_type: tag
-    sha: dbcb813823bdd20940b903addbd779551569679f
+    sha: 81c6f93d4bc991e510b342a00b419b3bb4efc5c6
     exclude:
       - src/
       - __tests__/
