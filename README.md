@@ -80,7 +80,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | Action | Version | Description |
 |--------|---------|-------------|
 | [`Swatinem/rust-cache/v2.8.2`](https://github.com/Swatinem/rust-cache/blob/779680da715d629ac1d338a641029a2f4372abb5/README.md) | v2.8.2 (`779680d`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
-| [`Swatinem/rust-cache/v2.9.2`](https://github.com/Swatinem/rust-cache/blob/6323deb102c322ba6fcbdcafc7e3dddab59af2b6/README.md) | v2.9.2 (`6323deb`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
+| [`Swatinem/rust-cache/v2.9.2`](https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md) | v2.9.3 (`d1527c8`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
 | [`Swatinem/rust-cache/v2.9.3`](https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md) | v2.9.3 (`d1527c8`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
 | [`andresz1/size-limit-action/v1.8.0`](https://github.com/andresz1/size-limit-action/blob/94bc357df29c36c8f8d50ea497c3e225c3c95d1d/README.md) | v1.8.0 (`94bc357`) | size-limit action |
 | [`astral-sh/setup-uv/rev-d0cc045d04cc`](https://github.com/astral-sh/setup-uv/blob/d0cc045d04ccac9d8b7881df0226f9e82c39688e/README.md) | v6.8.0 (`d0cc045`) | Set up your GitHub Actions workflow with a specific version of uv. |
