@@ -108,7 +108,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`dtolnay/rust-toolchain/rev-6c977a6ca407`](https://github.com/dtolnay/rust-toolchain/blob/6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772/README.md) | `6c977a6` | Install the Rust toolchain |
 | [`dtolnay/rust-toolchain/rev-b725eda52536`](https://github.com/dtolnay/rust-toolchain/blob/b725eda525362e7cf34af9a7243cac1e3f01a7ec/README.md) | stable (`b725eda`) | Install the Rust toolchain |
 | [`foundry-rs/foundry-toolchain/v1.5.0`](https://github.com/foundry-rs/foundry-toolchain/blob/50d5a8956f2e319df19e6b57539d7e2acb9f8c1e/README.md) | v1.5.0 (`50d5a89`) | Install Foundry |
-| [`foundry-rs/foundry-toolchain/v1.6.0`](https://github.com/foundry-rs/foundry-toolchain/blob/8b0419c685ef46cb79ec93fbdc131174afceb730/README.md) | v1.6.0 (`8b0419c`) | Install Foundry |
+| [`foundry-rs/foundry-toolchain/v1.6.0`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |
 | [`foundry-rs/foundry-toolchain/v1.9.2`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |
 | [`jdx/mise-action/v4.2.5`](https://github.com/jdx/mise-action/blob/3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518/README.md) | v4.2.5 (`3c2e0cf`) | Actions for working with mise runtime manager |
 | [`marocchino/sticky-pull-request-comment/v2.9.4`](https://github.com/marocchino/sticky-pull-request-comment/blob/773744901bac0e8cbb5a0dc842800d45e9b2b405/README.md) | v2.9.4 (`7737449`) | Create comment on pull request, if exists update that comment. |
