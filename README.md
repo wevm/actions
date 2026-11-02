@@ -110,7 +110,7 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`foundry-rs/foundry-toolchain/v1.5.0`](https://github.com/foundry-rs/foundry-toolchain/blob/50d5a8956f2e319df19e6b57539d7e2acb9f8c1e/README.md) | v1.5.0 (`50d5a89`) | Install Foundry |
 | [`foundry-rs/foundry-toolchain/v1.6.0`](https://github.com/foundry-rs/foundry-toolchain/blob/8b0419c685ef46cb79ec93fbdc131174afceb730/README.md) | v1.6.0 (`8b0419c`) | Install Foundry |
 | [`foundry-rs/foundry-toolchain/v1.9.2`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |
-| [`jdx/mise-action/v4.2.5`](https://github.com/jdx/mise-action/blob/3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518/README.md) | v4.2.5 (`3c2e0cf`) | Actions for working with mise runtime manager |
+| [`jdx/mise-action/v4.2.5`](https://github.com/jdx/mise-action/blob/c2a87611a18de5b3828c5652fe268e992400cb5c/README.md) | v4.3.0 (`c2a8761`) | Actions for working with mise runtime manager |
 | [`marocchino/sticky-pull-request-comment/v2.9.4`](https://github.com/marocchino/sticky-pull-request-comment/blob/773744901bac0e8cbb5a0dc842800d45e9b2b405/README.md) | v2.9.4 (`7737449`) | Create comment on pull request, if exists update that comment. |
 | [`nick-fields/retry/rev-ad984534de44`](https://github.com/nick-fields/retry/blob/ad984534de44a9489a53aefd81eb77f87c70dc60/README.md) | v4.0.0 (`ad98453`) | Retry a step on failure or timeout |
 | [`nick-fields/retry/v3.0.2`](https://github.com/nick-fields/retry/blob/ce71cc2ab81d554ebbe88c79ab5975992d79ba08/README.md) | v3.0.2 (`ce71cc2`) | Retry a step on failure or timeout |
