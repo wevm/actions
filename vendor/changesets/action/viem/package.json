@@ -1,42 +1,40 @@
 {
   "name": "@changesets/action",
-  "version": "1.4.10",
-  "main": "dist/index.js",
+  "version": "1.9.0",
   "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist --transpile-only --minify",
-    "test": "jest",
-    "test:watch": "yarn test --watch",
+    "build": "rolldown -c",
+    "test": "vitest",
+    "test:watch": "pnpm test --watch",
+    "typecheck": "tsc",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
     "changeset": "changeset",
-    "bump": "node ./scripts/bump.js",
-    "release": "node ./scripts/release.js"
-  },
-  "engines": {
-    "node": ">= 20"
+    "bump": "node --experimental-strip-types ./scripts/bump.ts",
+    "release": "node --experimental-strip-types ./scripts/release.ts",
+    "release:pr": "node --experimental-strip-types ./scripts/release-pr.ts"
   },
   "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/exec": "^1.1.1",
-    "@actions/github": "^5.1.1",
-    "@changesets/pre": "^1.0.9",
-    "@changesets/read": "^0.5.3",
+    "@actions/core": "^3.0.1",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.1.1",
+    "@changesets/get-release-plan": "^4.0.16",
+    "@changesets/ghcommit": "^2.1.1",
+    "@changesets/git": "^3.0.4",
+    "@changesets/pre": "^2.0.2",
+    "@changesets/read": "^0.6.7",
     "@manypkg/get-packages": "^1.1.3",
-    "@octokit/plugin-throttling": "^5.2.1",
-    "fs-extra": "^8.1.0",
-    "mdast-util-to-string": "^1.0.6",
-    "remark-parse": "^7.0.1",
-    "remark-stringify": "^7.0.3",
-    "resolve-from": "^5.0.0",
-    "semver": "^7.5.3",
-    "unified": "^8.3.2"
+    "@octokit/core": "^7.0.6",
+    "@octokit/plugin-throttling": "^11.0.3",
+    "human-id": "^4.1.3",
+    "markdown-table": "^3.0.4",
+    "semver": "^7.8.0",
+    "tinyexec": "^1.1.2"
   },
-  "husky": {
-    "hooks": {}
+  "engines": {
+    "node": ">=24"
   },
-  "prettier": {},
-  "resolutions": {
-    "**/@octokit/core": "4.2.0",
-    "trim": "^0.0.3",
-    "y18n": "^4.0.1"
-  }
+  "packageManager": "pnpm@11.1.1+sha512.d1fdf5f73c617b64fa1a56a81c3c8dfe0e966e33a6010aa256b517ae77be21d93e05affc0de1a83b0e4f29d569f68b446ae8f068cd7247c0bb3df0fb4d7bdf9a"
 }

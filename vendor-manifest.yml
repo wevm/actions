@@ -233,9 +233,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: changesets/action/viem
-    ref: v1.4.10
+    ref: v1.9.0
     ref_type: tag
-    sha: 06245a4e0a36c064a573d4150030f5ec548e4fcc
+    sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
     strip_dev_dependencies: true
     exclude:
       - src/
