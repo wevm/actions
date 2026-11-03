@@ -9,22 +9,23 @@ inputs:
   version:
     default: "stable"
     description: |
-      Foundry version.
+      Foundry version to install. Passed to `foundryup --install <version>`.
 
       This version number has to match a released version of Foundry.
       The default value is `stable`, which will pull the latest stable build.
+      Other options include `nightly` or a specific version like `v1.3.6`.
     required: false
   network:
     default: "ethereum"
     description: |
-      Network to install Foundry for.
+      **Deprecated.** Tempo is now part of main Foundry; this input will be removed in a future release.
 
-      This can be either `ethereum` or `tempo`. The default value is `ethereum`.
+      Network to install Foundry for. Passed to `foundryup --network <network>`.
     required: false
   cache:
     default: "true"
     description: |
-      Whether to cache RPC responses or not.
+      Whether to cache Foundry data or not.
 
       Caching is activated by default.
     required: false
