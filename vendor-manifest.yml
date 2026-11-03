@@ -469,9 +469,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: docker/setup-buildx-action/v4.2.0
-    ref: v4.2.0
+    ref: v4.4.1
     ref_type: tag
-    sha: bb05f3f5519dd87d3ba754cc423b652a5edd6d2c
+    sha: f87e5991a6d7451dcb8d9637bfbc97413f497069
     exclude:
       - src/
       - __tests__/

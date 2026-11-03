@@ -106,7 +106,7 @@ The `lock-issue-v5.yml` and other older vendor paths remain available while cons
 | [`dessant/lock-threads/v5`](https://github.com/dessant/lock-threads/blob/1bf7ec25051fe7c00bdd17e6a7cf3d7bfb7dc771/README.md) | v5.0.1 (`1bf7ec2`) | Lock closed issues, pull requests and discussions after a period of inactivity |
 | [`dessant/lock-threads/v6`](https://github.com/dessant/lock-threads/blob/89ae32b08ed1a541efecbab17912962a5e38981c/README.md) | v6.0.2 (`89ae32b`) | Lock closed issues, pull requests and discussions after a period of inactivity |
 | [`docker/login-action/v4.6.0`](https://github.com/docker/login-action/blob/81c6f93d4bc991e510b342a00b419b3bb4efc5c6/README.md) | v4.7.0 (`81c6f93`) | GitHub Action to login against a Docker registry |
-| [`docker/setup-buildx-action/v4.2.0`](https://github.com/docker/setup-buildx-action/blob/bb05f3f5519dd87d3ba754cc423b652a5edd6d2c/README.md) | v4.2.0 (`bb05f3f`) | Set up Docker Buildx |
+| [`docker/setup-buildx-action/v4.2.0`](https://github.com/docker/setup-buildx-action/blob/f87e5991a6d7451dcb8d9637bfbc97413f497069/README.md) | v4.4.1 (`f87e599`) | Set up Docker Buildx |
 | [`dtolnay/rust-toolchain/rev-6c977a6ca407`](https://github.com/dtolnay/rust-toolchain/blob/6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772/README.md) | `6c977a6` | Install the Rust toolchain |
 | [`dtolnay/rust-toolchain/rev-b725eda52536`](https://github.com/dtolnay/rust-toolchain/blob/b725eda525362e7cf34af9a7243cac1e3f01a7ec/README.md) | stable (`b725eda`) | Install the Rust toolchain |
 | [`foundry-rs/foundry-toolchain/v1.5.0`](https://github.com/foundry-rs/foundry-toolchain/blob/50d5a8956f2e319df19e6b57539d7e2acb9f8c1e/README.md) | v1.5.0 (`50d5a89`) | Install Foundry |
