@@ -14,22 +14,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up pnpm
-      uses: wevm/actions/vendor/pnpm/action-setup/v4@ff2e489195c2eb75f07b3fecad79cec5b39854c5 # upstream v4.1.0
-
-    - name: Set up node with cache
-      if: ${{ inputs.skip-cache != 'true' }}
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-      with:
-        cache: pnpm
-        node-version: ${{ inputs.node-version }}
-
-    - name: Set up node without cache
-      if: ${{ inputs.skip-cache == 'true' }}
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+    - name: Set up pnpm and install dependencies
+      uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75 # v1.0.1
       with:
         node-version: ${{ inputs.node-version }}
-
-    - name: Install dependencies
-      shell: bash
-      run: pnpm install
+        skip-cache: ${{ inputs.skip-cache }}
