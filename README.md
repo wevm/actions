@@ -74,12 +74,14 @@ For consumer upgrades, use these shared entrypoints:
 - `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation, for callers that need a custom destination or `package_json_file`.
 - `.github/workflows/lock-issue.yml`: lock-threads v6.0.2 with the existing 14-day policy.
 
-The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available while consumers migrate. Changesets requires a separate CLI migration: action v2 targets Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by changing only the action path or its input names.
+`pnpm-v4` is a compatibility alias for `.github/actions/pnpm`, forwarding `node-version` and `skip-cache`. The old `vendor/pnpm/action-setup/v4` and `viem-wagmi` paths retain their original snapshots but no longer track updates; use `v6` for new pins. Both shared pnpm entrypoints are smoke-tested with pnpm 12.16.1. Upgrading the setup action does not change a repository's `packageManager` pin.
+
+The `lock-issue-v5.yml` and other older vendor paths remain available while consumers migrate. Changesets requires a separate CLI migration: action v2 targets Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by changing only the action path or its input names.
 
 <!-- vendored-actions:begin -->
 | Action | Version | Description |
 |--------|---------|-------------|
-| [`Swatinem/rust-cache/v2.8.2`](https://github.com/Swatinem/rust-cache/blob/779680da715d629ac1d338a641029a2f4372abb5/README.md) | v2.8.2 (`779680d`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
+| [`Swatinem/rust-cache/v2.8.2`](https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md) | v2.9.3 (`d1527c8`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
 | [`Swatinem/rust-cache/v2.9.2`](https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md) | v2.9.3 (`d1527c8`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
 | [`Swatinem/rust-cache/v2.9.3`](https://github.com/Swatinem/rust-cache/blob/d1527c8f67ef9af357290475d4af4b0fab8f12e0/README.md) | v2.9.3 (`d1527c8`) | A GitHub Action that implements smart caching for rust/cargo projects with sensible defaults. |
 | [`andresz1/size-limit-action/v1.8.0`](https://github.com/andresz1/size-limit-action/blob/94bc357df29c36c8f8d50ea497c3e225c3c95d1d/README.md) | v1.8.0 (`94bc357`) | size-limit action |
@@ -119,16 +121,16 @@ The `pnpm-v4`, `lock-issue-v5.yml`, and older vendor paths remain available whil
 | [`oven-sh/setup-bun/v2.2.0`](https://github.com/oven-sh/setup-bun/blob/0c5077e51419868618aeaa5fe8019c62421857d6/README.md) | v2.2.0 (`0c5077e`) | Download, install, and setup Bun to your path. |
 | [`peter-evans/create-pull-request/v8.1.1`](https://github.com/peter-evans/create-pull-request/blob/5f6978faf089d4d20b00c7766989d076bb2fc7f1/README.md) | v8.1.1 (`5f6978f`) | Creates a pull request for changes to your repository in the actions workspace |
 | [`planetscale/setup-pscale-action/rev-b6a50ee45b4b`](https://github.com/planetscale/setup-pscale-action/blob/b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af/README.md) | v1 (`b6a50ee`) | Installs the PlanetScale CLI |
-| [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md) | v4.1.0 (`a7487c7`) | Install pnpm package manager |
+| [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md) | `a7487c7` | Install pnpm package manager |
 | [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/ea17c68df8912ef543352723c149a84f56e3d413/README.md) | v6.1.0 (`ea17c68`) | Install pnpm package manager |
-| [`pnpm/action-setup/viem-wagmi`](https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md) | v4.3.0 (`b906aff`) | Install pnpm package manager |
+| [`pnpm/action-setup/viem-wagmi`](https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md) | `b906aff` | Install pnpm package manager |
 | [`preactjs/compressed-size-action/2.8.0`](https://github.com/preactjs/compressed-size-action/blob/946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a/README.md) | 2.8.0 (`946a292`) | Get compressed size differences for every PR |
 | [`re-actors/alls-green/v1.2.2`](https://github.com/re-actors/alls-green/blob/05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe/README.md) | v1.2.2 (`05ac938`) | GitHub Action for checking that the test matrix jobs are all successful before proceeding. To be used in branch protection |
 | [`rust-lang/crates-io-auth-action/rev-3268eb413133`](https://github.com/rust-lang/crates-io-auth-action/blob/3268eb413133e2960fa4ae0e963ca76380c54cd9/README.md) | v1.0.6 (`3268eb4`) | Retrieve a temporary crates.io access token using trusted publishing. |
 | [`stefanzweifel/git-auto-commit-action/v6.0.1`](https://github.com/stefanzweifel/git-auto-commit-action/blob/778341af668090896ca464160c2def5d1d1a3eb0/README.md) | v6.0.1 (`778341a`) | Automatically commits files which have been changed during the workflow run and push changes back to remote repository. |
 | [`taiki-e/install-action/v2.86.1`](https://github.com/taiki-e/install-action/blob/288e746965032cfcc232e09af2daf5f23c14d780/README.md) | v2.86.1 (`288e746`) | GitHub Action for installing development tools |
 | [`zizmorcore/zizmor-action/v0.5.4`](https://github.com/zizmorcore/zizmor-action/blob/b572f7b1a1c2d41efaab43d504f68d215c3cd727/README.md) | v0.5.4 (`b572f7b`) | Run zizmor from GitHub Actions 🌈 |
-| [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/f9597c869b2e67095f9b527070297a13a6efe928/README.md) | v0.7.0 (`f9597c8`) | Run zizmor from GitHub Actions 🌈 |
+| [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/53290badfa369cb0bf7ad16342cb62c2fa47ac7b/README.md) | v0.8.0 (`53290ba`) | Run zizmor from GitHub Actions 🌈 |
 <!-- vendored-actions:end -->
 
 See [vendor/README.md](vendor/README.md) for imports, verification, updates, and the STS rollout prerequisites. Vendoring controls when upstream code changes enter our workflows; it does not sandbox actions or eliminate vulnerabilities in a pinned version. Other third-party actions are not yet migrated, so org-wide enforcement must wait. The issue-labeled workflow uses the runner's GitHub CLI to post the reproduction request and close the issue as `not_planned`, with `issues: write` permission.
