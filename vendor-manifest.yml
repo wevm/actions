@@ -804,9 +804,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: re-actors/alls-green/v1.2.2
-    ref: v1.2.2
+    ref: v1.3.0
     ref_type: tag
-    sha: 05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe
+    sha: b5b5b37504aa4183270bd3d855c52a67f212be35
     exclude: []
     notes: >-
       Composite action; loads src from the action directory. kept although usually excludable: src/
