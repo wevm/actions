@@ -657,9 +657,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: ossf/scorecard-action/v2.4.1
-    ref: v2.4.1
+    ref: v2.5.0
     ref_type: tag
-    sha: f49aabe0b5af0936a0987cfb85d86b75731b0186
+    sha: fa7117db83c52d787ae5a89f350999701505d78e
     exclude:
       - '**'
     notes: >-
