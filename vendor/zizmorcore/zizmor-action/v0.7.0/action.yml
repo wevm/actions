@@ -56,8 +56,9 @@ inputs:
     description: |
       The version of zizmor to use.
 
-      Either an exact `X.Y.Z` version or `latest` (the default), i.e. the
-      newest zizmor release this action knows about.
+      An exact version (including prereleases), `latest` (the default) for the
+      newest stable release, or `prerelease` for the newest prerelease this
+      action knows about.
     required: false
     default: latest
   token:
@@ -128,7 +129,7 @@ runs:
       shell: bash
 
     - name: Upload SARIF file to GitHub Advanced Security
-      uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+      uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
       if: ${{ inputs.advanced-security == 'true' }}
       with:
         sarif_file: ${{ steps.run-zizmor.outputs.sarif-file }}
