@@ -1,9 +1,9 @@
 {
   "upstream": "https://github.com/cloudflare/wrangler-action",
-  "ref": "v3.14.1",
+  "ref": "v3.15.0",
   "ref_type": "tag",
-  "sha": "da0e0dfe58b7a431659754fdf3f186c529afbe65",
-  "upstream_commit_date": "2025-03-15T02:01:33Z",
+  "sha": "9acf94ace14e7dc412b076f2c5c20b8ce93c79cd",
+  "upstream_commit_date": "2026-04-15T20:48:52Z",
   "readme_url": "https://github.com/cloudflare/wrangler-action",
   "description": "Deploy your Cloudflare projects from GitHub using Wrangler",
   "consume_as": "wevm/actions/vendor/cloudflare/wrangler-action/v3.14.1@<reviewed-sha>",
