@@ -850,9 +850,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: taiki-e/install-action/v2.86.1
-    ref: v2.86.1
+    ref: v2.87.31
     ref_type: tag
-    sha: 288e746965032cfcc232e09af2daf5f23c14d780
+    sha: 1e29709c0ec63babbe8f266397a465f29a825f91
     exclude: []
     notes: >-
       whole repository kept (apart from repo-wide defaults): action.yml uses the action directory

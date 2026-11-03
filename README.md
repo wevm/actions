@@ -128,7 +128,7 @@ The `lock-issue-v5.yml` and other older vendor paths remain available while cons
 | [`re-actors/alls-green/v1.2.2`](https://github.com/re-actors/alls-green/blob/b5b5b37504aa4183270bd3d855c52a67f212be35/README.md) | v1.3.0 (`b5b5b37`) | GitHub Action for checking that the test matrix jobs are all successful before proceeding. To be used in branch protection |
 | [`rust-lang/crates-io-auth-action/rev-3268eb413133`](https://github.com/rust-lang/crates-io-auth-action/blob/3268eb413133e2960fa4ae0e963ca76380c54cd9/README.md) | v1.0.6 (`3268eb4`) | Retrieve a temporary crates.io access token using trusted publishing. |
 | [`stefanzweifel/git-auto-commit-action/v6.0.1`](https://github.com/stefanzweifel/git-auto-commit-action/blob/778341af668090896ca464160c2def5d1d1a3eb0/README.md) | v6.0.1 (`778341a`) | Automatically commits files which have been changed during the workflow run and push changes back to remote repository. |
-| [`taiki-e/install-action/v2.86.1`](https://github.com/taiki-e/install-action/blob/288e746965032cfcc232e09af2daf5f23c14d780/README.md) | v2.86.1 (`288e746`) | GitHub Action for installing development tools |
+| [`taiki-e/install-action/v2.86.1`](https://github.com/taiki-e/install-action/blob/1e29709c0ec63babbe8f266397a465f29a825f91/README.md) | v2.87.31 (`1e29709`) | GitHub Action for installing development tools |
 | [`zizmorcore/zizmor-action/v0.5.4`](https://github.com/zizmorcore/zizmor-action/blob/b572f7b1a1c2d41efaab43d504f68d215c3cd727/README.md) | v0.5.4 (`b572f7b`) | Run zizmor from GitHub Actions 🌈 |
 | [`zizmorcore/zizmor-action/v0.7.0`](https://github.com/zizmorcore/zizmor-action/blob/53290badfa369cb0bf7ad16342cb62c2fa47ac7b/README.md) | v0.8.0 (`53290ba`) | Run zizmor from GitHub Actions 🌈 |
 <!-- vendored-actions:end -->
