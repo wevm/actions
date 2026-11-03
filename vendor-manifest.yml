@@ -517,9 +517,9 @@ actions:
     upstream: dtolnay/rust-toolchain
 
   - name: foundry-rs/foundry-toolchain/v1.5.0
-    ref: v1.5.0
+    ref: v1.9.2
     ref_type: tag
-    sha: 50d5a8956f2e319df19e6b57539d7e2acb9f8c1e
+    sha: dba66c27052e63476d886f22216e119ba7e615bf
     exclude:
       - src/
       - .prettierrc*
