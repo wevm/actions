@@ -45340,10 +45340,24 @@ class XmlNode {
       this.child.push({ [node.tagname]: node.child });
     }
     // if requested, add the startIndex
+    this.addStartIndex(startIndex);
+  }
+
+  addStartIndex(startIndex) {
     if (startIndex !== undefined) {
       // Note: for now we just overwrite the metadata. If we had more complex metadata,
       // we might need to do an object append here:  metadata = { ...metadata, startIndex }
       this.child[this.child.length - 1][METADATA_SYMBOL$1] = { startIndex };
+    }
+  }
+
+  addEndIndex(endIndex) {
+    const lastChild = this.child[this.child.length - 1];
+    // endIndex is write-once: when updateTag drops a node, the last child is a
+    // previously completed sibling whose endIndex must not be overwritten
+    if (lastChild !== undefined && lastChild[METADATA_SYMBOL$1] !== undefined
+      && lastChild[METADATA_SYMBOL$1].endIndex === undefined) {
+      lastChild[METADATA_SYMBOL$1].endIndex = endIndex;
     }
   }
   /** symbol used for metadata */
@@ -45590,8 +45604,23 @@ class DocTypeReader {
             i = i + 9;
             let angleBracketsCount = 1;
             let hasBody = false, comment = false;
+            let quoteChar = null; // tracks an open SYSTEM/PUBLIC literal before the '[' body
             let exp = "";
             for (; i < xmlData.length; i++) {
+                // Inside a quoted external-identifier literal — XML allows '<'
+                // and '>' as plain data here, so they must not be interpreted
+                // as DOCTYPE structure until the matching quote closes.
+                if (quoteChar !== null) {
+                    if (xmlData[i] === quoteChar) quoteChar = null;
+                    exp += xmlData[i];
+                    continue;
+                }
+                if (!hasBody && !comment && (xmlData[i] === '"' || xmlData[i] === "'")) {
+                    quoteChar = xmlData[i];
+                    exp += xmlData[i];
+                    continue;
+                }
+
                 if (xmlData[i] === '<' && !comment) { //Determine the tag type
                     if (hasBody && hasSeq(xmlData, "!ENTITY", i)) {
                         i += 7;
@@ -45646,7 +45675,7 @@ class DocTypeReader {
                     exp += xmlData[i];
                 }
             }
-            if (angleBracketsCount !== 0) {
+            if (quoteChar !== null || angleBracketsCount !== 0) {
                 throw new Error(`Unclosed DOCTYPE`);
             }
         } else {
@@ -46349,7 +46378,11 @@ function resolveEnotation(str, trimmedStr, options) {
  */
 function trimZeros(numStr) {
     if (numStr && numStr.indexOf(".") !== -1) {//float
-        numStr = numStr.replace(/0+$/, ""); //remove ending zeros
+        //remove ending zeros without the O(n^2) backtracking that /0+$/ hits
+        //when the string doesn't end in 0 but has a long internal zero-run
+        let end = numStr.length;
+        while (end > 0 && numStr.charCodeAt(end - 1) === 48 /* '0' */) end--;
+        numStr = numStr.slice(0, end);
         if (numStr === ".") numStr = "0";
         else if (numStr[0] === ".") numStr = "0" + numStr;
         else if (numStr[numStr.length - 1] === ".") numStr = numStr.substring(0, numStr.length - 1);
@@ -48777,7 +48810,12 @@ const parseXml = function (xmlData) {
         this.matcher.pop();
         this.isCurrentNodeStopNode = false; // Reset flag when closing tag
 
-        currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
+        //a closing tag with no matching opening tag leaves the stack empty
+        currentNode = this.tagsNodeStack.pop() || xmlObj;//avoid recursion, set the parent tag scope
+
+        if (options.captureMetaData && currentNode) {
+          currentNode.addEndIndex(closeIndex + 1);
+        }
         textData = "";
         i = closeIndex;
       } else if (c1 === 63) { //'?'
@@ -48801,6 +48839,11 @@ const parseXml = function (xmlData) {
             childNode[":@"] = attsMap;
           }
           this.addChild(currentNode, childNode, this.readonlyMatcher, i);
+
+          if (options.captureMetaData) {
+            // closeIndex points at '?' of the closing '?>'
+            currentNode.addEndIndex(tagData.closeIndex + 2);
+          }
         }
 
 
@@ -48964,6 +49007,10 @@ const parseXml = function (xmlData) {
           this.isCurrentNodeStopNode = false; // Reset flag
 
           this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+
+          if (options.captureMetaData) {
+            currentNode.addEndIndex(i + 1);
+          }
         } else {
           //selfClosing tag
           if (isSelfClosing) {
@@ -48974,6 +49021,10 @@ const parseXml = function (xmlData) {
               childNode[":@"] = prefixedAttrs;
             }
             this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+
+            if (options.captureMetaData) {
+              currentNode.addEndIndex(closeIndex + 1);
+            }
             this.matcher.pop(); // Pop self-closing tag
             this.isCurrentNodeStopNode = false; // Reset flag
           }
@@ -48983,6 +49034,10 @@ const parseXml = function (xmlData) {
               childNode[":@"] = prefixedAttrs;
             }
             this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+
+            if (options.captureMetaData) {
+              currentNode.addEndIndex(result.closeIndex + 1);
+            }
             this.matcher.pop(); // Pop unpaired tag
             this.isCurrentNodeStopNode = false; // Reset flag
             i = result.closeIndex;
@@ -49513,19 +49568,26 @@ class XMLParser {
     }
 }
 
+// String(val)/val.toString() drop the sign of -0 (e.g. String(-0) === '0'), silently
+// corrupting a round-tripped negative-zero value. XML has no separate int/float syntax,
+// so this is the single place every raw value gets turned into text.
+function valToStr(val) {
+  return typeof val === 'number' && Object.is(val, -0) ? '-0' : String(val)
+}
+
 function safeComment(val) {
-  return String(val)
+  return valToStr(val)
     .replace(/--/g, '- -')   // -- is illegal anywhere in comment content
     .replace(/--/g, '- -')   // handle the scenario when 2 consiucative dashes appears 
     .replace(/-$/, '- ');    // trailing - would form -- with the closing -->
 }
 
 function safeCdata(val) {
-  return String(val).replace(/\]\]>/g, ']]]]><![CDATA[>')
+  return valToStr(val).replace(/\]\]>/g, ']]]]><![CDATA[>')
 }
 
 function escapeAttribute(val) {
-  return String(val).replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+  return valToStr(val).replace(/"/g, '&quot;').replace(/'/g, '&apos;')
 }
 
 const EOL = "\n";
@@ -49614,7 +49676,7 @@ function arrToStr(arr, options, indentation, matcher, stopNodeExpressions, qName
     if (!Array.isArray(arr)) {
         // Non-array values (e.g. string tag values) should be treated as text content
         if (arr !== undefined && arr !== null) {
-            let text = arr.toString();
+            let text = valToStr(arr);
             text = replaceEntitiesValue(text, options);
             return text;
         }
@@ -49653,6 +49715,7 @@ function arrToStr(arr, options, indentation, matcher, stopNodeExpressions, qName
                 tagText = options.tagValueProcessor(tagName, tagText);
                 tagText = replaceEntitiesValue(tagText, options);
             }
+            tagText = valToStr(tagText);
             if (isPreviousElementTag) {
                 xmlStr += indentation;
             }
@@ -49761,7 +49824,7 @@ function getRawContent(arr, options) {
     if (!Array.isArray(arr)) {
         // Non-array values return as-is
         if (arr !== undefined && arr !== null) {
-            return arr.toString();
+            return valToStr(arr);
         }
         return "";
     }
@@ -49773,7 +49836,7 @@ function getRawContent(arr, options) {
 
         if (tagName === options.textNodeName) {
             // Raw text content - NO processing, NO entity replacement
-            content += item[tagName];
+            content += valToStr(item[tagName]);
         } else if (tagName === options.cdataPropName) {
             // CDATA content
             content += item[tagName][0][options.textNodeName];
@@ -50106,11 +50169,11 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
       if (attr && !this.ignoreAttributesFn(attr, jPath)) {
         // Resolve the attribute name through sanitizeName
         const resolvedAttr = resolveTagName(attr, true, this.options, matcher, qNameValidator);
-        attrStr += this.buildAttrPairStr(resolvedAttr, '' + jObj[key], isCurrentStopNode);
+        attrStr += this.buildAttrPairStr(resolvedAttr, valToStr(jObj[key]), isCurrentStopNode);
       } else if (!attr) {
         //tag value
         if (key === this.options.textNodeName) {
-          let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
+          let newval = this.options.tagValueProcessor(key, valToStr(jObj[key]));
           val += this.replaceEntitiesValue(newval);
         } else {
           // Check if this is a stopNode before building
@@ -50120,7 +50183,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
           if (isStopNode) {
             // Build as raw content without encoding
-            const textValue = '' + jObj[key];
+            const textValue = valToStr(jObj[key]);
             if (textValue === '') {
               val += this.indentate(level) + '<' + resolvedKey + this.closeTag(resolvedKey) + this.tagEndChar;
             } else {
@@ -50160,6 +50223,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
           if (this.options.oneListGroup) {
             let textValue = this.options.tagValueProcessor(resolvedKey, item);
             textValue = this.replaceEntitiesValue(textValue);
+            textValue = valToStr(textValue);
             listTagVal += textValue;
           } else {
             // Check if this is a stopNode before building
@@ -50169,7 +50233,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
             if (isStopNode) {
               // Build as raw content without encoding
-              const textValue = '' + item;
+              const textValue = valToStr(item);
               if (textValue === '') {
                 listTagVal += this.indentate(level) + '<' + resolvedKey + this.closeTag(resolvedKey) + this.tagEndChar;
               } else {
@@ -50193,7 +50257,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
         for (let j = 0; j < L; j++) {
           // Resolve attribute names inside attributesGroupName
           const resolvedAttr = resolveTagName(Ks[j], true, this.options, matcher, qNameValidator);
-          attrStr += this.buildAttrPairStr(resolvedAttr, '' + jObj[key][Ks[j]], isCurrentStopNode);
+          attrStr += this.buildAttrPairStr(resolvedAttr, valToStr(jObj[key][Ks[j]]), isCurrentStopNode);
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], resolvedKey, level, matcher, qNameValidator);
@@ -50205,7 +50269,7 @@ Builder.prototype.j2x = function (jObj, level, matcher, qNameValidator) {
 
 Builder.prototype.buildAttrPairStr = function (attrName, val, isStopNode) {
   if (!isStopNode) {
-    val = this.options.attributeValueProcessor(attrName, '' + val);
+    val = this.options.attributeValueProcessor(attrName, valToStr(val));
     val = this.replaceEntitiesValue(val);
   }
   if (this.options.suppressBooleanAttributes && val === "true") {
@@ -50454,6 +50518,10 @@ Builder.prototype.buildTextValNode = function (val, key, attrStr, level, matcher
     // Normal processing: apply tagValueProcessor and entity replacement
     let textValue = this.options.tagValueProcessor(key, val);
     textValue = this.replaceEntitiesValue(textValue);
+    // tagValueProcessor may return the raw value unchanged (default is identity), and
+    // replaceEntitiesValue no-ops on non-strings, so a plain number can still reach here;
+    // stringify it now, sign-preserving, before it's implicitly ToString'd below.
+    textValue = valToStr(textValue);
 
     if (textValue === '') {
       return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
@@ -94998,6 +95066,8 @@ const verifiedShasums = new Map();
 let cachedDownloadTool;
 const DOWNLOAD_RETRIES = 5;
 const DOWNLOAD_RETRY_DELAY_MS = 2000;
+class NonRetryableError extends Error {
+}
 async function run() {
     try {
         await setToolVersions();
@@ -95028,8 +95098,9 @@ async function run() {
         // comment as overstating what the early call accelerates.
         setupWings();
         const version = getInput('version');
+        const minimumReleaseAge = getInput('minimum_release_age');
         const fetchFromGitHub = getBooleanInput('fetch_from_github');
-        await setupMise(version, fetchFromGitHub);
+        await setupMise(version, fetchFromGitHub, minimumReleaseAge);
         await setEnvVars();
         if (getBooleanInput('reshim')) {
             await miseReshim();
@@ -95284,27 +95355,36 @@ async function restoreMiseCache() {
     }
     info(`mise cache restored from key: ${cacheKey}`);
 }
-async function setupMise(version, fetchFromGitHub = false) {
+async function setupMise(version, fetchFromGitHub = false, minimumReleaseAge = '') {
     const miseBinDir = path$1.join(miseDir(), 'bin');
     const miseBinPath = path$1.join(miseBinDir, process.platform === 'win32' ? 'mise.exe' : 'mise');
     const miseShimPath = path$1.join(miseBinDir, 'mise-shim.exe');
+    const useMinimumReleaseAge = !version && Boolean(minimumReleaseAge.trim());
+    if (version && minimumReleaseAge.trim()) {
+        info('`minimum_release_age` is ignored because an explicit mise version was provided');
+    }
+    let resolvedVersion = cleanVersion(version);
+    if (!resolvedVersion &&
+        (!fs.existsSync(miseBinPath) || useMinimumReleaseAge)) {
+        resolvedVersion = cleanVersion(await latestMiseVersion(useMinimumReleaseAge ? minimumReleaseAge : undefined));
+    }
     let installedVersion;
     if (!fs.existsSync(path$1.join(miseBinPath))) {
         startGroup(version ? `Download mise@${version}` : 'Setup mise');
         await fs.promises.mkdir(miseBinDir, { recursive: true });
         const ext = process.platform === 'win32'
             ? '.zip'
-            : version && version.startsWith('2024')
+            : resolvedVersion.startsWith('2024')
                 ? ''
                 : (await tarSupportsZstd())
                     ? '.tar.zst'
                     : '.tar.gz';
-        let resolvedVersion = version || (await latestMiseVersion());
-        resolvedVersion = resolvedVersion.replace(/^v/, '');
         const target = await getTarget();
         const assetName = `mise-v${resolvedVersion}-${target}${ext}`;
         const rawAssetName = `mise-v${resolvedVersion}-${target}${process.platform === 'win32' ? '.exe' : ''}`;
-        const fetchFromCdn = !fetchFromGitHub && !version;
+        // The CDN only exposes the newest binary. An age-filtered release must be
+        // downloaded by its exact version from GitHub.
+        const fetchFromCdn = !fetchFromGitHub && !version && !useMinimumReleaseAge;
         const githubUrl = `https://github.com/jdx/mise/releases/download/v${resolvedVersion}/${assetName}`;
         const cdnUrl = `https://mise.jdx.dev/mise-latest-${target}${process.platform === 'win32' ? '.exe' : ''}`;
         installedVersion = resolvedVersion;
@@ -95353,7 +95433,8 @@ async function setupMise(version, fetchFromGitHub = false) {
         }
     }
     else {
-        const requestedVersion = cleanVersion(getInput('version'));
+        const requestedVersion = cleanVersion(getInput('version')) ||
+            (useMinimumReleaseAge ? resolvedVersion : '');
         if (requestedVersion !== '') {
             installedVersion = await getInstalledMiseVersion(miseBinPath);
             if (requestedVersion === installedVersion) {
@@ -95436,7 +95517,7 @@ async function retryDownload(fn) {
             return await fn();
         }
         catch (err) {
-            if (retry === DOWNLOAD_RETRIES)
+            if (err instanceof NonRetryableError || retry === DOWNLOAD_RETRIES)
                 throw err;
             warning(`Download failed: ${errorMessage(err)}. Retrying in ${DOWNLOAD_RETRY_DELAY_MS / 1000} seconds (${retry + 1}/${DOWNLOAD_RETRIES}).`);
             await new Promise(resolve => setTimeout(resolve, DOWNLOAD_RETRY_DELAY_MS));
@@ -95609,8 +95690,156 @@ async function tarSupportsZstd() {
         return false;
     }
 }
-async function latestMiseVersion() {
-    return downloadText('https://mise.jdx.dev/VERSION');
+function subtractUtcMonths(date, months) {
+    const day = date.getUTCDate();
+    date.setUTCDate(1);
+    date.setUTCMonth(date.getUTCMonth() - months);
+    const lastDay = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate();
+    date.setUTCDate(Math.min(day, lastDay));
+}
+function hasValidIsoCalendarDate(input) {
+    const match = input.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!match)
+        return false;
+    const [, yearText, monthText, dayText] = match;
+    const year = Number(yearText);
+    const month = Number(monthText);
+    const day = Number(dayText);
+    const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    const daysInMonth = [
+        31,
+        leapYear ? 29 : 28,
+        31,
+        30,
+        31,
+        30,
+        31,
+        31,
+        30,
+        31,
+        30,
+        31
+    ];
+    return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth[month - 1];
+}
+function minimumReleaseAgeCutoff(value, now = new Date()) {
+    const input = value.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(input) && hasValidIsoCalendarDate(input)) {
+        const cutoff = new Date(`${input}T23:59:59Z`);
+        if (!Number.isNaN(cutoff.getTime()))
+            return cutoff;
+    }
+    if (/^\d{4}-\d{2}-\d{2}T/.test(input) && hasValidIsoCalendarDate(input)) {
+        const cutoff = new Date(input);
+        if (!Number.isNaN(cutoff.getTime()))
+            return cutoff;
+    }
+    if (/^\d+$/.test(input)) {
+        return new Date(now.getTime() - Number(input) * 1000);
+    }
+    const duration = /(\d+)(mo|ms|us|ns|y|w|d|h|m|s)/gy;
+    let offset = 0;
+    let months = 0;
+    let milliseconds = 0;
+    for (let match = duration.exec(input); match; match = duration.exec(input)) {
+        if (match.index !== offset)
+            break;
+        offset = duration.lastIndex;
+        const amount = Number(match[1]);
+        switch (match[2]) {
+            case 'y':
+                months += amount * 12;
+                break;
+            case 'mo':
+                months += amount;
+                break;
+            case 'w':
+                milliseconds += amount * 7 * 24 * 60 * 60 * 1000;
+                break;
+            case 'd':
+                milliseconds += amount * 24 * 60 * 60 * 1000;
+                break;
+            case 'h':
+                milliseconds += amount * 60 * 60 * 1000;
+                break;
+            case 'm':
+                milliseconds += amount * 60 * 1000;
+                break;
+            case 's':
+                milliseconds += amount * 1000;
+                break;
+            case 'ms':
+                milliseconds += amount;
+                break;
+            case 'us':
+                milliseconds += amount / 1000;
+                break;
+            case 'ns':
+                milliseconds += amount / 1_000_000;
+                break;
+        }
+    }
+    if (!input || offset !== input.length) {
+        throw new Error(`Invalid minimum_release_age: ${value}. Expected a duration such as 24h, 7d, 6mo, or 1y, or an ISO date or timestamp.`);
+    }
+    const cutoff = new Date(now);
+    if (months)
+        subtractUtcMonths(cutoff, months);
+    cutoff.setTime(cutoff.getTime() - milliseconds);
+    return cutoff;
+}
+async function githubMiseReleases(page) {
+    const headers = {
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'mise-action',
+        'X-GitHub-Api-Version': '2022-11-28'
+    };
+    const githubToken = getInput('github_token');
+    if (githubToken)
+        headers.Authorization = `Bearer ${githubToken}`;
+    return retryDownload(async () => {
+        const response = await fetch(`https://api.github.com/repos/jdx/mise/releases?per_page=100&page=${page}`, { headers, signal: AbortSignal.timeout(30_000) });
+        if (!response.ok) {
+            const message = `GitHub releases API returned ${response.status} ${response.statusText}`;
+            if (response.status >= 400 &&
+                response.status < 500 &&
+                response.status !== 429) {
+                throw new NonRetryableError(message);
+            }
+            throw new Error(message);
+        }
+        return (await response.json());
+    });
+}
+async function latestMiseVersion(minimumReleaseAge) {
+    if (!minimumReleaseAge) {
+        return downloadText('https://mise.jdx.dev/VERSION');
+    }
+    const cutoff = minimumReleaseAgeCutoff(minimumReleaseAge);
+    let newestRelease;
+    for (let page = 1;; page++) {
+        const releases = await githubMiseReleases(page);
+        for (const release of releases) {
+            if (release.draft || release.prerelease)
+                continue;
+            const releasedAt = new Date(release.published_at || release.created_at);
+            if (Number.isNaN(releasedAt.getTime()) || releasedAt > cutoff)
+                continue;
+            if (!newestRelease ||
+                releasedAt >
+                    new Date(newestRelease.published_at || newestRelease.created_at)) {
+                newestRelease = release;
+            }
+        }
+        if (releases.length < 100)
+            break;
+    }
+    if (newestRelease) {
+        const releasedAt = newestRelease.published_at || newestRelease.created_at;
+        info(`Selected mise ${cleanVersion(newestRelease.tag_name)}, released ${releasedAt}, with minimum_release_age=${minimumReleaseAge}`);
+        return cleanVersion(newestRelease.tag_name);
+    }
+    throw new Error(`No stable mise release satisfies minimum_release_age=${minimumReleaseAge}`);
 }
 async function setToolVersions() {
     const toolVersions = getInput('tool_versions');

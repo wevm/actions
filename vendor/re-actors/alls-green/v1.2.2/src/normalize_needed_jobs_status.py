@@ -5,19 +5,37 @@ import json
 import os
 import pathlib
 import sys
+import typing as _t
+
+import job_outcome
 
 
+_T = _t.TypeVar('_T')
 FILE_APPEND_MODE = 'a'
 
 
-def write_lines_to_streams(lines, streams):
+class ActionJobInputType(_t.TypedDict):  # noqa: D101
+    outputs: dict[str, str]
+    result: job_outcome.JobResult
+
+
+class ActionInputsType(_t.TypedDict):  # noqa: D101
+    allowed_failures: list[str]
+    allowed_skips: list[str]
+    jobs: dict[str, ActionJobInputType]
+
+
+def write_lines_to_streams(  # noqa: D103
+    lines: _t.Iterable[str],
+    streams: _t.Iterable[_t.TextIO],
+) -> None:
     eoled_lines = [line + os.linesep for line in lines]
     for stream in streams:
         stream.writelines(eoled_lines)
         stream.flush()
 
 
-def set_gha_output(name, value):
+def set_gha_output(name: str, value: str) -> None:
     """Set an action output using an environment file.
 
     Refs:
@@ -25,11 +43,17 @@ def set_gha_output(name, value):
     * https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
     """
     outputs_file_path = pathlib.Path(os.environ['GITHUB_OUTPUT'])
-    with outputs_file_path.open(mode=FILE_APPEND_MODE) as outputs_file:
-        write_lines_to_streams((f'{name}={value}',), (outputs_file,))
+    # NOTE: typeshed does note cover `OpenTextMode` for pathlib.Path.open()
+    with outputs_file_path.open(  # type: ignore[misc]
+        mode=FILE_APPEND_MODE,
+    ) as outputs_file:
+        write_lines_to_streams(
+            (f'{name}={value}',),
+            (_t.cast('_t.TextIO', outputs_file),),
+        )
 
 
-def set_final_result_outputs(job_matrix_succeeded):
+def set_final_result_outputs(job_matrix_succeeded: bool) -> None:
     """Set action outputs depending on the computed outcome."""
     set_gha_output(name='failure', value=str(not job_matrix_succeeded).lower())
     set_gha_output(
@@ -39,19 +63,23 @@ def set_final_result_outputs(job_matrix_succeeded):
     set_gha_output(name='success', value=str(job_matrix_succeeded).lower())
 
 
-def parse_as_list(input_text):
+def parse_as_list(input_text: str) -> list[str]:
     """Parse given input as JSON or comma-separated list."""
     try:
-        return json.loads(input_text)
+        return _t.cast('list[str]', json.loads(input_text))
     except json.decoder.JSONDecodeError:
         return [s.strip() for s in input_text.split(',')]
 
 
-def drop_empty_from_list(a_list):
+def drop_empty_from_list(a_list: _t.Iterable[_T]) -> list[_T]:  # noqa: D103
     return [list_element for list_element in a_list if list_element]
 
 
-def parse_inputs(raw_allowed_failures, raw_allowed_skips, raw_jobs):
+def parse_inputs(
+    raw_allowed_failures: str,
+    raw_allowed_skips: str,
+    raw_jobs: str,
+) -> ActionInputsType:
     """Normalize the action inputs by turning them into data."""
     allowed_failures_input = drop_empty_from_list(
         parse_as_list(raw_allowed_failures),
@@ -63,26 +91,83 @@ def parse_inputs(raw_allowed_failures, raw_allowed_skips, raw_jobs):
     return {
         'allowed_failures': allowed_failures_input,
         'allowed_skips': allowed_skips_input,
-        'jobs': json.loads(raw_jobs),
+        'jobs': _t.cast('dict[str, ActionJobInputType]', json.loads(raw_jobs)),
     }
 
 
+_STATUS_LABELS: dict[job_outcome.JobRequirement, str] = {
+    job_outcome.JobRequirement.REQUIRED: 'required to succeed',
+    job_outcome.JobRequirement.ALLOWED_TO_FAIL: 'allowed to fail',
+    job_outcome.JobRequirement.ALLOWED_TO_BE_SKIPPED: (
+        'required to succeed or be skipped'
+    ),
+    job_outcome.JobRequirement.ALLOWED_EITHER: 'allowed to fail',
+}
+
+_RESULT_SYMBOLS: dict[job_outcome.JobResult, str] = {
+    'success': '🟢',
+    'failure': '🔴',
+    'skipped': '⬜',
+    'cancelled': '⚫',
+}
+
+_ANSI_GREEN = '\x1b[32m'
+_ANSI_RED = '\x1b[31m'
+_ANSI_RESET = '\x1b[0m'
+
+
+def _ansi_color_enabled() -> bool:
+    """Decide whether to colorize console output.
+
+    Respects `https://no-color.org`__: presence of :envvar:`NO_COLOR`
+    disables color regardless of its value.
+    """
+    return 'NO_COLOR' not in os.environ
+
+
+def _colorize_line(*, text: str, acceptable: bool) -> str:
+    """Wrap a whole line in ANSI color if enabled, based on acceptability."""
+    if not _ansi_color_enabled():
+        return text
+    color = _ANSI_GREEN if acceptable else _ANSI_RED
+    return f'{color}{text}{_ANSI_RESET}'
+
+
 def log_decision_details(
-        job_matrix_succeeded,
-        jobs_allowed_to_fail,
-        jobs_allowed_to_be_skipped,
-        allowed_to_fail_jobs_succeeded,
-        allowed_to_be_skipped_jobs_succeeded,
-        jobs,
-        summary_file_streams,
-):
+    *,
+    job_matrix_succeeded: bool,
+    jobs_allowed_to_fail: _t.AbstractSet[str],
+    jobs_allowed_to_be_skipped: _t.AbstractSet[str],
+    verdicts: list[job_outcome.JobVerdict],
+    summary_file: _t.TextIO,
+    console_file: _t.TextIO,
+) -> None:
     """Record the decisions made into console output."""
-    markdown_summary_lines = []
+    allowed_to_fail_jobs_succeeded = all(
+        verdict.result == 'success'
+        for verdict in verdicts
+        if verdict.requirement
+        in {
+            job_outcome.JobRequirement.ALLOWED_TO_FAIL,
+            job_outcome.JobRequirement.ALLOWED_EITHER,
+        }
+    )
+    allowed_to_be_skipped_jobs_succeeded = all(
+        verdict.result == 'success'
+        for verdict in verdicts
+        if verdict.requirement
+        in {
+            job_outcome.JobRequirement.ALLOWED_TO_BE_SKIPPED,
+            job_outcome.JobRequirement.ALLOWED_EITHER,
+        }
+    )
+
+    markdown_summary_lines: list[str] = []
 
     markdown_summary_lines += {
         '# ✓ All of the required dependency jobs succeeded 🎉🎉🎉'
-        if job_matrix_succeeded else
-        '# ❌ Some of the required to succeed jobs failed 😢😢😢'
+        if job_matrix_succeeded
+        else '# ❌ Some of the required to succeed jobs failed 😢😢😢',
     }
     markdown_summary_lines += {''}
 
@@ -95,40 +180,45 @@ def log_decision_details(
             '🛈 Some of the allowed to fail jobs did not succeed.',
         }
 
-
     if jobs_allowed_to_be_skipped and allowed_to_be_skipped_jobs_succeeded:
         markdown_summary_lines += {
             '🛈 All of the allowed to be skipped dependency jobs succeeded.',
         }
-    elif jobs_allowed_to_fail:
+    elif jobs_allowed_to_be_skipped:
         markdown_summary_lines += {
             '🛈 Some of the allowed to be skipped jobs did not succeed.',
         }
 
-
     markdown_summary_lines += {
-        '📝 Job statuses:',
+        '🔮 Job statuses:',
     }
-    for name, job in jobs.items():
-        markdown_summary_lines += {
-            '📝 {name} → {emoji} {result} [{status}]'.
-            format(
-                emoji='✓' if job['result'] == 'success'
-                else '❌' if job['result'] == 'failure'
-                else '⬜',
-                name=name,
-                result=job['result'],
-                status='allowed to fail' if name in jobs_allowed_to_fail
-                else 'required to succeed'
-                if name not in jobs_allowed_to_be_skipped
-                else 'required to succeed or be skipped',
+
+    write_lines_to_streams(
+        markdown_summary_lines,
+        (console_file, summary_file),
+    )
+
+    plain_job_lines: list[str] = []
+    console_job_lines: list[str] = []
+    for verdict in verdicts:
+        plain_verdict_line = (
+            f'{"✓" if verdict.acceptable else "❌"} '
+            f'{verdict.name} → {_RESULT_SYMBOLS[verdict.result]} '
+            f'{verdict.result} [{_STATUS_LABELS[verdict.requirement]}]'
+        )
+        plain_job_lines += {plain_verdict_line}
+        console_job_lines += {
+            _colorize_line(
+                text=plain_verdict_line,
+                acceptable=verdict.acceptable,
             ),
         }
 
-    write_lines_to_streams(markdown_summary_lines, summary_file_streams)
+    write_lines_to_streams(plain_job_lines, (summary_file,))
+    write_lines_to_streams(console_job_lines, (console_file,))
 
 
-def main(argv):
+def main(argv: list[str]) -> int:
     """Decide whether the needed jobs got satisfactory results."""
     inputs = parse_inputs(
         raw_allowed_failures=argv[1],
@@ -137,56 +227,48 @@ def main(argv):
     )
     summary_file_path = pathlib.Path(os.environ['GITHUB_STEP_SUMMARY'])
 
-
     jobs = inputs['jobs'] or {}
     jobs_allowed_to_fail = set(inputs['allowed_failures'] or [])
     jobs_allowed_to_be_skipped = set(inputs['allowed_skips'] or [])
 
     if not jobs:
-        with summary_file_path.open(mode=FILE_APPEND_MODE) as summary_file:
+        with summary_file_path.open(  # type: ignore[misc]
+            mode=FILE_APPEND_MODE,
+        ) as summary_file:
             write_lines_to_streams(
                 (
-                    '# ❌ Invalid input jobs matrix, '
+                    # NOTE: ISC004 Unparenthesized implicit string
+                    # NOTE: concatenation in collection
+                    '# ❌ Invalid input jobs matrix, '  # noqa: ISC004
                     'please provide a non-empty `needs` context',
                 ),
-                (sys.stderr, summary_file),
+                (
+                    _t.cast('_t.TextIO', sys.stderr),
+                    _t.cast('_t.TextIO', summary_file),
+                ),
             )
         return 1
 
-
-    job_matrix_succeeded = all(
-        job['result'] == 'success' for name, job in jobs.items()
-        if name not in (jobs_allowed_to_fail | jobs_allowed_to_be_skipped)
-    ) and all(
-        job['result'] in {'skipped', 'success'} for name, job in jobs.items()
-        if name in jobs_allowed_to_be_skipped
+    job_results = {name: job['result'] for name, job in jobs.items()}
+    verdicts = job_outcome.evaluate_jobs(
+        jobs=job_results,
+        jobs_allowed_to_fail=jobs_allowed_to_fail,
+        jobs_allowed_to_be_skipped=jobs_allowed_to_be_skipped,
     )
+    job_matrix_succeeded = all(verdict.acceptable for verdict in verdicts)
     set_final_result_outputs(job_matrix_succeeded)
 
-
-    allowed_to_fail_jobs_succeeded = all(
-        job['result'] == 'success' for name, job in jobs.items()
-        if name in jobs_allowed_to_fail
-    )
-
-
-    allowed_to_be_skipped_jobs_succeeded = all(
-        job['result'] == 'success' for name, job in jobs.items()
-        if name in jobs_allowed_to_be_skipped
-    )
-
-
-    with summary_file_path.open(mode=FILE_APPEND_MODE) as summary_file:
+    with summary_file_path.open(  # type: ignore[misc]
+        mode=FILE_APPEND_MODE,
+    ) as summary_file:
         log_decision_details(
-            job_matrix_succeeded,
-            jobs_allowed_to_fail,
-            jobs_allowed_to_be_skipped,
-            allowed_to_fail_jobs_succeeded,
-            allowed_to_be_skipped_jobs_succeeded,
-            jobs,
-            summary_file_streams=(sys.stderr, summary_file),
+            job_matrix_succeeded=job_matrix_succeeded,
+            jobs_allowed_to_fail=jobs_allowed_to_fail,
+            jobs_allowed_to_be_skipped=jobs_allowed_to_be_skipped,
+            verdicts=verdicts,
+            summary_file=_t.cast('_t.TextIO', summary_file),
+            console_file=_t.cast('_t.TextIO', sys.stderr),
         )
-
 
     return int(not job_matrix_succeeded)
 
