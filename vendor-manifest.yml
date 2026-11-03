@@ -533,9 +533,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: foundry-rs/foundry-toolchain/v1.6.0
-    ref: v1.6.0
+    ref: v1.9.2
     ref_type: tag
-    sha: 8b0419c685ef46cb79ec93fbdc131174afceb730
+    sha: dba66c27052e63476d886f22216e119ba7e615bf
     exclude:
       - src/
       - .prettierrc*
