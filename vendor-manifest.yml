@@ -41,9 +41,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: Swatinem/rust-cache/v2.9.2
-    ref: v2.9.2
+    ref: v2.9.3
     ref_type: tag
-    sha: 6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+    sha: d1527c8f67ef9af357290475d4af4b0fab8f12e0
     exclude:
       - src/
       - tests/
