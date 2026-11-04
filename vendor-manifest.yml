@@ -158,8 +158,8 @@ actions:
     strip_dev_dependencies: true
 
   - name: changesets/action/abitype
-    ref: v2.1.2
-    ref_type: tag
+    ref: ae32849d5ba541f9ae29e40e22a623bc13562f51
+    ref_type: commit
     sha: ae32849d5ba541f9ae29e40e22a623bc13562f51
     strip_dev_dependencies: true
     exclude:
@@ -177,6 +177,7 @@ actions:
       - scripts/
       - select-mode/
     notes: >-
+      Frozen v2.1.2 compatibility snapshot. New consumers use changesets/action/v2 (CLI v3).
       Node action; runs dist/index.js. .changeset kept: named as a path in the code pack kept: named
       as a path in the code pnpm-workspace.yaml kept: named as a path in the code publish kept:
       named as a path in the code version kept: named as a path in the code excluded: src/,
@@ -185,8 +186,8 @@ actions:
     upstream: changesets/action
 
   - name: changesets/action/ox
-    ref: v1.5.3
-    ref_type: tag
+    ref: e0145edc7d9d8679003495b11f87bd8ef63c0cba
+    ref_type: commit
     sha: e0145edc7d9d8679003495b11f87bd8ef63c0cba
     strip_dev_dependencies: true
     exclude:
@@ -203,14 +204,15 @@ actions:
       - scripts/
       - types/
     notes: >-
+      Frozen v1.5.3 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
       Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
       **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/
     upstream: changesets/action
 
   - name: changesets/action/v1.7.0
-    ref: v1.7.0
-    ref_type: tag
+    ref: 6a0a831ff30acef54f2c6aa1cbbc1096b066edaf
+    ref_type: commit
     sha: 6a0a831ff30acef54f2c6aa1cbbc1096b066edaf
     exclude:
       - src/
@@ -226,6 +228,7 @@ actions:
       - scripts/
       - types/
     notes: >-
+      Frozen v1.7.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
       Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
       **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/ Consumers: curl.md.
@@ -233,8 +236,8 @@ actions:
     strip_dev_dependencies: true
 
   - name: changesets/action/viem
-    ref: v1.4.10
-    ref_type: tag
+    ref: 06245a4e0a36c064a573d4150030f5ec548e4fcc
+    ref_type: commit
     sha: 06245a4e0a36c064a573d4150030f5ec548e4fcc
     strip_dev_dependencies: true
     exclude:
@@ -249,14 +252,15 @@ actions:
       - scripts/
       - types/
     notes: >-
+      Frozen v1.4.10 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
       Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, .babelrc*, yarn.lock, CHANGELOG*, **/*.d.ts, **/*.test.*,
       scripts/, types/
     upstream: changesets/action
 
   - name: changesets/action/wagmi
-    ref: v1.9.0
-    ref_type: tag
+    ref: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
+    ref_type: commit
     sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
     strip_dev_dependencies: true
     exclude:
@@ -273,11 +277,59 @@ actions:
       - rolldown.config.js
       - scripts/
     notes: >-
+      Frozen v1.9.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
       Node action; runs dist/index.js. .changeset kept: named as a path in the code
       pnpm-workspace.yaml kept: named as a path in the code excluded: src/, tsconfig*.json,
       pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts, .oxfmtrc.json, pr-comment/,
       pr-status/, rolldown.config.js, scripts/
     upstream: changesets/action
+
+  - name: changesets/action/v1
+    ref: v1.9.0
+    ref_type: tag
+    sha: a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d
+    upstream: changesets/action
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - .node-version
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.ts'
+      - .oxfmtrc.json
+      - pr-comment/
+      - pr-status/
+      - rolldown.config.js
+      - scripts/
+    notes: >-
+      Shared Changesets CLI v2 action. Tracks v1 releases; runtime snapshot uses the same
+      exclusions as the frozen wagmi slot. Upstream build/test dependencies are not installed.
+
+  - name: changesets/action/v2
+    ref: v2.1.2
+    ref_type: tag
+    sha: ae32849d5ba541f9ae29e40e22a623bc13562f51
+    upstream: changesets/action
+    strip_dev_dependencies: true
+    exclude:
+      - src/
+      - tsconfig*.json
+      - pnpm-lock.yaml
+      - .node-version
+      - CHANGELOG*
+      - '**/*.test.*'
+      - '**/*.ts'
+      - .oxfmtrc.json
+      - pr-comment/
+      - pr-status/
+      - rolldown.config.js
+      - scripts/
+      - select-mode/
+    notes: >-
+      Shared Changesets CLI v3 action. Tracks v2 releases; runtime snapshot uses the same
+      exclusions as the frozen abitype slot. Upstream build/test dependencies are not installed.
 
   - name: cloudflare/wrangler-action/rev-9acf94ace14e
     ref: v3.15.0

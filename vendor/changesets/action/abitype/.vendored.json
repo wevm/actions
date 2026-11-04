@@ -1,7 +1,7 @@
 {
   "upstream": "https://github.com/changesets/action",
-  "ref": "v2.1.2",
-  "ref_type": "tag",
+  "ref": "ae32849d5ba541f9ae29e40e22a623bc13562f51",
+  "ref_type": "commit",
   "sha": "ae32849d5ba541f9ae29e40e22a623bc13562f51",
   "upstream_commit_date": "2026-09-07T11:58:07Z",
   "readme_url": "https://github.com/changesets/action/blob/ae32849d5ba541f9ae29e40e22a623bc13562f51/README.md",

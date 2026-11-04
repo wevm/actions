@@ -72,11 +72,15 @@ For consumer upgrades, use these shared entrypoints:
 
 - `.github/actions/pnpm`: pnpm setup v6.1.0 and Node setup v6.4.0. Each repository's `packageManager` still selects its pnpm version; `skip-cache` remains supported.
 - `vendor/pnpm/action-setup/v6`: the same pnpm setup without dependency installation, for callers that need a custom destination or `package_json_file`.
+- `vendor/changesets/action/v1`: Changesets action v1.9.0 for repositories using Changesets CLI v2.
+- `vendor/changesets/action/v2`: Changesets action v2.1.2 for repositories using Changesets CLI v3.
 - `.github/workflows/lock-issue.yml`: lock-threads v6.0.2 with the existing 14-day policy.
 
 `pnpm-v4` is a compatibility alias for `.github/actions/pnpm`, forwarding `node-version` and `skip-cache`. The old `vendor/pnpm/action-setup/v4` and `viem-wagmi` paths retain their original snapshots but no longer track updates; use `v6` for new pins. Both shared pnpm entrypoints are smoke-tested with pnpm 12.16.1. Upgrading the setup action does not change a repository's `packageManager` pin.
 
-The `lock-issue-v5.yml` and other older vendor paths remain available while consumers migrate. Changesets requires a separate CLI migration: action v2 targets Changesets CLI v3, while action v1 targets CLI v2. Do not unify those slots by changing only the action path or its input names.
+Changesets has one tracked action per CLI compatibility line. The old `abitype`, `ox`, `v1.7.0`, `viem`, and `wagmi` paths are frozen compatibility snapshots; new pins use `v1` or `v2` according to the repository's locked CLI major. Moving from action v1 to v2 also requires v2's input/output names and an explicit `github-token` input for custom tokens. It is not a CLI upgrade.
+
+The `lock-issue-v5.yml` and other older vendor paths remain available while consumers migrate.
 
 <!-- vendored-actions:begin -->
 | Action | Version | Description |
@@ -89,11 +93,13 @@ The `lock-issue-v5.yml` and other older vendor paths remain available while cons
 | [`autofix-ci/action/v1.3.2`](https://github.com/autofix-ci/action/blob/c5b2d67aa2274e7b5a18224e8171550871fc7e4a/README.md) | v1.3.4 (`c5b2d67`) | Automatically fix formatting/lint issues in pull requests |
 | [`awalsh128/cache-apt-pkgs-action/rev-553a35bb8ebd`](https://github.com/awalsh128/cache-apt-pkgs-action/blob/553a35bb8ebd9fcabcb1c9451aa4c98e1b4ca8a9/README.md) | latest (`553a35b`) | Install APT based packages and cache them for future runs. |
 | [`benchmark-action/github-action-benchmark/v1.22.2`](https://github.com/benchmark-action/github-action-benchmark) | v1.22.2 (`4322e57`) | Continuous Benchmark using GitHub pages as dash board for keeping performance |
-| [`changesets/action/abitype`](https://github.com/changesets/action/blob/ae32849d5ba541f9ae29e40e22a623bc13562f51/README.md) | v2.1.2 (`ae32849`) | A GitHub action to automate releases with Changesets |
-| [`changesets/action/ox`](https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md) | v1.5.3 (`e0145ed`) | A GitHub action to automate releases with Changesets |
-| [`changesets/action/v1.7.0`](https://github.com/changesets/action/blob/6a0a831ff30acef54f2c6aa1cbbc1096b066edaf/README.md) | v1.7.0 (`6a0a831`) | A GitHub action to automate releases with Changesets |
-| [`changesets/action/viem`](https://github.com/changesets/action/blob/06245a4e0a36c064a573d4150030f5ec548e4fcc/README.md) | v1.4.10 (`06245a4`) | A GitHub action to automate releases with Changesets |
-| [`changesets/action/wagmi`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |
+| [`changesets/action/abitype`](https://github.com/changesets/action/blob/ae32849d5ba541f9ae29e40e22a623bc13562f51/README.md) | `ae32849` | A GitHub action to automate releases with Changesets |
+| [`changesets/action/ox`](https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md) | `e0145ed` | A GitHub action to automate releases with Changesets |
+| [`changesets/action/v1.7.0`](https://github.com/changesets/action/blob/6a0a831ff30acef54f2c6aa1cbbc1096b066edaf/README.md) | `6a0a831` | A GitHub action to automate releases with Changesets |
+| [`changesets/action/viem`](https://github.com/changesets/action/blob/06245a4e0a36c064a573d4150030f5ec548e4fcc/README.md) | `06245a4` | A GitHub action to automate releases with Changesets |
+| [`changesets/action/wagmi`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | `a45c4d5` | A GitHub action to automate releases with Changesets |
+| [`changesets/action/v1`](https://github.com/changesets/action/blob/a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d/README.md) | v1.9.0 (`a45c4d5`) | A GitHub action to automate releases with Changesets |
+| [`changesets/action/v2`](https://github.com/changesets/action/blob/ae32849d5ba541f9ae29e40e22a623bc13562f51/README.md) | v2.1.2 (`ae32849`) | A GitHub action to automate releases with Changesets |
 | [`cloudflare/wrangler-action/rev-9acf94ace14e`](https://github.com/cloudflare/wrangler-action) | v3.15.0 (`9acf94a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v3.14.1`](https://github.com/cloudflare/wrangler-action) | v3.15.0 (`9acf94a`) | Deploy your Cloudflare projects from GitHub using Wrangler |
 | [`cloudflare/wrangler-action/v4.0.0`](https://github.com/cloudflare/wrangler-action) | v4.0.0 (`ebbaa15`) | Deploy your Cloudflare projects from GitHub using Wrangler |
