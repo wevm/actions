@@ -279,7 +279,7 @@ test('workflow uses compatible pinned tooling, CI-triggering STS, and no publish
   }
   const steps = workflow.jobs.version.steps
   const changesets = steps.find(step => step.uses?.includes('/changesets/'))
-  assert.match(changesets.uses, /^wevm\/actions\/vendor\/changesets\/action\/abitype@[0-9a-f]{40}$/)
+  assert.match(changesets.uses, /^wevm\/actions\/vendor\/changesets\/action\/v2@[0-9a-f]{40}$/)
   for (const flag of ['create-github-releases', 'push-git-tags', 'push-with-git-cli']) assert.equal(changesets.with[flag], false)
   assert.equal(changesets.with['publish-script'], undefined)
   assert.equal(changesets.with['github-token'], '${{ steps.sts.outputs.token }}')
