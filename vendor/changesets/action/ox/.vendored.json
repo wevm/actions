@@ -1,7 +1,7 @@
 {
   "upstream": "https://github.com/changesets/action",
-  "ref": "v1.5.3",
-  "ref_type": "tag",
+  "ref": "e0145edc7d9d8679003495b11f87bd8ef63c0cba",
+  "ref_type": "commit",
   "sha": "e0145edc7d9d8679003495b11f87bd8ef63c0cba",
   "upstream_commit_date": "2025-05-17T16:42:57Z",
   "readme_url": "https://github.com/changesets/action/blob/e0145edc7d9d8679003495b11f87bd8ef63c0cba/README.md",

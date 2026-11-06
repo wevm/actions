@@ -31,10 +31,44 @@
     }
   },
   "latest": {
-    "version": "1.13.0"
+    "version": "1.15.0"
   },
   "1": {
-    "version": "1.13.0"
+    "version": "1.15.0"
+  },
+  "1.15": {
+    "version": "1.15.0"
+  },
+  "1.15.0": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF08DC766C353E",
+      "hash": "4db541da2b76fec89e2b5b6e9d0fb6daa6da7141ad91f58537ea33db2d288d61"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF08DC7537ECC1",
+      "hash": "f425dc2330553678b5cc3d53cb9fe30133e1a22ab25afc8c19d14f1de564458b"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF08DC7541A5D0",
+      "hash": "9891739e89bf6fe05ddb75d416f5b459611bfa397085f756e7b186cbe1d5d312"
+    }
+  },
+  "1.14": {
+    "version": "1.14.0"
+  },
+  "1.14.0": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DEFD350B0AC614",
+      "hash": "8d1c2b0945a812e4c00a0af8504087e988f379ee9c8d51c6e961137d2dfd90a5"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DEFD3509EA73F8",
+      "hash": "56e938d666f38bd075c3ec9ae44e03380a6b4146ce6b47cadb4e9f4d4c1c6942"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DEFD3509EE402C",
+      "hash": "bfe3a7d9710e91406fe6e02997ed8c28896d7be0a6caa920352a1eaaf181ca92"
+    }
   },
   "1.13": {
     "version": "1.13.0"

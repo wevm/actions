@@ -6,10 +6,26 @@ branding:
   icon: "play-circle"
 
 inputs:
+  version:
+    default: "stable"
+    description: |
+      Foundry version to install. Passed to `foundryup --install <version>`.
+
+      This version number has to match a released version of Foundry.
+      The default value is `stable`, which will pull the latest stable build.
+      Other options include `nightly` or a specific version like `v1.3.6`.
+    required: false
+  network:
+    default: "ethereum"
+    description: |
+      **Deprecated.** Tempo is now part of main Foundry; this input will be removed in a future release.
+
+      Network to install Foundry for. Passed to `foundryup --network <network>`.
+    required: false
   cache:
     default: "true"
     description: |
-      Whether to cache RPC responses or not.
+      Whether to cache Foundry data or not.
 
       Caching is activated by default.
     required: false
@@ -28,17 +44,9 @@ inputs:
 
       This key is used to identify the cache to restore. If not provided, a default key consisting of the job id is used.
     required: false
-  version:
-    default: "stable"
-    description: |
-      Foundry version.
-
-      This version number has to match a released version of Foundry.
-      The default value is `stable`, which will pull the latest stable build.
-    required: false
 
 runs:
-  using: "node20"
+  using: "node24"
   main: "dist/index.js"
   post: "dist/save/index.js"
   post-if: success()
