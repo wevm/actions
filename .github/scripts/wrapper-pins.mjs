@@ -31,8 +31,8 @@ function visitPins(visit) {
 export function refreshPins(base) {
   visitPins((path, sha) => {
     git('merge-base', '--is-ancestor', sha, base)
-    git('cat-file', '-e', `${base}:${path}`)
-    return base
+    // Avoid changing nested wrappers solely to repin an identical action tree.
+    return git('rev-parse', `${sha}:${path}`) === git('rev-parse', `${base}:${path}`) ? sha : base
   })
 }
 
