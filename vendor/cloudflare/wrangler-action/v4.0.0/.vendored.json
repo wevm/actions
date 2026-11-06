@@ -7,6 +7,9 @@
   "readme_url": "https://github.com/cloudflare/wrangler-action/blob/953926a2e2182532811c01a25e53647d93bf07c0/README.md",
   "description": "Deploy your Cloudflare projects from GitHub using Wrangler",
   "consume_as": "wevm/actions/vendor/cloudflare/wrangler-action/v4.0.0@<reviewed-sha>",
-  "files_removed": 11,
-  "nested_rewrites": []
+  "files_removed": 79,
+  "nested_rewrites": [],
+  "transforms": [
+    "package.json:devDependencies"
+  ]
 }
