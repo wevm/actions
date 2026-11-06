@@ -93,7 +93,7 @@ jobs:
       - name: Obtain short-lived publisher token
         if: steps.apply.outputs.changed == 'true'
         id: sts
-        uses: wevm/actions/.github/actions/github-sts@ff2e489195c2eb75f07b3fecad79cec5b39854c5
+        uses: wevm/actions/.github/actions/github-sts@31d7c5bc5f75932a367cf341ca5e26818eb9ec9d
         with:
           host: gh-sts.wevm.run
           policy: vendor-update
