@@ -41545,10 +41545,21 @@ const OutputEntryVersionUpload = OutputEntryBase.merge(objectType({
     /** The preview URL associated with this version upload */
     preview_url: stringType().optional(),
 }));
+const OutputEntryPreview = OutputEntryBase.merge(objectType({
+    type: literalType("preview"),
+    worker_name: stringType(),
+    preview_id: stringType(),
+    preview_name: stringType(),
+    preview_slug: stringType(),
+    preview_urls: arrayType(stringType()),
+    deployment_id: stringType(),
+    deployment_urls: arrayType(stringType()),
+}));
 const SupportedOutputEntry = discriminatedUnionType("type", [
     OutputEntryPagesDeployment,
     OutputEntryDeployment,
     OutputEntryVersionUpload,
+    OutputEntryPreview,
 ]);
 /**
  * Parses file names in a directory to find wrangler artifact files
@@ -41691,6 +41702,74 @@ async function createGitHubDeploymentAndJobSummary(config, pagesArtifactFields) 
         }
     }
 }
+async function createPreviewJobSummary({ previewName, previewUrl, deploymentUrl, workerName, }) {
+    await core.summary
+        .addRaw(`
+# Workers Preview Deployment
+
+| Name                       | Result |
+| -------------------------- | - |
+| **Worker:**                | ${workerName} |
+| **Preview:**               | ${previewName} |
+| **Preview URL:**           | ${previewUrl ?? "N/A"} |
+| **Unique Deployment URL:** | ${deploymentUrl ?? "N/A"} |
+  `)
+        .write();
+}
+/**
+ * Create a non-production GitHub deployment and job summary for a Workers Preview.
+ */
+async function createPreviewGitHubDeploymentAndJobSummary(config, previewFields) {
+    if (!config.GITHUB_TOKEN) {
+        return;
+    }
+    const octokit = (0,github.getOctokit)(config.GITHUB_TOKEN);
+    const githubBranch = external_process_namespaceObject.env.GITHUB_HEAD_REF || external_process_namespaceObject.env.GITHUB_REF_NAME;
+    const environment = previewFields.preview_name;
+    const productionEnvironment = false;
+    const [createDeploymentRes, createSummaryRes] = await Promise.allSettled([
+        (async () => {
+            const deployment = await octokit.rest.repos.createDeployment({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                ref: githubBranch || github.context.ref,
+                auto_merge: false,
+                description: "Cloudflare Workers Preview",
+                required_contexts: [],
+                environment,
+                production_environment: productionEnvironment,
+            });
+            if (deployment.status !== 201) {
+                info(config, "Error creating GitHub deployment for preview");
+                return;
+            }
+            await octokit.rest.repos.createDeploymentStatus({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                deployment_id: deployment.data.id,
+                environment,
+                environment_url: previewFields.preview_urls[0],
+                production_environment: productionEnvironment,
+                log_url: `https://dash.cloudflare.com/${config.CLOUDFLARE_ACCOUNT_ID}/?to=/${config.CLOUDFLARE_ACCOUNT_ID}/workers/services/view/${previewFields.worker_name}/production/previews/${encodeURIComponent(previewFields.preview_slug)}/deployments/${encodeURIComponent(previewFields.deployment_id)}`,
+                description: "Cloudflare Workers Preview",
+                state: "success",
+                auto_inactive: false,
+            });
+        })(),
+        createPreviewJobSummary({
+            previewName: previewFields.preview_name,
+            previewUrl: previewFields.preview_urls[0],
+            deploymentUrl: previewFields.deployment_urls[0],
+            workerName: previewFields.worker_name,
+        }),
+    ]);
+    if (createDeploymentRes.status === "rejected") {
+        warn(config, "Creating Github Deployment for preview failed");
+    }
+    if (createSummaryRes.status === "rejected") {
+        warn(config, "Creating Github Job summary for preview failed");
+    }
+}
 
 ;// CONCATENATED MODULE: ./src/commandOutputParsing.ts
 
@@ -41762,6 +41841,27 @@ function handleWranglerDeployCommand(config, stdOut) {
 function handleVersionsUploadOutputEntry(versionsOutputEntry) {
     (0,core.setOutput)("deployment-url", versionsOutputEntry.preview_url);
 }
+async function handlePreviewOutputEntry(config, previewOutputEntry) {
+    if (previewOutputEntry.preview_urls.length === 0) {
+        info(config, "No preview-url found in wrangler preview output file");
+    }
+    else if (previewOutputEntry.preview_urls.length > 1) {
+        info(config, "Multiple preview urls found in wrangler preview output file, preview-url will be set to the first url");
+    }
+    if (previewOutputEntry.deployment_urls.length === 0) {
+        info(config, "No preview-deployment-url found in wrangler preview output file");
+    }
+    else if (previewOutputEntry.deployment_urls.length > 1) {
+        info(config, "Multiple preview deployment urls found in wrangler preview output file, preview-deployment-url will be set to the first url");
+    }
+    (0,core.setOutput)("deployment-url", previewOutputEntry.preview_urls[0]);
+    (0,core.setOutput)("preview-url", previewOutputEntry.preview_urls[0]);
+    (0,core.setOutput)("preview-deployment-url", previewOutputEntry.deployment_urls[0]);
+    (0,core.setOutput)("preview-name", previewOutputEntry.preview_name);
+    (0,core.setOutput)("preview-id", previewOutputEntry.preview_id);
+    (0,core.setOutput)("preview-deployment-id", previewOutputEntry.deployment_id);
+    await createPreviewGitHubDeploymentAndJobSummary(config, previewOutputEntry);
+}
 /**
  * If no wrangler output file found, log a message stating deployment-url will be unavailable for output.
  * @deprecated Use {@link handleVersionsOutputEntry} instead.
@@ -41786,6 +41886,15 @@ function handleDeprectatedStdoutParsing(config, command, stdOut) {
         handleVersionsOutputCommand(config);
         return;
     }
+    // Check if this command is a Workers Preview deployment
+    const [commandName, previewArgument] = command.trim().split(/\s+/);
+    if (commandName === "preview" &&
+        (previewArgument === undefined || previewArgument.startsWith("-"))) {
+        info(config, "Unable to find a WRANGLER_OUTPUT_DIR, preview outputs will be unavailable. Have you updated wrangler to version >=4.136.3?");
+        const { deploymentUrl } = extractDeploymentUrlsFromStdout(stdOut);
+        (0,core.setOutput)("deployment-url", deploymentUrl);
+        return;
+    }
 }
 async function handleCommandOutputParsing(config, command, stdOut) {
     // get first OutputEntry found within wrangler artifact output directory
@@ -41804,6 +41913,9 @@ async function handleCommandOutputParsing(config, command, stdOut) {
             break;
         case "version-upload":
             handleVersionsUploadOutputEntry(outputEntry);
+            break;
+        case "preview":
+            await handlePreviewOutputEntry(config, outputEntry);
             break;
     }
 }
@@ -42061,7 +42173,9 @@ async function wranglerCommands(config, packageManager) {
                 args.push("--env", environment);
             }
             if (config["VARS"].length &&
-                (command.startsWith("deploy") || command.startsWith("publish")) &&
+                (command.startsWith("deploy") ||
+                    command.startsWith("publish") ||
+                    command.startsWith("preview")) &&
                 !command.includes("--var")) {
                 args.push("--var");
                 for (const v of config["VARS"]) {
@@ -42086,7 +42200,15 @@ async function wranglerCommands(config, packageManager) {
                 },
             };
             // Execute the wrangler command
-            await (0,exec.exec)(`${packageManager.exec} wrangler ${command}`, args, options);
+            try {
+                await (0,exec.exec)(`${packageManager.exec} wrangler ${command}`, args, options);
+            }
+            catch (err) {
+                if (stdErr) {
+                    error(config, stdErr);
+                }
+                throw err;
+            }
             // Set the outputs for the command
             (0,core.setOutput)("command-output", stdOut);
             (0,core.setOutput)("command-stderr", stdErr);
