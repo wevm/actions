@@ -21,13 +21,173 @@
     }
   },
   "latest": {
-    "version": "1.49.0"
+    "version": "1.51.1"
   },
   "1": {
-    "version": "1.49.0"
+    "version": "1.51.1"
+  },
+  "1.51": {
+    "version": "1.51.1"
+  },
+  "1.51.1": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF23ED2A9E6FEB",
+      "hash": "93c301fd4120ff076e2cc2a6d6a61cab4a4bdb81899287c0938b452e56d1f454"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF23EDAB2B6126",
+      "hash": "f3451079971633a7f769fb958fe06b0d64b5f1dc46df0854aa1ddb9a6f4031d6"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF23ED6CD9E33E",
+      "hash": "518f759fba43205f17a717656054c1d25bc883455a6296989e9d021c6edb7c59"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF23ED1C86E47E",
+      "hash": "2ac5e37b3236b3c07dec5cdf1527acf143aec4674a6089b0bf424d021b35e099"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF23ED5CE33F3A",
+      "hash": "316d50a32c3726a80ab39c6d12141b70080498973c5e8a9b068b12cde78b10c1"
+    }
+  },
+  "1.51.0": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF23C1FC38407A",
+      "hash": "cfaf1683883b2851afeccf310c8f9c086e70d6ea33f939e595a6b1b1c2c8e5d6"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF23C1F9EA3E7A",
+      "hash": "fef59b9297a808bffeffe3be61754d5f71d9ab0d4eeaf46bd281929d4dd8f95d"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF23C1E4036499",
+      "hash": "6b9a2084e508cf90553430ffe920c5b186bb87b66f5d6e75400e446c1d9ea494"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF23C1EC62467F",
+      "hash": "ec77ba48a6cf05f8416455b83e9aa86e206480c2be72136071842aba3b9f71ea"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF23C200748810",
+      "hash": "9b650aed321349d9b0b2d61ac1c03b0a291be4c3c02b4d0d4d3d103bffb7fd96"
+    }
+  },
+  "1.50": {
+    "version": "1.50.3"
+  },
+  "1.50.3": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF1B350718E7E5",
+      "hash": "aca6b5d546307092b8d0a8e0a89dd80f9da51f2f7617c5e45c5607c1684ffbf2"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF1B358A4EB666",
+      "hash": "7cc75e42fff1e3b66928de325b3ea1ec7e23ce35ffaa3561fdb0ede8e7275f6f"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF1B35166F26C4",
+      "hash": "b59f149d84e86aab535d52db029fa8d3ac5ecba9ae5c7f19cf07acb5aa0caaaf"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF1B34F0788106",
+      "hash": "456f9fe7aa6e7c1597879f5e951d7de2fab261a9ca05f16f324f896c806c55db"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF1B352A671CAD",
+      "hash": "844d4121fb47a95604aa5566843bb9e3d6078040b3c8f22367709f563038f2c5"
+    }
+  },
+  "1.50.2": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF132FFEBA8B46",
+      "hash": "abcb3e257c7c2abeff4d903f7fe68071357637605bdb283ce2251f44bc70dc09"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF13306A2FBA17",
+      "hash": "7480a081e51d428d94f560ef8b855ae0decb7c35cc686925ed887c5f51b1ecf1"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF13303CB82C95",
+      "hash": "8474ca8bd72df497b7dee2272345bdea0d4926b18b708faea492fc9bcfd0b0e9"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF13304F29E96F",
+      "hash": "27c4b6d0ba6f37d120ce32117777d703fc9d57ba71f16e8bcde5b35c987cf9b8"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF1330868598C0",
+      "hash": "70d61e9d682034133f0aa56f5a02bae0de168495f3cce62a87054aa7186c1901"
+    }
+  },
+  "1.50.1": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF0849E388DD52",
+      "hash": "edf0545109aee6a22751d04ddecb97c45be47d3aa0409564fb895eeeace91b1e"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF084A206DFE00",
+      "hash": "b31ccf2f21154b2bc8d2a84f395f746106edda0feec4817fbecdb12216df53bd"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF084A57A77BA6",
+      "hash": "8740867a0d9e44a62f0803e37a669ec3c6cd17ab63cd49d00e14a96d3e03ccc3"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF0849C3E53EA2",
+      "hash": "a48feb58c517977ca953e634507c72819d64df8717c33ced3e43868d174fd39e"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF084A1F3DD4D5",
+      "hash": "2c940734b44b6e199e165278b662b7e17c68f068471a2a8a5e491ce635414ae6"
+    }
+  },
+  "1.50.0": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF0529BFFF60E3",
+      "hash": "a1497c9626ba0bab731b3e37c12ac9051bbfa2a253463d4d574c28f190b5497b"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF052A367111D8",
+      "hash": "ab88faa54ab9ceac55c6fc2a9841ceab8ef883ed46522dbcbde2ec7a110350b0"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF052A35FB9BDF",
+      "hash": "a48abe229e6fd48729ee891b2c410c41bfa9dc15ca77815e723c4b66c311c53c"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF0529CE447400",
+      "hash": "a520651f52199efc91a27aa2b82362e93d50e7d96386d3d48b28c2ad06b9ae4e"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF052A106AEDF3",
+      "hash": "3c9e3cdc20fbed3812c1f2060650398e88af0c0a251bbe069398752dd71513ed"
+    }
   },
   "1.49": {
-    "version": "1.49.0"
+    "version": "1.49.1"
+  },
+  "1.49.1": {
+    "x86_64_linux_musl": {
+      "etag": "0x8DF04709D0D44F6",
+      "hash": "467c88326d29b225263a64efcc47729bfea2b5b9b5e787de0002b8ddb9f2efc9"
+    },
+    "x86_64_macos": {
+      "etag": "0x8DF0470FE570BC6",
+      "hash": "2dca27c97def4a4a77bac80c57f0100b152497ea79dcd84f620c244773237486"
+    },
+    "x86_64_windows": {
+      "etag": "0x8DF0470EF7CDE27",
+      "hash": "a2ce9a02125d0ab4a9490f45bba7f0296ebe1bebb6ae508e8277521a5cf29e35"
+    },
+    "aarch64_linux_musl": {
+      "etag": "0x8DF04708E375A66",
+      "hash": "631f19b0e4df118c97497e2a8505b97af33bd7f3bba027d65750fbefb4a087f9"
+    },
+    "aarch64_macos": {
+      "etag": "0x8DF04711A5AB6D3",
+      "hash": "34ab3263970ad79e93a6cabdb82814e55ccc58c0fafe34645b8f376081ecb7af"
+    }
   },
   "1.49.0": {
     "x86_64_linux_musl": {
