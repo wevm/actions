@@ -15,7 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up pnpm and install dependencies
-      uses: wevm/actions/.github/actions/pnpm@b518cf981b50a4c745a8b7335fc693f34b108a75 # v1.0.1
+      uses: wevm/actions/.github/actions/pnpm@e1f868d7ecd1c5a1eaaca871c42180d9c37badbb # v1.0.1
       with:
         node-version: ${{ inputs.node-version }}
         skip-cache: ${{ inputs.skip-cache }}
