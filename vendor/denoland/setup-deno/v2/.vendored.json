@@ -1,0 +1,12 @@
+{
+  "upstream": "https://github.com/denoland/setup-deno",
+  "ref": "v2.0.5",
+  "ref_type": "tag",
+  "sha": "22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+  "upstream_commit_date": "2026-07-03T11:27:31+02:00",
+  "readme_url": "https://github.com/denoland/setup-deno/blob/22d081ff2d3a40755e97629de92e3bcbfa7cf2ed/README.md",
+  "description": "Setup Deno by installing, downloading, and adding it to the path.",
+  "consume_as": "wevm/actions/vendor/denoland/setup-deno/v2@<reviewed-sha>",
+  "files_removed": 14,
+  "nested_rewrites": []
+}

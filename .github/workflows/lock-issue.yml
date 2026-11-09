@@ -20,7 +20,7 @@ jobs:
     if: github.repository_owner == 'wevm'
     runs-on: ubuntu-latest
     steps:
-      - uses: wevm/actions/vendor/dessant/lock-threads/v6@ff2e489195c2eb75f07b3fecad79cec5b39854c5 # upstream v6.0.2
+      - uses: wevm/actions/vendor/dessant/lock-threads/v6@9bf103bd47b43c77baa02648201039b6ef3d713b # upstream v6.0.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           issue-comment: ${{ inputs.issue-comment }}
