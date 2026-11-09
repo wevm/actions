@@ -70,7 +70,7 @@ jobs:
       - name: Obtain short-lived version PR token (allows PR CI to run)
         if: steps.plan.outputs.mode == 'version'
         id: sts
-        uses: wevm/actions/.github/actions/github-sts@ff2e489195c2eb75f07b3fecad79cec5b39854c5
+        uses: wevm/actions/.github/actions/github-sts@9bf103bd47b43c77baa02648201039b6ef3d713b
         with:
           host: gh-sts.wevm.run
           policy: release-pr
@@ -78,7 +78,7 @@ jobs:
       - name: Maintain manually reviewed version PR; never publish
         if: steps.plan.outputs.mode == 'version'
         id: changesets
-        uses: wevm/actions/vendor/changesets/action/v2@6d24d44bb98809270f8d2a19d584f29aeb384be5 # upstream v2.1.2; CLI v3
+        uses: wevm/actions/vendor/changesets/action/v2@9bf103bd47b43c77baa02648201039b6ef3d713b # upstream v2.1.2; CLI v3
         with:
           github-token: ${{ steps.sts.outputs.token }}
           version-script: npm run version:release
