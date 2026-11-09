@@ -177,12 +177,12 @@ actions:
       - scripts/
       - select-mode/
     notes: >-
-      Frozen v2.1.2 compatibility snapshot. New consumers use changesets/action/v2 (CLI v3).
-      Node action; runs dist/index.js. .changeset kept: named as a path in the code pack kept: named
-      as a path in the code pnpm-workspace.yaml kept: named as a path in the code publish kept:
-      named as a path in the code version kept: named as a path in the code excluded: src/,
-      tsconfig*.json, pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts,
-      .oxfmtrc.json, pr-comment/, pr-status/, rolldown.config.js, scripts/, select-mode/
+      Frozen v2.1.2 compatibility snapshot. New consumers use changesets/action/v2 (CLI v3). Node
+      action; runs dist/index.js. .changeset kept: named as a path in the code pack kept: named as a
+      path in the code pnpm-workspace.yaml kept: named as a path in the code publish kept: named as
+      a path in the code version kept: named as a path in the code excluded: src/, tsconfig*.json,
+      pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts, .oxfmtrc.json, pr-comment/,
+      pr-status/, rolldown.config.js, scripts/, select-mode/
     upstream: changesets/action
 
   - name: changesets/action/ox
@@ -204,8 +204,8 @@ actions:
       - scripts/
       - types/
     notes: >-
-      Frozen v1.5.3 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
-      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      Frozen v1.5.3 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2). Node
+      action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
       **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/
     upstream: changesets/action
@@ -228,8 +228,8 @@ actions:
       - scripts/
       - types/
     notes: >-
-      Frozen v1.7.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
-      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      Frozen v1.7.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2). Node
+      action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, rollup.config.*, yarn.lock, .node-version, CHANGELOG*,
       **/*.d.ts, **/*.test.*, **/*.ts, scripts/, types/ Consumers: curl.md.
     upstream: changesets/action
@@ -252,8 +252,8 @@ actions:
       - scripts/
       - types/
     notes: >-
-      Frozen v1.4.10 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
-      Node action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
+      Frozen v1.4.10 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2). Node
+      action; runs dist/index.js. .changeset kept: named as a path in the code excluded: src/,
       __fixtures__/, tsconfig*.json, .babelrc*, yarn.lock, CHANGELOG*, **/*.d.ts, **/*.test.*,
       scripts/, types/
     upstream: changesets/action
@@ -277,11 +277,11 @@ actions:
       - rolldown.config.js
       - scripts/
     notes: >-
-      Frozen v1.9.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2).
-      Node action; runs dist/index.js. .changeset kept: named as a path in the code
-      pnpm-workspace.yaml kept: named as a path in the code excluded: src/, tsconfig*.json,
-      pnpm-lock.yaml, .node-version, CHANGELOG*, **/*.test.*, **/*.ts, .oxfmtrc.json, pr-comment/,
-      pr-status/, rolldown.config.js, scripts/
+      Frozen v1.9.0 compatibility snapshot. New consumers use changesets/action/v1 (CLI v2). Node
+      action; runs dist/index.js. .changeset kept: named as a path in the code pnpm-workspace.yaml
+      kept: named as a path in the code excluded: src/, tsconfig*.json, pnpm-lock.yaml,
+      .node-version, CHANGELOG*, **/*.test.*, **/*.ts, .oxfmtrc.json, pr-comment/, pr-status/,
+      rolldown.config.js, scripts/
     upstream: changesets/action
 
   - name: changesets/action/v1
@@ -304,8 +304,8 @@ actions:
       - rolldown.config.js
       - scripts/
     notes: >-
-      Shared Changesets CLI v2 action. Tracks v1 releases; runtime snapshot uses the same
-      exclusions as the frozen wagmi slot. Upstream build/test dependencies are not installed.
+      Shared Changesets CLI v2 action. Tracks v1 releases; runtime snapshot uses the same exclusions
+      as the frozen wagmi slot. Upstream build/test dependencies are not installed.
 
   - name: changesets/action/v2
     ref: v2.1.2
@@ -328,8 +328,8 @@ actions:
       - scripts/
       - select-mode/
     notes: >-
-      Shared Changesets CLI v3 action. Tracks v2 releases; runtime snapshot uses the same
-      exclusions as the frozen abitype slot. Upstream build/test dependencies are not installed.
+      Shared Changesets CLI v3 action. Tracks v2 releases; runtime snapshot uses the same exclusions
+      as the frozen abitype slot. Upstream build/test dependencies are not installed.
 
   - name: cloudflare/wrangler-action/rev-9acf94ace14e
     ref: v3.15.0
@@ -365,8 +365,8 @@ actions:
       - '**/*.ts'
       - scripts/
     notes: >-
-      Node action; runs prebuilt dist/index.mjs. Exclude upstream development files
-      and dependencies, matching the v4.1.3 slot. Consumers: chaindex, cove.
+      Node action; runs prebuilt dist/index.mjs. Exclude upstream development files and
+      dependencies, matching the v4.1.3 slot. Consumers: chaindex, cove.
     upstream: cloudflare/wrangler-action
     strip_dev_dependencies: true
 
@@ -833,8 +833,8 @@ actions:
       - pnpm-lock.yaml
       - run.sh
     notes: >-
-      Frozen v4.1.0 compatibility snapshot. New consumers use pnpm/action-setup/v6.
-      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
+      Frozen v4.1.0 compatibility snapshot. New consumers use pnpm/action-setup/v6. Node action;
+      runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
     upstream: pnpm/action-setup
 
   - name: pnpm/action-setup/v6
@@ -865,8 +865,8 @@ actions:
       - pnpm-lock.yaml
       - run.sh
     notes: >-
-      Frozen v4.3.0 compatibility snapshot. New consumers use pnpm/action-setup/v6.
-      Node action; runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
+      Frozen v4.3.0 compatibility snapshot. New consumers use pnpm/action-setup/v6. Node action;
+      runs dist/index.js. excluded: src/, tsconfig*.json, pnpm-lock.yaml, run.sh
     upstream: pnpm/action-setup
 
   - name: preactjs/compressed-size-action/2.8.0
@@ -931,9 +931,9 @@ actions:
     strip_dev_dependencies: true
 
   - name: taiki-e/install-action/v2.86.1
-    ref: v2.87.31
+    ref: v2.89.0
     ref_type: tag
-    sha: 1e29709c0ec63babbe8f266397a465f29a825f91
+    sha: 1919c4a95903d2c33e4a221102edca87309fc14b
     exclude: []
     notes: >-
       whole repository kept (apart from repo-wide defaults): action.yml uses the action directory

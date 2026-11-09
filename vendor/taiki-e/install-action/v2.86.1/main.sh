@@ -96,7 +96,7 @@ download_and_extract() {
     # xbuild's binary name is "x", as opposed to the usual crate name
     xbuild) installed_bin=("${bin_dir}/x${exe}") ;;
     # Their binary names are renamed below.
-    editorconfig-checker | oxfmt) installed_bin=("${bin_dir}/${tool}${exe}") ;;
+    editorconfig-checker | oxfmt | yq) installed_bin=("${bin_dir}/${tool}${exe}") ;;
     *)
       for tmp in "${bin_in_archive[@]}"; do
         installed_bin+=("${bin_dir}/$(basename -- "${tmp}")")
@@ -205,7 +205,7 @@ download_and_extract() {
       esac
       for tmp in "${bin_in_archive[@]}"; do
         case "${tool}" in
-          editorconfig-checker | oxfmt) mv -- "${tmp}" "${bin_dir}/${tool}${exe}" ;;
+          editorconfig-checker | oxfmt | yq) mv -- "${tmp}" "${bin_dir}/${tool}${exe}" ;;
           *) mv -- "${tmp}" "${bin_dir}/" ;;
         esac
       done
@@ -215,7 +215,7 @@ download_and_extract() {
           unzip -q tmp
           for tmp in "${bin_in_archive[@]}"; do
             case "${tool}" in
-              editorconfig-checker | oxfmt) mv -- "${tmp}" "${bin_dir}/${tool}${exe}" ;;
+              editorconfig-checker | oxfmt | yq) mv -- "${tmp}" "${bin_dir}/${tool}${exe}" ;;
               *) mv -- "${tmp}" "${bin_dir}/" ;;
             esac
           done
@@ -371,6 +371,7 @@ download_from_manifest() {
   download_from_download_info "$@"
 }
 download_from_download_info() {
+  local tool="$1"
   read_download_info "$@"
   download_and_extract "${url}" "${checksum}" "${bin_dir}" "${bin_in_archive[@]}"
 }
@@ -378,20 +379,26 @@ install_cargo_binstall() {
   local binstall_version
   binstall_version=$(jq -r '.latest.version' "${manifest_dir}/cargo-binstall.json")
   local install_binstall=1
+  local installed_at
+  installed_at=$(type -P "cargo-binstall${exe}" || true)
   _binstall_version=$("cargo-binstall${exe}" binstall -V 2>/dev/null || true)
   if [[ -n "${_binstall_version}" ]]; then
     if [[ "${_binstall_version}" == "${binstall_version}" ]]; then
-      info "cargo-binstall already installed at ${cargo_bin}/cargo-binstall${exe}"
+      info "cargo-binstall already installed at ${installed_at}"
       install_binstall=''
     else
-      info "cargo-binstall already installed at ${cargo_bin}/cargo-binstall${exe}, but is not compatible version with this action, upgrading"
-      rm -- "${cargo_bin}/cargo-binstall${exe}"
+      info "cargo-binstall already installed at ${installed_at}, but is not compatible version with this action, upgrading"
     fi
   fi
 
   if [[ -n "${install_binstall}" ]]; then
     info "installing cargo-binstall@latest (${binstall_version})"
     download_from_manifest "cargo-binstall" "latest"
+    # Prefer the downloaded binary over an incompatible version elsewhere in PATH.
+    export PATH="${bin_dir}:${PATH}"
+    local _bin_dir
+    _bin_dir=$(canonicalize_windows_path "${bin_dir}")
+    printf '%s\n' "${_bin_dir}" >>"${GITHUB_PATH}"
     installed_at=$(type -P "cargo-binstall${exe}" || true)
     if [[ -n "${installed_at}" ]]; then
       info "cargo-binstall installed at ${installed_at}"
