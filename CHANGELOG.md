@@ -1,5 +1,11 @@
 # @wevm/actions
 
+## 1.0.3
+
+### Patch Changes
+
+- ba1fd58: Preserve release pins to unchanged action trees so nested wrappers do not block snapshot publication.
+
 ## 1.0.2
 
 ### Patch Changes
