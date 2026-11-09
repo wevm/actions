@@ -159,9 +159,9 @@ test('real CLI versions private root, updates lock and wrapper pins, then releas
     assert.match(f.read(file), new RegExp(`wevm/actions/vendor/example/action/v1@${base}`))
     assert(!f.read(file).includes(head))
   }
-  assert.match(f.read('.github/actions/example/action.yml'), new RegExp(`/v2@${base}`))
+  assert.match(f.read('.github/actions/example/action.yml'), new RegExp(`/v2@${f.setup}`))
   assert.match(f.read('.github/actions/example/action.yml'), /uses: wevm\/actions\/vendor\/not-an-action@main/)
-  assert.match(f.read('.github/workflows/example.yml'), new RegExp(`\.github/actions/token@${base}`))
+  assert.match(f.read('.github/workflows/example.yml'), new RegExp(`\.github/actions/token@${f.setup}`))
   assert.match(f.read('.github/workflows/example.yml'), /uses: wevm\/actions\/vendor\/not-an-action@main/)
   assert.equal(f.read('vendor-manifest.yml'), manifest)
   assert.equal(f.git('diff', '--name-only', base, head, 'vendor', 'vendor-manifest.yml'), '')
@@ -175,6 +175,22 @@ test('real CLI versions private root, updates lock and wrapper pins, then releas
   success(f.run())
   assert.deepEqual(f.state(), released)
   assert.doesNotMatch(f.git('config', '--local', '--list'), /credential\.|extraheader/i)
+})
+
+test('releases nested wrappers without rewriting pins to unchanged action trees', t => {
+  const f = fixture(t)
+  f.propose()
+  const wrapper = `runs:\n  using: composite\n  steps:\n    - uses: wevm/actions/vendor/example/action/v2@${f.setup}\n`
+  f.write('.github/actions/stable/action.yml', wrapper)
+  const wrapperBase = f.commit()
+  const alias = `runs:\n  using: composite\n  steps:\n    - uses: wevm/actions/.github/actions/stable@${wrapperBase}\n`
+  f.write('.github/actions/alias/action.yml', alias)
+  f.commit()
+  const head = f.version()
+  success(f.run())
+  assert.equal(f.read('.github/actions/stable/action.yml'), wrapper)
+  assert.equal(f.read('.github/actions/alias/action.yml'), alias)
+  assert.equal(f.state().releases[0].target_commitish, head)
 })
 
 test('retry after tag succeeds and release API fails creates only the missing release', t => {

@@ -36,7 +36,9 @@ repository commit. No new action import or vendored runtime edits are needed.
 The version PR consumes pending changesets, updates `package.json`, the root lock
 version and `CHANGELOG.md`, and refreshes first-party `wevm/actions/...@SHA` uses
 under `.github/actions` and `.github/workflows` to the already-merged, CI-checked
-base commit. It never pins to its own future commit. It does not change vendor
+base commit only when the referenced action tree changed. Pins to identical trees
+stay unchanged so nested wrappers remain identical to their pinned snapshots.
+It never pins to its own future commit. It does not change vendor
 paths, the manifest's `self_sha`, or generated vendor trees. Nested vendor
 dependencies still follow the separate bootstrap process in `vendor/README.md`.
 
