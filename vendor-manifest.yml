@@ -951,9 +951,9 @@ actions:
     upstream: zizmorcore/zizmor-action
 
   - name: zizmorcore/zizmor-action/v0.7.0
-    ref: v0.8.0
+    ref: v0.8.1
     ref_type: tag
-    sha: 53290badfa369cb0bf7ad16342cb62c2fa47ac7b
+    sha: 45d7276c9ca790aabd705e31ca99c6185c3e76dd
     exclude: []
     notes: >-
       whole repository kept (apart from repo-wide defaults): action.yml uses the action directory
