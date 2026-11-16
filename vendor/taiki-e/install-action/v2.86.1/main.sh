@@ -109,53 +109,57 @@ download_and_extract() {
     *.tar.gz | *.tgz)
       tar_args+=('xzf')
       if ! type -P gzip >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (gzip)\n'
-            sys_install gzip
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (gzip)\n'
+          sys_install gzip
+          printf '::endgroup::\n'
+        else
+          warn "this action requires gzip to install ${tool}"
+        fi
       fi
       ;;
     *.gz)
       if ! type -P gzip >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (gzip)\n'
-            sys_install gzip
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (gzip)\n'
+          sys_install gzip
+          printf '::endgroup::\n'
+        else
+          warn "this action requires gzip to install ${tool}"
+        fi
       fi
       ;;
     *.tar.bz2 | *.tbz2)
       tar_args+=('xjf')
       if ! type -P bzip2 >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (bzip2)\n'
-            sys_install bzip2
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (bzip2)\n'
+          sys_install bzip2
+          printf '::endgroup::\n'
+        else
+          warn "this action requires bzip2 to install ${tool}"
+        fi
       fi
       ;;
     *.tar.xz | *.txz)
       tar_args+=('xJf')
       if ! type -P xz >/dev/null; then
-        case "${base_distro}" in
-          debian)
-            printf '::group::Install packages required for installation (xz-utils)\n'
-            sys_install xz-utils
-            printf '::endgroup::\n'
-            ;;
-          fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (xz)\n'
-            sys_install xz
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          case "${base_distro}" in
+            debian)
+              printf '::group::Install packages required for installation (xz-utils)\n'
+              sys_install xz-utils
+              printf '::endgroup::\n'
+              ;;
+            *)
+              printf '::group::Install packages required for installation (xz)\n'
+              sys_install xz
+              printf '::endgroup::\n'
+              ;;
+          esac
+        else
+          warn "this action requires xz to install ${tool}"
+        fi
       fi
       ;;
     *.tar.zst | *.tzst)
@@ -172,24 +176,24 @@ download_and_extract() {
       ;;
     *.zip)
       if ! type -P unzip >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (unzip)\n'
-            sys_install unzip
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (unzip)\n'
+          sys_install unzip
+          printf '::endgroup::\n'
+        else
+          warn "this action requires unzip to install ${tool}"
+        fi
       fi
       ;;
     *.deb)
       if ! type -P dpkg-deb >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (dpkg)\n'
-            sys_install dpkg
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (dpkg)\n'
+          sys_install dpkg
+          printf '::endgroup::\n'
+        else
+          warn "this action requires dpkg-deb to install ${tool}"
+        fi
       fi
       ;;
   esac
@@ -324,6 +328,13 @@ read_manifest() {
       ;;
     *) bail "unsupported OS type '${host_os}' for ${tool}" ;;
   esac
+}
+skip_unavailable_tool() {
+  if [[ "${fallback}" == "skip" ]] && [[ "${download_info}" == "null" ]]; then
+    info "$1@$2 for '${host_arch}_${host_os}' is not supported (updating install-action might resolve this); skipping because of 'fallback: skip' input option"
+    return 0
+  fi
+  return 1
 }
 read_download_info() {
   local tool="$1"
@@ -510,16 +521,17 @@ esac
 
 fallback="${INPUT_FALLBACK:-}"
 case "${fallback}" in
-  none | cargo-binstall | cargo-install) ;;
-  *) bail "'fallback' input option must be 'none', 'cargo-binstall', or 'cargo-install': '${fallback}'" ;;
+  none | skip | cargo-binstall | cargo-install) ;;
+  *) bail "'fallback' input option must be 'none', 'skip', 'cargo-binstall', or 'cargo-install': '${fallback}'" ;;
 esac
 
 # Unlike gh command, cargo-binstall reads GITHUB_TOKEN first via cli parser, and then reads GH_TOKEN.
 # https://github.com/cargo-bins/cargo-binstall/blob/v1.17.9/crates/bin/src/args.rs#L704
 token="${GITHUB_TOKEN:-"${GH_TOKEN:-"${DEFAULT_GITHUB_TOKEN:-}"}"}"
 # This prevents tokens from being exposed to subprocesses via environment variables.
-# Since the tokens remain in memory, setting `fallback: none` (which prevents the tokens from being
-# set in the first place) remains the best practice from a security standpoint, as readme says.
+# Since the tokens remain in memory, setting `fallback: none`, `fallback: skip`, or
+# `fallback: cargo-install` (which prevents the tokens from being set in the first place) remains
+# the best practice from a security standpoint, as readme says.
 # Note that this does not prevent token leaks via reading `/proc/*/environ` on Linux or
 # via `ps -Eww` on macOS. It only reduces the risk of leaks.
 unset GITHUB_TOKEN GH_TOKEN DEFAULT_GITHUB_TOKEN
@@ -548,19 +560,25 @@ case "${RUNNER_OS}" in
       # /etc/os-release is available on Debian 7+
       base_distro=debian
     elif [[ -e /etc/os-release ]]; then
-      if grep -Eq '^ID_LIKE=' /etc/os-release; then
-        base_distro=$(grep -E '^ID_LIKE=' /etc/os-release | cut -d= -f2)
-        case "${base_distro}" in
-          *debian*) base_distro=debian ;;
-          *fedora*) base_distro=fedora ;;
-          *suse*) base_distro=suse ;;
-          *arch*) base_distro=arch ;;
-          *alpine*) base_distro=alpine ;;
-        esac
-      else
-        base_distro=$(grep -E '^ID=' /etc/os-release | cut -d= -f2)
-      fi
-      base_distro="${base_distro//\"/}"
+      base_distro=$(grep -E '^ID_LIKE=' /etc/os-release || true)
+      case "${base_distro}" in
+        *debian*) base_distro=debian ;;
+        *fedora*) base_distro=fedora ;;
+        *suse*) base_distro=suse ;;
+        *arch*) base_distro=arch ;;
+        *alpine*) base_distro=alpine ;;
+        *)
+          base_distro=$(grep -E '^ID=' /etc/os-release)
+          base_distro="${base_distro#*=}"
+          base_distro="${base_distro//\"/}"
+          case "${base_distro}" in
+            debian | fedora | suse | arch | alpine) ;;
+            *) base_distro='' ;;
+          esac
+          ;;
+      esac
+    else
+      base_distro=''
     fi
     case "${base_distro}" in
       fedora)
@@ -681,39 +699,42 @@ manifest_dir="${GITHUB_ACTION_PATH}/manifests"
 case "${host_os}" in
   linux)
     if ! type -P jq >/dev/null || ! type -P curl >/dev/null || ! type -P tar >/dev/null; then
-      case "${base_distro}" in
-        debian | fedora | suse | arch | alpine)
-          printf '::group::Install packages required for installation (jq, curl, and/or tar)\n'
-          sys_packages=()
-          if ! type -P curl >/dev/null; then
-            sys_packages+=(ca-certificates curl)
-          fi
-          if ! type -P tar >/dev/null; then
-            sys_packages+=(tar)
-          fi
-          if [[ "${dnf:-}" == "yum" ]]; then
-            # On RHEL7-based distribution jq requires EPEL
-            if ! type -P jq >/dev/null; then
-              sys_packages+=(epel-release)
-              sys_install "${sys_packages[@]}"
-              sys_install jq --enablerepo=epel
-            else
-              sys_install "${sys_packages[@]}"
-            fi
+      if [[ -n "${base_distro}" ]]; then
+        printf '::group::Install packages required for installation (jq, curl, and/or tar)\n'
+        sys_packages=()
+        if ! type -P curl >/dev/null; then
+          # Note that we do not fallback to wget.
+          # Common containers do not install GNU Wget by default and BusyBox wget installed in some
+          # common containers by default lacks necessary security options (--https-only --secure-protocol=TLSv1_2).
+          sys_packages+=(ca-certificates curl)
+        fi
+        if ! type -P tar >/dev/null; then
+          # TODO: this is not necessary for some tools using unzip.
+          sys_packages+=(tar)
+        fi
+        if [[ "${dnf:-}" == "yum" ]]; then
+          # On RHEL7-based distribution jq requires EPEL
+          if ! type -P jq >/dev/null; then
+            sys_packages+=(epel-release)
+            sys_install "${sys_packages[@]}"
+            sys_install jq --enablerepo=epel
           else
-            if ! type -P jq >/dev/null; then
-              # https://github.com/taiki-e/install-action/issues/521
-              if [[ "${base_distro}" == "arch" ]]; then
-                sys_packages+=(glibc)
-              fi
-              sys_packages+=(jq)
-            fi
             sys_install "${sys_packages[@]}"
           fi
-          printf '::endgroup::\n'
-          ;;
-        *) warn "this action requires at least jq and curl on non-Debian/Fedora/SUSE/Arch/Alpine-based Linux" ;;
-      esac
+        else
+          if ! type -P jq >/dev/null; then
+            # https://github.com/taiki-e/install-action/issues/521
+            if [[ "${base_distro}" == "arch" ]]; then
+              sys_packages+=(glibc)
+            fi
+            sys_packages+=(jq)
+          fi
+          sys_install "${sys_packages[@]}"
+        fi
+        printf '::endgroup::\n'
+      else
+        warn "this action requires at least jq and curl on non-Debian/Fedora/SUSE/Arch/Alpine-based Linux"
+      fi
     fi
     ;;
   macos)
@@ -741,8 +762,8 @@ case "${host_os}" in
     else
       printf '::group::Install packages required for installation (jq)\n'
       mkdir -p -- "${install_action_dir}/jq/bin"
-      url='https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-windows-amd64.exe'
-      checksum='23cb60a1354eed6bcc8d9b9735e8c7b388cd1fdcb75726b93bc299ef22dd9334'
+      url='https://github.com/jqlang/jq/releases/download/jq-1.8.2/jq-windows-amd64.exe'
+      checksum='a6fc67fedaf9128a3309a1e2ebb8b986aeccf70122ee46d2cb4849e423f0c627'
       (
         cd -- "${install_action_dir}/jq/bin"
         download_and_checksum "${url}" "${checksum}"
@@ -790,7 +811,6 @@ for tool in "${tools[@]}"; do
         version=stable
       fi
       info "installing ${tool}@${version}"
-      export RUSTUP_MAX_RETRIES="${RUSTUP_MAX_RETRIES:-10}"
       rustup_args=(--profile minimal)
       if [[ -n "${additional}" ]]; then
         component=''
@@ -821,7 +841,7 @@ for tool in "${tools[@]}"; do
       else
         # https://github.com/rust-lang/rustup/tags
         # Run tools/rustup-hash.sh to get sha256 hash.
-        rustup_version=1.29.0
+        rustup_version=1.29.2
         # https://rust-lang.github.io/rustup/installation/other.html#manual-installation
         rust_target=''
         checksum=''
@@ -831,33 +851,33 @@ for tool in "${tools[@]}"; do
             case "${host_arch}" in
               x86_64)
                 case "${host_env}" in
-                  gnu) checksum=4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10 ;;
-                  musl) checksum=9cd3fda5fd293890e36ab271af6a786ee22084b5f6c2b83fd8323cec6f0992c1 ;;
+                  gnu) checksum=5be191e8c70a5007074254cb74d78dbfdd25cd5a61c27de7b8e5410122ec24f4 ;;
+                  musl) checksum=2ba97d668c06dc4b1884f2a3fa6f4cf14b9bd0c1db379af7e4f87a705ff19edd ;;
                 esac
                 ;;
               aarch64)
                 case "${host_env}" in
-                  gnu) checksum=9732d6c5e2a098d3521fca8145d826ae0aaa067ef2385ead08e6feac88fa5792 ;;
-                  musl) checksum=88761caacddb92cd79b0b1f939f3990ba1997d701a38b3e8dd6746a562f2a759 ;;
+                  gnu) checksum=a9c168dbea81a84671c6b7a5c1795cb0eb699020110d107ddfca427bd797e697 ;;
+                  musl) checksum=7fdbb23acf6495efee2e371580c52b365917551b4835090a225c44ac30915235 ;;
                 esac
                 ;;
               powerpc64le)
                 case "${host_env}" in
-                  gnu) checksum=4bfff85bd3967d988e14567aa9cc6ab0ea386f0ffeff0f9f14d23f0103bf1f97 ;;
-                  musl) checksum=e15d033af90b7a55d170aac2d82cc28ddd96dbfcdda7c6d4eb8cb064a99c4646 ;;
+                  gnu) checksum=96d46b6164ff778288c789e7e94dd09ce55d35777043aabe4e7af1d99b04bd71 ;;
+                  musl) checksum=d0f97151d3ed165ca11c68b460cabf1b828dc605525ce68bb0ef8f62f78ac8b6 ;;
                 esac
                 ;;
               riscv64)
                 rust_target="${host_arch}gc-unknown-${host_os}-${host_env}"
                 # riscv64gc-unknown-linux-musl is tier 2 without host tools
                 case "${host_env}" in
-                  gnu) checksum=7e43f2b2e6307d61da17a4dff61e6bceef408b8189822df64e1094590d2a70f9 ;;
+                  gnu) checksum=1217772975cb864e12a2cad757cd27d7dcdbac3b490a05ad9b86b61ffa6a8b3b ;;
                 esac
                 ;;
               s390x)
                 # s390x-unknown-linux-musl is tier 3
                 case "${host_env}" in
-                  gnu) checksum=66c2c132428b6b77803facb02cbdf33b89d20c00bd20da142be8cb651f2e7cd8 ;;
+                  gnu) checksum=c60999321d0363f6e4d75b646f59ba25feb41b20f872ffb3a46b9a9aea6da1fc ;;
                 esac
                 ;;
             esac
@@ -865,15 +885,15 @@ for tool in "${tools[@]}"; do
           macos)
             rust_target="${host_arch}-apple-darwin"
             case "${host_arch}" in
-              x86_64) checksum=33cf85df9142bc6d29cbc62fa5ca1d4c29622cddb55213a4c1a43c457fb9b2d7 ;;
-              aarch64) checksum=aeb4105778ca1bd3c6b0e75768f581c656633cd51368fa61289b6a71696ac7e1 ;;
+              x86_64) checksum=b9610730ddeef52765723847866fd1e3540b2bf7d5ab0c324aa143a5edf25ba0 ;;
+              aarch64) checksum=f7c7e11eb2e07f006e532a8aaac77b32f4527d305ac386c0c633ca6133d35ca9 ;;
             esac
             ;;
           windows)
             rust_target="${host_arch}-pc-windows-msvc"
             case "${host_arch}" in
-              x86_64) checksum=86478e53f769379d7f0ebfa7c9aa97cb76ca92233f79aa2cc0dbee2efaac73c7 ;;
-              aarch64) checksum=3af309e6c3062aa11df0e932954f69d13b734d8a431e593812f3ecd9ff9e6ef6 ;;
+              x86_64) checksum=00f139da614dced87d3c3d4121c43eebdac3c1bf8a5ee86b9d80dfd71c8d70fd ;;
+              aarch64) checksum=58005a321c5dcb9c4457c0a13bb5d6a56a5793efaef429004edaa1db33019b59 ;;
             esac
             ;;
         esac
@@ -902,8 +922,11 @@ for tool in "${tools[@]}"; do
       installed_bin=("rustc${exe}" "cargo${exe}")
       ;;
     protoc)
-      info "installing ${tool}@${version}"
       read_manifest "protoc" "${version}"
+      if skip_unavailable_tool "${tool}" "${version}"; then
+        continue
+      fi
+      info "installing ${tool}@${version}"
       read_download_info "protoc" "${version}"
       # Copying files to /usr/local/include requires sudo, so do not use it.
       bin_dir="${install_action_dir}/bin"
@@ -913,13 +936,13 @@ for tool in "${tools[@]}"; do
         mkdir -p -- "${include_dir}"
       fi
       if ! type -P unzip >/dev/null; then
-        case "${base_distro}" in
-          debian | fedora | suse | arch | alpine)
-            printf '::group::Install packages required for installation (unzip)\n'
-            sys_install unzip
-            printf '::endgroup::\n'
-            ;;
-        esac
+        if [[ -n "${base_distro}" ]]; then
+          printf '::group::Install packages required for installation (unzip)\n'
+          sys_install unzip
+          printf '::endgroup::\n'
+        else
+          warn "this action requires unzip to install ${tool}"
+        fi
       fi
       mkdir -p -- "${tmp_dir}"
       (
@@ -932,7 +955,7 @@ for tool in "${tools[@]}"; do
         if [[ -z "${PROTOC:-}" ]]; then
           _bin_dir=$(canonicalize_windows_path "${bin_dir}")
           info "setting PROTOC environment variable to '${_bin_dir}/protoc${exe}'"
-          printf '%s\n' "PROTOC=${_bin_dir}/protoc${exe}" >>"${GITHUB_ENV}"
+          printf 'PROTOC=%s\n' "${_bin_dir}/protoc${exe}" >>"${GITHUB_ENV}"
         fi
       )
       rm -rf -- "${tmp_dir}"
@@ -950,7 +973,9 @@ for tool in "${tools[@]}"; do
         *) bail "unsupported host OS '${host_os}' for ${tool}" ;;
       esac
       # libc6-dbg is needed to run Valgrind
-      apt_install libc6-dbg
+      case "${base_distro}" in
+        debian) sys_install libc6-dbg ;;
+      esac
       # Use snap to install the latest Valgrind
       # https://snapcraft.io/install/valgrind/ubuntu
       snap_install valgrind --classic
@@ -961,6 +986,12 @@ for tool in "${tools[@]}"; do
         latest) ;;
         *) warn "specifying the version of ${tool} is not supported" ;;
       esac
+      if [[ "${fallback}" == "skip" ]]; then
+        read_manifest "${tool}" "latest"
+        if skip_unavailable_tool "${tool}" "latest"; then
+          continue
+        fi
+      fi
       install_cargo_binstall
       printf '\n'
       continue
@@ -976,7 +1007,7 @@ for tool in "${tools[@]}"; do
         taplo-cli | typos-cli | wasm-bindgen-cli | wasmtime-cli) tool="${tool%-cli}" ;;
       esac
 
-      # Use cargo-binstall fallback if tool is not available.
+      # Use fallback if tool is not available.
       if [[ ! -f "${manifest_dir}/${tool}.json" ]]; then
         case "${version}" in
           latest) unsupported_tools+=("${tool}") ;;
@@ -985,8 +1016,11 @@ for tool in "${tools[@]}"; do
         continue
       fi
 
-      # Use cargo-binstall fallback if tool is available but the specified version not available.
+      # Use fallback if tool is available but the specified version or platform is not available.
       read_manifest "${tool}" "${version}"
+      if skip_unavailable_tool "${tool}" "${version}"; then
+        continue
+      fi
       if [[ "${download_info}" == "null" ]]; then
         if [[ "${rust_crate}" == "null" ]] || [[ "${fallback}" == "none" ]]; then
           bail "${tool} is supported but version ${version} for '${host_arch}_${host_os}' is not supported (updating install-action might resolve this)"
@@ -1015,7 +1049,9 @@ for tool in "${tools[@]}"; do
         cyclonedx)
           case "${host_os}" in
             linux)
-              apt_install libicu-dev
+              case "${base_distro}" in
+                debian) sys_install libicu-dev ;;
+              esac
               ;;
           esac
           ;;
@@ -1084,6 +1120,10 @@ if [[ ${#unsupported_tools[@]} -gt 0 ]]; then
   IFS=','
   case "${fallback}" in
     none) bail "install-action does not support ${unsupported_tools[*]} (updating install-action might resolve this); aborting because fallback is disabled by 'fallback: none' input option" ;;
+    skip)
+      info "install-action does not support ${unsupported_tools[*]} (updating install-action might resolve this); skipping because of 'fallback: skip' input option"
+      exit 0
+      ;;
     cargo-binstall)
       case "${host_arch}" in
         x86_64 | aarch64 | riscv64) ;;
