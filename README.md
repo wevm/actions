@@ -129,7 +129,7 @@ The `lock-issue-v5.yml` and other older vendor paths remain available while cons
 | [`peter-evans/create-pull-request/v8.1.1`](https://github.com/peter-evans/create-pull-request/blob/5f6978faf089d4d20b00c7766989d076bb2fc7f1/README.md) | v8.1.1 (`5f6978f`) | Creates a pull request for changes to your repository in the actions workspace |
 | [`planetscale/setup-pscale-action/rev-b6a50ee45b4b`](https://github.com/planetscale/setup-pscale-action/blob/b6a50ee45b4b24944e1d8de6e57b3a5f6476a1af/README.md) | v1 (`b6a50ee`) | Installs the PlanetScale CLI |
 | [`pnpm/action-setup/v4`](https://github.com/pnpm/action-setup/blob/a7487c7e89a18df4991f7f222e4898a00d66ddda/README.md) | `a7487c7` | Install pnpm package manager |
-| [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/ea17c68df8912ef543352723c149a84f56e3d413/README.md) | v6.1.0 (`ea17c68`) | Install pnpm package manager |
+| [`pnpm/action-setup/v6`](https://github.com/pnpm/action-setup/blob/73e46992e05b19abd31f2f3c20e0e7370d762115/README.md) | v6.1.1 (`73e4699`) | Install pnpm package manager |
 | [`pnpm/action-setup/viem-wagmi`](https://github.com/pnpm/action-setup/blob/b906affcce14559ad1aafd4ab0e942779e9f58b1/README.md) | `b906aff` | Install pnpm package manager |
 | [`preactjs/compressed-size-action/2.8.0`](https://github.com/preactjs/compressed-size-action/blob/f322c295dde06a1cb7ccaef105732dd8a726d1d9/README.md) | 2.10.0 (`f322c29`) | Get compressed size differences for every PR |
 | [`re-actors/alls-green/v1.2.2`](https://github.com/re-actors/alls-green/blob/b5b5b37504aa4183270bd3d855c52a67f212be35/README.md) | v1.3.0 (`b5b5b37`) | GitHub Action for checking that the test matrix jobs are all successful before proceeding. To be used in branch protection |

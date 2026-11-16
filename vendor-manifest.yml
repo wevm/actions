@@ -838,9 +838,9 @@ actions:
     upstream: pnpm/action-setup
 
   - name: pnpm/action-setup/v6
-    ref: v6.1.0
+    ref: v6.1.1
     ref_type: tag
-    sha: ea17c68df8912ef543352723c149a84f56e3d413
+    sha: 73e46992e05b19abd31f2f3c20e0e7370d762115
     strip_dev_dependencies: true
     exclude:
       - src/
