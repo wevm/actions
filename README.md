@@ -115,7 +115,7 @@ The `lock-issue-v5.yml` and other older vendor paths remain available while cons
 | [`docker/login-action/v4.6.0`](https://github.com/docker/login-action/blob/81c6f93d4bc991e510b342a00b419b3bb4efc5c6/README.md) | v4.7.0 (`81c6f93`) | GitHub Action to login against a Docker registry |
 | [`docker/setup-buildx-action/v4.2.0`](https://github.com/docker/setup-buildx-action/blob/f87e5991a6d7451dcb8d9637bfbc97413f497069/README.md) | v4.4.1 (`f87e599`) | Set up Docker Buildx |
 | [`dtolnay/rust-toolchain/rev-6c977a6ca407`](https://github.com/dtolnay/rust-toolchain/blob/6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772/README.md) | `6c977a6` | Install the Rust toolchain |
-| [`dtolnay/rust-toolchain/rev-b725eda52536`](https://github.com/dtolnay/rust-toolchain/blob/b725eda525362e7cf34af9a7243cac1e3f01a7ec/README.md) | stable (`b725eda`) | Install the Rust toolchain |
+| [`dtolnay/rust-toolchain/rev-b725eda52536`](https://github.com/dtolnay/rust-toolchain/blob/39008827e6b4319a349e9a42dfc90579dd25f1ca/README.md) | stable (`3900882`) | Install the Rust toolchain |
 | [`foundry-rs/foundry-toolchain/v1.5.0`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |
 | [`foundry-rs/foundry-toolchain/v1.6.0`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |
 | [`foundry-rs/foundry-toolchain/v1.9.2`](https://github.com/foundry-rs/foundry-toolchain/blob/dba66c27052e63476d886f22216e119ba7e615bf/README.md) | v1.9.2 (`dba66c2`) | Install Foundry |

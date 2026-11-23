@@ -589,7 +589,7 @@ actions:
   - name: dtolnay/rust-toolchain/rev-b725eda52536
     ref: stable
     ref_type: branch
-    sha: b725eda525362e7cf34af9a7243cac1e3f01a7ec
+    sha: 39008827e6b4319a349e9a42dfc90579dd25f1ca
     exclude:
       - '**'
     notes: >-
